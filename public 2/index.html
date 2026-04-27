@@ -167,14 +167,7 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 .gallery-scroll{display:flex;gap:14px;padding:0 28px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory;cursor:grab}
 .gallery-scroll:active{cursor:grabbing}
 .gallery-scroll::-webkit-scrollbar{display:none}
-.g-img{flex-shrink:0;width:380px;height:280px;border-radius:18px;overflow:hidden;scroll-snap-align:start;cursor:pointer}
-/* GAL MODAL */
-.gal-modal-bg{display:none;position:fixed;inset:0;z-index:600;background:rgba(8,7,5,.95);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px}
-.gal-modal-bg.open{display:flex;animation:fadeUp .3s ease}
-.gal-modal-content{position:relative;max-width:1000px;max-height:90vh;width:100%}
-.gal-modal-content img{width:100%;height:100%;object-fit:contain;border-radius:12px;box-shadow:var(--shadow-intense)}
-.gal-modal-close{position:absolute;top:-40px;right:-10px;background:none;border:none;color:#fff;font-size:32px;cursor:pointer;transition:transform .2s;padding:10px}
-.gal-modal-close:hover{transform:scale(1.1)}
+.g-img{flex-shrink:0;width:380px;height:280px;border-radius:18px;overflow:hidden;scroll-snap-align:start}
 .g-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
 .g-img:hover img{transform:scale(1.06)}
 
@@ -401,14 +394,6 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   </div>
 </div>
 
-<!-- GALLERY MODAL -->
-<div class="gal-modal-bg" id="galModal">
-  <div class="gal-modal-content">
-    <button class="gal-modal-close" onclick="closeGalleryModal()">✕</button>
-    <img id="galModalImg" src="" alt="Gallery Image">
-  </div>
-</div>
-
 <!-- MOBILE MENU -->
 <div id="mob-menu">
   <a onclick="go('home')">Home</a>
@@ -562,21 +547,16 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 <section class="gallery" id="gallery">
   <div class="gallery-hd"><span class="s-tag r">Portfolio</span><h2 class="s-h r2">Our work speaks<br><em>for itself.</em></h2></div>
   <div class="gallery-scroll" id="galScroll">
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio1.jpg" alt="Kitchen project" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio2.jpg" alt="Kitchen renovation" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./vanity.jpg" alt="Bathroom vanity" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio3.jpg" alt="Stone detail" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio4.jpg" alt="Luxury kitchen" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_kitchen_grey.png" alt="Kitchen counter with grey cabinets and marble backsplash" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_island_view.png" alt="Kitchen island with scenic view" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_marble_backsplash.png" alt="Marble backsplash detailing" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_kitchen_green.png" alt="Kitchen counter with green cabinets" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_kitchen_peninsula.png" alt="Kitchen layout with grey cabinets and peninsula" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_kitchen_cutout.jpg" alt="Kitchen peninsula cutout with pendant lamps" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_puppy_counter.jpg" alt="Cute puppy sitting on a pristine quartz countertop" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_white_kitchen.jpg" alt="Large white kitchen remodel with central island" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_vanity_close.jpg" alt="Bathroom vanity top with sink and faucet" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_outdoor_bbq.jpg" alt="Outdoor granite BBQ island" loading="lazy"></div>
+    <div class="g-img"><img src="./portfolio1.jpg" alt="Kitchen project" loading="lazy"></div>
+    <div class="g-img"><img src="./portfolio2.jpg" alt="Kitchen renovation" loading="lazy"></div>
+    <div class="g-img"><img src="./vanity.jpg" alt="Bathroom vanity" loading="lazy"></div>
+    <div class="g-img"><img src="./portfolio3.jpg" alt="Stone detail" loading="lazy"></div>
+    <div class="g-img"><img src="./portfolio4.jpg" alt="Luxury kitchen" loading="lazy"></div>
+    <div class="g-img"><img src="./portfolio_kitchen_grey.png" alt="Kitchen counter with grey cabinets and marble backsplash" loading="lazy"></div>
+    <div class="g-img"><img src="./portfolio_island_view.png" alt="Kitchen island with scenic view" loading="lazy"></div>
+    <div class="g-img"><img src="./portfolio_marble_backsplash.png" alt="Marble backsplash detailing" loading="lazy"></div>
+    <div class="g-img"><img src="./portfolio_kitchen_green.png" alt="Kitchen counter with green cabinets" loading="lazy"></div>
+    <div class="g-img"><img src="./portfolio_kitchen_peninsula.png" alt="Kitchen layout with grey cabinets and peninsula" loading="lazy"></div>
   </div>
 </section>
 
@@ -923,18 +903,6 @@ function openMaterial(key){
 }
 function closeModal(){document.getElementById('matModal').classList.remove('open');document.body.style.overflow=''}
 document.getElementById('matModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
-
-/* ── GALLERY MODAL ── */
-function openGalleryModal(src){
-  document.getElementById('galModalImg').src=src;
-  document.getElementById('galModal').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closeGalleryModal(){
-  document.getElementById('galModal').classList.remove('open');
-  document.body.style.overflow='';
-}
-document.getElementById('galModal').addEventListener('click',function(e){if(e.target===this)closeGalleryModal()});
 
 /* ── WIZARD ── */
 let wzStep=1;
