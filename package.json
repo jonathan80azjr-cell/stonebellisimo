@@ -2,9 +2,11 @@
   "name": "stone-bellisimo-2",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "homepage": "https://jonathan80azjr-cell.github.io/stonebellisimo",
   "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "gh-pages -d public"
   },

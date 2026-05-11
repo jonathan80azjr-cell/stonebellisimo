@@ -19,7 +19,7 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 #nav.light{background:rgba(250,249,244,.88);border-bottom:1px solid rgba(0,0,0,.05)}
 .nav-w{max-width:1240px;margin:0 auto;padding:0 28px;height:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .n-logo{display:flex;align-items:center;text-decoration:none}
-.n-logo img{height:32px;display:block;filter:invert(1);mix-blend-mode:screen;transition:all .4s}
+.n-logo img{height:54px;display:block;filter:invert(1);mix-blend-mode:screen;transition:all .4s}
 #nav.light .n-logo img{filter:none;mix-blend-mode:multiply}
 .nl{display:flex;gap:22px;list-style:none}
 .nl a{font-size:13px;color:rgba(255,255,255,.82);text-decoration:none;transition:color .2s;cursor:pointer}
@@ -194,6 +194,15 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 .reviews-footer{text-align:center;margin-top:32px;font-size:13px;color:var(--muted)}
 .reviews-footer a{color:var(--gold);text-decoration:none;font-weight:500}
 .reviews-footer a:hover{text-decoration:underline}
+.review-ask{margin-top:44px;background:linear-gradient(135deg,#1c1810 0%,#2a2216 100%);border-radius:22px;padding:34px 38px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px;overflow:hidden;position:relative}
+.review-ask::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(179,145,88,.22),transparent 52%);pointer-events:none}
+.review-ask-copy,.review-ask-action{position:relative;z-index:1}
+.review-ask-kicker{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:8px}
+.review-ask h3{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;color:#fff;letter-spacing:-.015em;line-height:1.12;margin-bottom:8px}
+.review-ask p{font-size:14px;font-weight:300;color:rgba(255,255,255,.58);line-height:1.7;max-width:620px}
+.review-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:var(--ink);font-size:14px;font-weight:600;text-decoration:none;border-radius:100px;padding:14px 24px;white-space:nowrap;transition:transform .15s,background .2s}
+.review-btn:hover{background:var(--gold-lt);transform:scale(1.02)}
+.review-btn-mark{width:21px;height:21px;border-radius:50%;background:conic-gradient(from -45deg,#4285f4 0 25%,#34a853 0 50%,#fbbc05 0 75%,#ea4335 0 100%);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700}
 
 /* PERKS */
 .perks{background:var(--sand)}
@@ -236,8 +245,12 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 .wz-opt:hover{border-color:var(--gold-lt);background:rgba(156,127,82,.1)}
 .wz-opt.sel{border-color:var(--gold);background:rgba(156,127,82,.2)}
 .wz-opt-icon{font-size:28px;margin-bottom:10px}
+.wz-opt-img{width:100%;aspect-ratio:4/3;border-radius:10px;overflow:hidden;margin-bottom:12px;background:rgba(255,255,255,.07)}
+.wz-opt-img img{width:100%;height:100%;object-fit:cover;display:block}
 .wz-opt-label{font-size:13px;font-weight:500;color:rgba(255,255,255,.85)}
 .wz-opt-sub{font-size:11px;color:rgba(255,255,255,.3);margin-top:4px}
+.wz-other{display:none;margin:-16px 0 32px}
+.wz-other.show{display:block;animation:fadeUp .25s ease}
 .wz-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .wz-back-btn{background:none;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.45);font-family:'Inter',sans-serif;font-size:13px;padding:11px 24px;border-radius:100px;cursor:pointer;transition:all .2s}
 .wz-back-btn:hover{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.8)}
@@ -287,29 +300,18 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 
 /* CONTACT */
 .contact-section{background:var(--ink)}
-.contact-grid{display:grid;grid-template-columns:5fr 7fr;gap:80px;align-items:start}
-.c-meta{margin-top:44px;display:flex;flex-direction:column;gap:26px}
-.c-lbl{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:5px}
-.c-val{font-size:15px;font-weight:300;color:rgba(255,255,255,.8);line-height:1.6}
-.c-val a{color:var(--gold-lt);text-decoration:none;transition:color .2s}
-.c-val a:hover{color:var(--gold);text-decoration:underline}
-.map-embed{border-radius:16px;overflow:hidden;margin-top:32px;border:1px solid rgba(255,255,255,.08)}
-.map-embed iframe{display:block;border:none}
-/* quick contact panel */
-.quick-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:44px}
-.quick-box h3{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;color:#fff;margin-bottom:6px}
-.quick-box-sub{font-size:13px;color:rgba(255,255,255,.35);margin-bottom:32px;font-weight:300}
-.qc-btns{display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
+.contact-grid{display:grid;grid-template-columns:minmax(320px,0.82fr) minmax(460px,1.18fr);gap:48px;align-items:stretch;max-width:1200px;margin:0 auto}
+.contact-actions{margin-top:36px}
+.qc-btns{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
 .qc-btn{display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:16px 20px;text-decoration:none;transition:all .2s;cursor:pointer}
 .qc-btn:hover{border-color:var(--gold);background:rgba(156,127,82,.1)}
 .qc-icon{width:40px;height:40px;border-radius:50%;background:rgba(156,127,82,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .qc-label{font-size:13px;font-weight:500;color:#fff}
 .qc-sub{font-size:12px;color:rgba(255,255,255,.35);margin-top:2px}
-.qc-divider{text-align:center;font-size:11px;color:rgba(255,255,255,.2);margin:4px 0;position:relative}
-.qc-divider::before,.qc-divider::after{content:'';position:absolute;top:50%;width:40%;height:1px;background:rgba(255,255,255,.07)}
-.qc-divider::before{left:0}.qc-divider::after{right:0}
-.qc-wizard-btn{width:100%;background:var(--gold);color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;padding:15px;border-radius:100px;border:none;cursor:pointer;transition:background .2s,transform .15s;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.qc-wizard-btn{width:100%;background:var(--gold);color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;padding:15px;border-radius:100px;border:none;cursor:pointer;transition:background .2s,transform .15s;display:flex;align-items:center;justify-content:center;gap:8px}
 .qc-wizard-btn:hover{background:#b8945f;transform:scale(1.01)}
+.map-embed{min-height:100%;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.map-embed iframe{display:block;width:100%;height:100%;min-height:560px}
 
 /* FOOTER */
 footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:52px 28px 40px}
@@ -325,6 +327,11 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 .soc{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:rgba(255,255,255,.5);text-decoration:none;transition:border-color .2s,color .2s,background .2s}
 .soc:hover{border-color:var(--gold);color:var(--gold-lt);background:rgba(156,127,82,.12)}
 .foot-divider{border:none;border-top:1px solid rgba(255,255,255,.05);margin:0}
+.foot-bella{margin:24px 0 0;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;background:rgba(156,127,82,.12);border:1px solid rgba(156,127,82,.25);border-radius:16px;padding:18px 20px}
+.foot-bella-title{font-size:14px;font-weight:500;color:#fff}
+.foot-bella-copy{font-size:12px;color:rgba(255,255,255,.48);margin-top:4px;line-height:1.5}
+.foot-bella-call{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--gold);color:#fff;text-decoration:none;border-radius:100px;padding:11px 18px;font-size:13px;font-weight:500;transition:background .2s,transform .15s;white-space:nowrap}
+.foot-bella-call:hover{background:#b8945f;transform:scale(1.02)}
 .foot-bottom{margin-top:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .foot-copy{font-size:11px;color:rgba(255,255,255,.22)}
 .foot-copy a{color:rgba(255,255,255,.35);text-decoration:none;transition:color .2s}
@@ -371,9 +378,9 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 
 /* RESPONSIVE */
-@media(max-width:1024px){.story-grid,.contact-grid{grid-template-columns:1fr;gap:52px}.mat-modal{grid-template-columns:1fr}.story-imgs{max-width:520px}}
-@media(max-width:860px){.prod-grid{grid-template-columns:1fr 1fr}.prod-card-lg{grid-column:span 2}.perks-grid{grid-template-columns:1fr}.perk:first-child{grid-column:span 1}.process-steps{grid-template-columns:1fr 1fr;gap:36px}.process-steps::before{display:none}.trust-w{grid-template-columns:1fr 1fr}.nl{display:none}.n-ham{display:flex}.reviews-grid{grid-template-columns:1fr}.insta-grid{grid-template-columns:repeat(3,1fr)}.wz-opts{grid-template-columns:repeat(2,1fr)}.wz-row{grid-template-columns:1fr}}
-@media(max-width:600px){.s{padding:80px 20px}.prod-grid{grid-template-columns:1fr}.prod-card-lg{grid-column:span 1;aspect-ratio:4/3}.story-imgs{grid-template-columns:1fr}.story-img-main{aspect-ratio:3/2;grid-row:auto}.story-img-sm{display:none}.quick-box{padding:28px 22px}.gallery{padding:80px 0}.g-img{width:300px;height:220px}.foot-top,.foot-bottom{flex-direction:column;align-items:flex-start}#chat-panel{width:calc(100vw - 56px);right:28px}.insta-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1024px){.story-grid{grid-template-columns:1fr;gap:52px}.mat-modal{grid-template-columns:1fr}.story-imgs{max-width:520px}.contact-grid{grid-template-columns:1fr;gap:36px;max-width:720px}.map-embed iframe{min-height:360px}}
+@media(max-width:860px){.prod-grid{grid-template-columns:1fr 1fr}.prod-card-lg{grid-column:span 2}.perks-grid{grid-template-columns:1fr}.perk:first-child{grid-column:span 1}.process-steps{grid-template-columns:1fr 1fr;gap:36px}.process-steps::before{display:none}.trust-w{grid-template-columns:1fr 1fr}.nl{display:none}.n-ham{display:flex}.reviews-grid{grid-template-columns:1fr}.review-ask{grid-template-columns:1fr;padding:30px 26px}.review-ask-action{justify-self:start}.insta-grid{grid-template-columns:repeat(3,1fr)}.wz-opts{grid-template-columns:repeat(2,1fr)}.wz-row{grid-template-columns:1fr}}
+@media(max-width:600px){.s{padding:80px 20px}.prod-grid{grid-template-columns:1fr}.prod-card-lg{grid-column:span 1;aspect-ratio:4/3}.story-imgs{grid-template-columns:1fr}.story-img-main{aspect-ratio:3/2;grid-row:auto}.story-img-sm{display:none}.gallery{padding:80px 0}.g-img{width:300px;height:220px}.foot-top,.foot-bottom{flex-direction:column;align-items:flex-start}#chat-panel{width:calc(100vw - 56px);right:28px}.insta-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -416,6 +423,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   <a onclick="go('materials')">Materials</a>
   <a onclick="go('story')">Our Story</a>
   <a onclick="go('reviews')">Reviews</a>
+  <a href="https://www.google.com/search?hl=en-US&amp;gl=US&amp;q=Stone+Bellisimo+LLC+Reviews&amp;ludocid=7284274112208580405#lrd=0x89c25799b7927797:0x6516f0b618c42f35,3,,,," target="_blank" rel="noopener" onclick="closeMob()">Write a Review</a>
   <a onclick="go('contact')">Contact</a>
   <div class="mob-cta-wrap"><a onclick="openWizard()">Get Free Estimate</a></div>
 </div>
@@ -601,6 +609,16 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       </div>
     </div>
     <div class="reviews-footer r">4.9 average across Google, Houzz &amp; Facebook · <a href="https://www.google.com/search?q=Stone+Bellisimo+LLC+reviews" target="_blank" rel="noopener">See all reviews →</a></div>
+    <div class="review-ask r2">
+      <div class="review-ask-copy">
+        <div class="review-ask-kicker">Loved your new stone?</div>
+        <h3>Share a quick Google review.</h3>
+        <p>Your words help neighbors find a family-owned countertop team they can trust. Mention your project, material, or the team member who helped you.</p>
+      </div>
+      <div class="review-ask-action">
+        <a class="review-btn" href="https://www.google.com/search?hl=en-US&amp;gl=US&amp;q=Stone+Bellisimo+LLC+Reviews&amp;ludocid=7284274112208580405#lrd=0x89c25799b7927797:0x6516f0b618c42f35,3,,,," target="_blank" rel="noopener"><span class="review-btn-mark">G</span>Write a Google Review</a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -659,6 +677,10 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
         <div class="wz-opt" onclick="selectOpt(this,'project','Commercial')"><div class="wz-opt-label">Commercial</div><div class="wz-opt-sub">Office / retail</div></div>
         <div class="wz-opt" onclick="selectOpt(this,'project','Other')"><div class="wz-opt-label">Other</div><div class="wz-opt-sub">Tell us more</div></div>
       </div>
+      <div class="wz-other wz-fg" id="projectOtherWrap">
+        <label for="projectOther">Tell us what you are renovating *</label>
+        <input type="text" id="projectOther" placeholder="e.g. Outdoor kitchen, laundry room, custom table" autocomplete="off">
+      </div>
       <div class="wz-nav"><div></div><button class="wz-next-btn" onclick="nextStep(2)" id="wz1next" disabled>Continue <span>→</span></button></div>
     </div>
 
@@ -666,12 +688,12 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
     <div class="wz-step" id="wz2">
       <div class="wz-q">Which material<br><em>interests you?</em></div>
       <div class="wz-hint">Not sure yet? Pick "Help me choose" — we'll guide you.</div>
-      <div class="wz-opts">
-        <div class="wz-opt" onclick="selectOpt(this,'material','Granite')"><div class="wz-opt-label">Granite</div><div class="wz-opt-sub">Most durable</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'material','Quartz')"><div class="wz-opt-label">Quartz</div><div class="wz-opt-sub">20% off now</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'material','Marble')"><div class="wz-opt-label">Marble</div><div class="wz-opt-sub">Timeless look</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'material','Quartzite')"><div class="wz-opt-label">Quartzite</div><div class="wz-opt-sub">Natural stone</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'material','Porcelain')"><div class="wz-opt-label">Porcelain</div><div class="wz-opt-sub">Ultra modern</div></div>
+      <div class="wz-opts wz-material-opts">
+        <div class="wz-opt" onclick="selectOpt(this,'material','Granite')"><div class="wz-opt-img"><img src="./material1.jpg" alt="Granite slab"></div><div class="wz-opt-label">Granite</div><div class="wz-opt-sub">Most durable</div></div>
+        <div class="wz-opt" onclick="selectOpt(this,'material','Quartz')"><div class="wz-opt-img"><img src="./material2.jpg" alt="Quartz slab"></div><div class="wz-opt-label">Quartz</div><div class="wz-opt-sub">20% off now</div></div>
+        <div class="wz-opt" onclick="selectOpt(this,'material','Marble')"><div class="wz-opt-img"><img src="./material3.jpg" alt="Marble slab"></div><div class="wz-opt-label">Marble</div><div class="wz-opt-sub">Timeless look</div></div>
+        <div class="wz-opt" onclick="selectOpt(this,'material','Quartzite')"><div class="wz-opt-img"><img src="./material4.jpg" alt="Quartzite slab"></div><div class="wz-opt-label">Quartzite</div><div class="wz-opt-sub">Natural stone</div></div>
+        <div class="wz-opt" onclick="selectOpt(this,'material','Porcelain')"><div class="wz-opt-img"><img src="./material5.png" alt="Porcelain slab"></div><div class="wz-opt-label">Porcelain</div><div class="wz-opt-sub">Ultra modern</div></div>
         <div class="wz-opt" onclick="selectOpt(this,'material','Help me choose')"><div class="wz-opt-label">Help me choose</div><div class="wz-opt-sub">We'll advise</div></div>
       </div>
       <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(1)">← Back</button><button class="wz-next-btn" onclick="nextStep(3)" id="wz2next" disabled>Continue →</button></div>
@@ -772,31 +794,22 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <div>
         <span class="s-tag r" style="color:var(--gold-lt)">Get in Touch</span>
         <h2 class="s-h wh r2">Let's talk about<br><em>your project.</em></h2>
-        <div class="c-meta">
-          <div class="r"><div class="c-lbl">Office</div><div class="c-val"><a href="tel:+12015531919">201.553.1919</a></div></div>
-          <div class="r2"><div class="c-lbl">Cesar Yunda — Owner</div><div class="c-val"><a href="tel:+12012816423">201.281.6423</a></div></div>
-          <div class="r3"><div class="c-lbl">Cristian Yunda — Sales</div><div class="c-val"><a href="tel:+12014437405">201.443.7405</a></div></div>
-          <div class="r"><div class="c-lbl">Email</div><div class="c-val"><a href="mailto:cesaryunda@hotmail.com">cesaryunda@hotmail.com</a></div></div>
-          <div class="r2"><div class="c-lbl">Showroom &amp; Warehouse</div><div class="c-val"><a href="https://maps.google.com/?q=618+23rd+Street,+Union+City,+NJ+07087" target="_blank" rel="noopener">618 23rd Street<br>Union City, NJ 07087</a></div></div>
-          <div class="r3"><div class="c-lbl">Hours</div><div class="c-val">Mon – Fri: 8:00 am – 5:00 pm<br>Saturday: By appointment</div></div>
-        </div>
-        <div class="map-embed r" style="margin-top:32px">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.3!2d-74.0247!3d40.7644!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25799b7927797%3A0x6516f0b618c42f35!2s618%2023rd%20St%2C%20Union%20City%2C%20NJ%2007087!5e0!3m2!1sen!2sus!4v1700000000000" width="100%" height="220" style="border:0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Stone Bellisimo LLC"></iframe>
+        <div class="contact-actions r2">
+          <div class="qc-btns">
+            <a href="tel:+15512928353" class="qc-btn"><div><div class="qc-label">Call Bella - 24/7 AI Voice Agent</div><div class="qc-sub">551.292.8353 · Free quotes &amp; project questions anytime</div></div></a>
+            <a href="tel:+12015531919" class="qc-btn"><div><div class="qc-label">Call the Office</div><div class="qc-sub">201.553.1919 · Mon–Fri 8am–5pm</div></div></a>
+            <a href="tel:+12012816423" class="qc-btn"><div><div class="qc-label">Call Cesar (Owner)</div><div class="qc-sub">201.281.6423 · Direct line</div></div></a>
+            <a href="tel:+12014437405" class="qc-btn"><div><div class="qc-label">Call Cristian (Sales)</div><div class="qc-sub">201.443.7405 · Quotes &amp; materials</div></div></a>
+            <a href="sms:+12015531919" class="qc-btn"><div><div class="qc-label">Send a Text</div><div class="qc-sub">Quick questions? Text us anytime</div></div></a>
+            <a href="mailto:cesaryunda@hotmail.com" class="qc-btn"><div><div class="qc-label">Send an Email</div><div class="qc-sub">cesaryunda@hotmail.com</div></div></a>
+            <a href="https://www.google.com/search?hl=en-US&amp;gl=US&amp;q=Stone+Bellisimo+LLC+Reviews&amp;ludocid=7284274112208580405#lrd=0x89c25799b7927797:0x6516f0b618c42f35,3,,,," target="_blank" rel="noopener" class="qc-btn"><div><div class="qc-label">Write a Google Review</div><div class="qc-sub">Share your experience in a minute</div></div></a>
+            <a href="https://maps.google.com/?q=618+23rd+Street,+Union+City,+NJ+07087" target="_blank" rel="noopener" class="qc-btn"><div><div class="qc-label">Visit Our Showroom</div><div class="qc-sub">618 23rd St, Union City NJ — open Mon–Fri</div></div></a>
+          </div>
+          <button onclick="openWizard()" class="qc-wizard-btn">Book a Free In-Home Estimate</button>
         </div>
       </div>
-      <div class="quick-box r2">
-        <h3>Ready to start?</h3>
-        <p class="quick-box-sub">Choose how you'd like to connect with us today.</p>
-        <div class="qc-btns">
-          <a href="tel:+12015531919" class="qc-btn"><div><div class="qc-label">Call the Office</div><div class="qc-sub">201.553.1919 · Mon–Fri 8am–5pm</div></div></a>
-          <a href="tel:+12012816423" class="qc-btn"><div><div class="qc-label">Call Cesar (Owner)</div><div class="qc-sub">201.281.6423 · Direct line</div></div></a>
-          <a href="tel:+12014437405" class="qc-btn"><div><div class="qc-label">Call Cristian (Sales)</div><div class="qc-sub">201.443.7405 · Quotes &amp; materials</div></div></a>
-          <a href="sms:+12015531919" class="qc-btn"><div><div class="qc-label">Send a Text</div><div class="qc-sub">Quick questions? Text us anytime</div></div></a>
-          <a href="mailto:cesaryunda@hotmail.com" class="qc-btn"><div><div class="qc-label">Send an Email</div><div class="qc-sub">cesaryunda@hotmail.com</div></div></a>
-          <a href="https://maps.google.com/?q=618+23rd+Street,+Union+City,+NJ+07087" target="_blank" rel="noopener" class="qc-btn"><div><div class="qc-label">Visit Our Showroom</div><div class="qc-sub">618 23rd St, Union City NJ — open Mon–Fri</div></div></a>
-        </div>
-        <div class="qc-divider">or</div>
-        <button onclick="openWizard()" class="qc-wizard-btn">Book a Free In-Home Estimate</button>
+      <div class="map-embed r">
+        <iframe src="https://www.google.com/maps?q=Stone%20Bellisimo%20LLC%2C%20618%2023rd%20Street%2C%20Union%20City%2C%20NJ%2007087&output=embed" width="100%" height="220" style="border:0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Stone Bellisimo LLC"></iframe>
       </div>
     </div>
   </div>
@@ -814,6 +827,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
         <li><a onclick="go('story')">About</a></li>
         <li><a onclick="go('process')">Process</a></li>
         <li><a onclick="go('reviews')">Reviews</a></li>
+        <li><a href="https://www.google.com/search?hl=en-US&amp;gl=US&amp;q=Stone+Bellisimo+LLC+Reviews&amp;ludocid=7284274112208580405#lrd=0x89c25799b7927797:0x6516f0b618c42f35,3,,,," target="_blank" rel="noopener">Write Review</a></li>
         <li><a onclick="go('why')">Why Us</a></li>
         <li><a onclick="go('contact')">Contact</a></li>
       </ul>
@@ -826,6 +840,13 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       </div>
     </div>
     <hr class="foot-divider">
+    <div class="foot-bella">
+      <div>
+        <div class="foot-bella-title">Meet Bella, our 24/7 AI Voice Agent</div>
+        <div class="foot-bella-copy">Bella can book a free quote and answer project questions based on your inquiry.</div>
+      </div>
+      <a class="foot-bella-call" href="tel:+15512928353">Call Bella - 551.292.8353</a>
+    </div>
     <div class="foot-bottom">
       <span class="foot-copy">© 2026 Stone Bellisimo LLC · 618 23rd Street, Union City, NJ 07087 · <a href="tel:+12015531919">201.553.1919</a></span>
       <button class="back-top" onclick="scrollToTop()">↑ Back to top</button>
@@ -840,22 +861,23 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   <div class="chat-hdr">
     <div class="chat-av"><svg viewBox="0 0 24 24" width="18" height="18" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
     <div class="chat-hdr-info">
-      <div class="chat-hdr-name">Stone Bellisimo</div>
-      <div class="chat-hdr-status"><span class="status-dot"></span>Typically replies same day</div>
+      <div class="chat-hdr-name">Stone Bellisimo Chat</div>
+      <div class="chat-hdr-status"><span class="status-dot"></span>Available 24/7</div>
     </div>
     <button class="chat-x" onclick="toggleChat()">✕</button>
   </div>
   <div class="chat-msgs">
-    <div class="chat-msg"><strong>Hi there!</strong> Welcome to Stone Bellisimo LLC.</div>
-    <div class="chat-msg">We specialize in granite, quartz, marble and more — with <strong>free in-home estimates</strong>. How can we help you today?</div>
+    <div class="chat-msg"><strong>Hi, I am Bella.</strong> I am Stone Bellisimo's 24/7 AI Voice Agent.</div>
+    <div class="chat-msg">I can book your <strong>free quote</strong> and answer questions about materials, services, timing and your project inquiry.</div>
   </div>
   <div class="chat-acts">
+    <a class="chat-act" href="tel:+15512928353">Call Bella - 551.292.8353</a>
     <button class="chat-act" onclick="openWizard();toggleChat()">Book a Free Estimate</button>
+    <a class="chat-act" href="https://www.google.com/search?hl=en-US&amp;gl=US&amp;q=Stone+Bellisimo+LLC+Reviews&amp;ludocid=7284274112208580405#lrd=0x89c25799b7927797:0x6516f0b618c42f35,3,,,," target="_blank" rel="noopener">Write a Google Review</a>
     <a class="chat-act" href="tel:+12015531919">Call Us — 201.553.1919</a>
-    <a class="chat-act" href="sms:+12015531919">Send Us a Text</a>
     <button class="chat-act" onclick="go('materials');toggleChat()">View Our Materials</button>
   </div>
-  <div class="chat-ftr">Stone Bellisimo LLC · Union City, NJ</div>
+  <div class="chat-ftr">Bella · Stone Bellisimo LLC · Union City, NJ</div>
 </div>
 
 <!-- BACK TO TOP -->
@@ -933,6 +955,19 @@ document.getElementById('galModal').addEventListener('click',function(e){if(e.ta
 
 /* ── WIZARD ── */
 let wzStep=1;
+function getProjectValue(){
+  if(wzData.project!=='Other')return wzData.project;
+  const custom=document.getElementById('projectOther').value.trim();
+  return custom ? `Other: ${custom}` : '';
+}
+function updateProjectOther(){
+  const wrap=document.getElementById('projectOtherWrap');
+  const input=document.getElementById('projectOther');
+  const isOther=wzData.project==='Other';
+  wrap.classList.toggle('show',isOther);
+  input.classList.toggle('err',isOther && !input.value.trim());
+  document.getElementById('wz1next').disabled=isOther ? !input.value.trim() : !wzData.project;
+}
 function openWizard(preselect){
   if(preselect){
     wzData.project=preselect;
@@ -940,6 +975,7 @@ function openWizard(preselect){
       o.classList.toggle('sel',o.getAttribute('onclick').includes(preselect));
     });
     document.getElementById('wz1next').disabled=false;
+    updateProjectOther();
   }
   go('wizard-section');
 }
@@ -951,8 +987,14 @@ function selectOpt(el,key,val){
   const step=el.closest('.wz-step').id;
   const nextMap={wz1:'wz1next',wz2:'wz2next',wz3:'wz3next',wz4:'wz4next'};
   if(nextMap[step])document.getElementById(nextMap[step]).disabled=false;
+  if(key==='project')updateProjectOther();
 }
 function nextStep(n){
+  if(wzStep===1 && n>1 && wzData.project==='Other' && !document.getElementById('projectOther').value.trim()){
+    updateProjectOther();
+    document.getElementById('projectOther').focus();
+    return;
+  }
   document.querySelectorAll('.wz-step').forEach(s=>s.classList.remove('active'));
   document.getElementById('wz'+n).classList.add('active');
   wzStep=n;
@@ -968,7 +1010,7 @@ function nextStep(n){
   });
   // Update summary on step 5
   if(n===5){
-    document.getElementById('sumProject').textContent=wzData.project||'—';
+    document.getElementById('sumProject').textContent=getProjectValue()||'—';
     document.getElementById('sumMaterial').textContent=wzData.material||'—';
     document.getElementById('sumSize').textContent=wzData.size||'—';
     document.getElementById('sumTimeline').textContent=wzData.timeline||'—';
@@ -997,7 +1039,7 @@ async function submitWizard(){
     lastName: l.value.trim(),
     email: e.value.trim(),
     phone: p.value.trim(),
-    projectType: wzData.project || 'Not specified',
+    projectType: getProjectValue() || 'Not specified',
     material: wzData.material || 'Not specified',
     message: `Size: ${wzData.size || 'N/A'}\nTimeline: ${wzData.timeline || 'N/A'}\nAddress: ${document.getElementById('wzAddr').value.trim() || 'Not provided'}\nNotes: ${document.getElementById('wzNote').value.trim() || 'None'}`,
     source: 'Website Estimate Wizard',
@@ -1029,12 +1071,16 @@ function resetWizard(){
   Object.keys(wzData).forEach(k=>wzData[k]='');
   document.querySelectorAll('.wz-opt').forEach(o=>o.classList.remove('sel'));
   document.querySelectorAll('.wz-next-btn').forEach(b=>b.disabled=true);
+  document.getElementById('wz5submit').disabled=false;
+  document.getElementById('projectOther').value='';
+  updateProjectOther();
   document.getElementById('wz-success').classList.remove('show');
   document.getElementById('wzProgress').style.display='flex';
   nextStep(1);
 }
 // Remove err on type
 document.querySelectorAll('.wz-fg input').forEach(el=>el.addEventListener('input',()=>el.classList.remove('err')));
+document.getElementById('projectOther').addEventListener('input',updateProjectOther);
 
 /* ── CHAT ── */
 let chatOpen=false;
