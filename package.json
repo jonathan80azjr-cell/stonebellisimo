@@ -8,7 +8,8 @@
     "dev": "node server.js",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "gh-pages -d public",
+    "predeploy": "gh-pages-clean",
+    "deploy": "gh-pages -d public --message \"Deploy latest site\"",
     "deploy:worker": "wrangler deploy",
     "worker:secret": "wrangler secret put N8N_WEBHOOK_URL"
   },

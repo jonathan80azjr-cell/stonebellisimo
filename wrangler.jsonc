@@ -7,6 +7,10 @@
     {
       "pattern": "stonebellisimollc.com/api/*",
       "zone_name": "stonebellisimollc.com"
+    },
+    {
+      "pattern": "www.stonebellisimollc.com/api/*",
+      "zone_name": "stonebellisimollc.com"
     }
   ]
 }

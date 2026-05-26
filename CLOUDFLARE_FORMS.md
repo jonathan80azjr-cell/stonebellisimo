@@ -32,10 +32,19 @@ Do not use Cloudflare's "Upload and deploy" static-file screen for `cloudflare-w
 
    ```text
    stonebellisimollc.com/api/*
+   www.stonebellisimollc.com/api/*
    ```
 
 5. Make sure the `stonebellisimollc.com` DNS record is proxied through Cloudflare, shown as the orange cloud.
-6. Submit the form again. The frontend can keep posting to `/api/contact`.
+6. Confirm the route is hitting the Worker:
+
+   ```sh
+   curl -i https://stonebellisimollc.com/api/contact
+   curl -i https://www.stonebellisimollc.com/api/contact
+   ```
+
+   Both should return JSON with `405 Method not allowed` for a GET request. If you see an HTML `405` from GitHub/Fastly, the Worker route is not attached yet.
+7. Submit the form again. The frontend can keep posting to `/api/contact`.
 
 You do not add the webhook to Cloudflare DNS. You add it as a Worker secret/env var. You also do not need a GitHub secret for this GitHub Pages deployment, because GitHub Pages has no backend runtime that can read it.
 
