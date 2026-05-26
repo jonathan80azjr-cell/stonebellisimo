@@ -8,7 +8,9 @@
     "dev": "node server.js",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "gh-pages -d public"
+    "deploy": "gh-pages -d public",
+    "deploy:worker": "wrangler deploy",
+    "worker:secret": "wrangler secret put N8N_WEBHOOK_URL"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +24,7 @@
     "helmet": "^8.2.0"
   },
   "devDependencies": {
-    "gh-pages": "^6.3.0"
+    "gh-pages": "^6.3.0",
+    "wrangler": "^4.50.0"
   }
 }

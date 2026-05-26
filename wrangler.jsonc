@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "stonebellisimo-forms",
+  "main": "cloudflare-worker.mjs",
+  "compatibility_date": "2026-05-26",
+  "routes": [
+    {
+      "pattern": "stonebellisimollc.com/api/*",
+      "zone_name": "stonebellisimollc.com"
+    }
+  ]
+}

@@ -6,10 +6,29 @@ The site currently posts the estimate wizard to `/api/contact`. That route exist
 
 Keep GitHub Pages for the static site and use a Cloudflare Worker only for `/api/*`.
 
-1. Create a Worker in Cloudflare.
-2. Use `cloudflare-worker.mjs` as the Worker code.
-3. Add a Worker secret or environment variable named `N8N_WEBHOOK_URL` with the production n8n webhook URL.
-4. Add a Worker route for:
+Do not use Cloudflare's "Upload and deploy" static-file screen for `cloudflare-worker.mjs`. A Worker JavaScript file has to be deployed with Wrangler.
+
+1. From this project folder, log in to Cloudflare:
+
+   ```sh
+   npx wrangler login
+   ```
+
+2. Add the n8n URL as a Worker secret:
+
+   ```sh
+   npm run worker:secret
+   ```
+
+   Paste the production n8n webhook URL when Wrangler asks for the value.
+
+3. Deploy the Worker:
+
+   ```sh
+   npm run deploy:worker
+   ```
+
+4. Wrangler will deploy `cloudflare-worker.mjs` using `wrangler.jsonc`. The route is already configured as:
 
    ```text
    stonebellisimollc.com/api/*
