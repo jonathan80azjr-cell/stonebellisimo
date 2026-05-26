@@ -886,6 +886,12 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 <script>
 /* ── DATA ── */
 const wzData = {project:'',material:'',size:'',timeline:''};
+const CONTACT_API_ENDPOINT = '/api/contact';
+const CONTACT_WEBHOOK_ENDPOINT = 'https://n8n.bitesites.org/webhook/website-lead';
+function getContactEndpoint(){
+  const localHosts = ['localhost','127.0.0.1',''];
+  return localHosts.includes(window.location.hostname) ? CONTACT_API_ENDPOINT : CONTACT_WEBHOOK_ENDPOINT;
+}
 const matData = {
   granite:{tag:'Natural Stone',title:'Granite',img:'./material1.jpg',desc:'Granite is one of the hardest natural stones on earth. Every slab is completely unique, with its own pattern of minerals and veining — no two kitchens will ever look the same.',pros:['Extremely scratch & heat resistant','Each slab is one-of-a-kind','Available in hundreds of colors','Very long-lasting — often 30+ years'],price:'$45 – $85 / sqft installed',note:'Exact price after free in-home measurement'},
   quartz:{tag:'Engineered Stone',title:'Quartz',img:'./material2.jpg',desc:'Quartz countertops are engineered from natural quartz crystals and resin, creating a surface that is non-porous, consistent in color, and virtually maintenance-free. Currently 20% off at our showroom.',pros:['Non-porous — no sealing required','Very consistent, uniform look','Stain & bacteria resistant','Low maintenance, easy to clean'],price:'20% off — starting ~$50/sqft installed',note:'Stop by our Union City showroom to see current selection'},
@@ -1047,7 +1053,7 @@ async function submitWizard(){
   };
 
   try {
-    const response = await fetch('/api/contact', {
+    const response = await fetch(getContactEndpoint(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
