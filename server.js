@@ -56,7 +56,23 @@ app.use(express.json({ limit: '20kb' }));
 app.use(express.urlencoded({ extended: false, limit: '20kb' }));
 
 // Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders(res, filePath) {
+    if (/\.(?:avif|jpe?g|png|gif|svg|ico)$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=2592000');
+      return;
+    }
+
+    if (/\.(?:js|css)$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      return;
+    }
+
+    if (/\.html$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  }
+}));
 
 const contactLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -66,6 +82,17 @@ const contactLimiter = rateLimit({
   message: {
     success: false,
     message: 'Too many requests. Please wait a few minutes and try again.'
+  }
+});
+
+const performanceLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 120,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many performance reports.'
   }
 });
 
@@ -114,6 +141,28 @@ function validateContact(body) {
   return { payload };
 }
 
+function validatePerformanceMetric(body) {
+  const name = normalizeText(body.name, 12).toUpperCase();
+  const value = Number(body.value);
+  const allowedNames = new Set(['CLS', 'FCP', 'INP', 'LCP', 'TTFB']);
+
+  if (!allowedNames.has(name) || !Number.isFinite(value) || value < 0) {
+    return { error: 'Invalid performance metric.' };
+  }
+
+  return {
+    payload: {
+      id: normalizeText(body.id, 80),
+      name,
+      value,
+      rating: normalizeText(body.rating, 24),
+      page: normalizeText(body.page, 160),
+      navigationType: normalizeText(body.navigationType, 40),
+      timestamp: Number.isFinite(Number(body.timestamp)) ? Number(body.timestamp) : Date.now()
+    }
+  };
+}
+
 function getWebhookUrl() {
   const rawUrl = process.env.N8N_WEBHOOK_URL;
   if (!rawUrl || rawUrl === 'YOUR_N8N_WEBHOOK_URL_HERE') return null;
@@ -132,6 +181,17 @@ function getWebhookUrl() {
     return null;
   }
 }
+
+app.post('/api/performance', performanceLimiter, (req, res) => {
+  const { payload: metric, error } = validatePerformanceMetric(req.body || {});
+
+  if (error) {
+    return res.status(400).json({ success: false, message: error });
+  }
+
+  console.info('Performance metric:', metric);
+  res.status(204).send();
+});
 
 // API Endpoint for Contact Form
 app.post('/api/contact', contactLimiter, async (req, res) => {

@@ -8,6 +8,7 @@
 <title>Stone Bellisimo LLC — Countertops, Union City NJ</title>
 <meta name="description" content="Family-owned stone countertop fabrication and installation in Union City, NJ. Granite, quartz, marble and more. 25+ years of experience.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preload" as="image" href="./assets/img/hero-1920.avif" type="image/avif" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -47,7 +48,7 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 
 /* HERO */
 .hero{position:relative;height:100vh;min-height:680px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:url('./hero.jpg') center/cover no-repeat}
+.hero-bg{position:absolute;inset:0;background:url('./assets/img/hero-1920.jpg') center/cover no-repeat;background-image:image-set(url('./assets/img/hero-1920.avif') type('image/avif'),url('./assets/img/hero-1920.jpg') type('image/jpeg'))}
 .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,7,5,.52) 0%,rgba(8,7,5,.38) 55%,rgba(8,7,5,.75) 100%)}
 .hero-content{position:relative;z-index:2;padding:0 24px;max-width:940px}
 .hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(156,127,82,.22);border:1px solid rgba(200,168,122,.35);border-radius:100px;padding:6px 16px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:28px;animation:fadeUp .9s .1s both}
@@ -221,7 +222,7 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 
 /* CTA BAND */
 .cta-full{position:relative;padding:130px 28px;text-align:center;overflow:hidden}
-.cta-bg{position:absolute;inset:0;background:url('./gallery.jpg') center/cover no-repeat}
+.cta-bg{position:absolute;inset:0;background:url('./assets/img/gallery-1600.jpg') center/cover no-repeat;background-image:image-set(url('./assets/img/gallery-1600.avif') type('image/avif'),url('./assets/img/gallery-1600.jpg') type('image/jpeg'))}
 .cta-bg::after{content:'';position:absolute;inset:0;background:rgba(8,7,5,.75)}
 .cta-content{position:relative;z-index:2}
 .cta-content h2{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,6.5vw,76px);font-weight:300;color:#fff;letter-spacing:-.025em;line-height:1.05;margin-bottom:18px}
@@ -390,7 +391,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 <!-- MATERIAL MODAL -->
 <div class="mat-modal-bg" id="matModal">
   <div class="mat-modal">
-    <div class="mat-modal-img"><img id="modalImg" src="" alt=""></div>
+    <div class="mat-modal-img"><img id="modalImg" src="" alt="" decoding="async"></div>
     <div class="mat-modal-body">
       <div class="mat-modal-tag" id="modalTag"></div>
       <div class="mat-modal-title" id="modalTitle"></div>
@@ -414,7 +415,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 <div class="gal-modal-bg" id="galModal">
   <div class="gal-modal-content">
     <button class="gal-modal-close" onclick="closeGalleryModal()">✕</button>
-    <img id="galModalImg" src="" alt="Gallery Image">
+    <img id="galModalImg" src="" alt="Gallery Image" decoding="async">
   </div>
 </div>
 
@@ -425,7 +426,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   <a onclick="go('materials')">Materials</a>
   <a href="./about/" onclick="closeMob()">About</a>
   <a onclick="go('reviews')">Reviews</a>
-  <a href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener" onclick="closeMob()">Write a Review</a>
+  <a href="https://www.google.com/search?q=Stone+Bellisimo+LLC+618+23rd+Street+Union+City+NJ&amp;ludocid=14331752926500352385#lrd=0x89c25786c985b655:0xc6e49d5a90b7f181,3" target="_blank" rel="noopener" onclick="closeMob()">Write a Review</a>
   <a href="./contact-us/" onclick="closeMob()">Contact</a>
   <div class="mob-cta-wrap"><a onclick="openWizard()">Get Free Estimate</a></div>
 </div>
@@ -433,7 +434,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 <!-- NAV -->
 <nav id="nav">
   <div class="nav-w">
-    <a href="#" class="n-logo" onclick="go('home')"><img src="./logo.png" alt="Stone Bellisimo"></a>
+    <a href="#" class="n-logo" onclick="go('home')"><img src="./assets/img/logo-280.png" alt="Stone Bellisimo" width="140" height="54" decoding="async"></a>
     <ul class="nl">
       <li><a onclick="go('products')">Products</a></li>
       <li><a onclick="go('materials')">Materials</a></li>
@@ -487,22 +488,22 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
     <h2 class="s-h r2">Beautiful stone for every<br><em>space in your home.</em></h2>
     <div class="prod-grid">
       <div class="prod-card r" onclick="openWizard('Kitchen Countertops')" title="Get a kitchen quote">
-        <img src="./kitchen.jpg" alt="Kitchen Countertops" loading="lazy">
+        <img src="./assets/img/kitchen-1200.jpg" data-avif="./assets/img/kitchen-1200.avif" alt="Kitchen Countertops" width="957" height="1200" loading="lazy" decoding="async">
         <div class="prod-ovl"></div>
         <div class="prod-body"><h3>Kitchens</h3><p>The centerpiece of every home.</p><span class="prod-link">Request a quote →</span></div>
       </div>
       <div class="prod-card r2" onclick="openWizard('Bathroom Vanity')" title="Get a vanity quote">
-        <img src="./vanity.jpg" alt="Bathroom Vanity" loading="lazy">
+        <img src="./assets/img/vanity-1200.jpg" data-avif="./assets/img/vanity-1200.avif" alt="Bathroom Vanity" width="1200" height="800" loading="lazy" decoding="async">
         <div class="prod-ovl"></div>
         <div class="prod-body"><h3>Vanities</h3><p>Elegant stone for your bathroom retreat.</p><span class="prod-link">Request a quote →</span></div>
       </div>
       <div class="prod-card r3" onclick="openWizard('Fireplace Surround')" title="Get a fireplace quote">
-        <img src="./fireplace.jpg" alt="Fireplace Surround" loading="lazy">
+        <img src="./assets/img/fireplace-1200.jpg" data-avif="./assets/img/fireplace-1200.avif" alt="Fireplace Surround" width="1200" height="1187" loading="lazy" decoding="async">
         <div class="prod-ovl"></div>
         <div class="prod-body"><h3>Fireplaces</h3><p>A bold statement in any living space.</p><span class="prod-link">Request a quote →</span></div>
       </div>
       <div class="prod-card r" onclick="openWizard('Custom Projects')" title="Get a custom quote">
-        <img src="./portfolio2.jpg" alt="Custom Stone Projects" loading="lazy">
+        <img src="./assets/img/portfolio2-1000.jpg" data-avif="./assets/img/portfolio2-1000.avif" alt="Custom Stone Projects" width="1000" height="995" loading="lazy" decoding="async">
         <div class="prod-ovl"></div>
         <div class="prod-body"><h3>Custom Projects</h3><p>Unique stone applications and designs.</p><span class="prod-link">Request a quote →</span></div>
       </div>
@@ -519,11 +520,11 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   </div>
   <div style="max-width:1256px;margin:44px auto 0;padding:0 28px">
     <div class="mat-scroll" id="matScroll">
-      <div class="mat-slab r" onclick="openMaterial('granite')"><img src="./material1.jpg" alt="Granite"><div class="mat-slab-lbl">Granite <span>Most durable</span></div></div>
-      <div class="mat-slab r2" onclick="openMaterial('quartz')"><img src="./material2.jpg" alt="Quartz"><div class="mat-slab-lbl">Quartz <span>20% off now</span></div></div>
-      <div class="mat-slab r3" onclick="openMaterial('marble')"><img src="./material3.jpg" alt="Marble"><div class="mat-slab-lbl">Marble <span>Timeless elegance</span></div></div>
-      <div class="mat-slab r" onclick="openMaterial('quartzite')"><img src="./material4.jpg" alt="Quartzite"><div class="mat-slab-lbl">Quartzite <span>Natural stone</span></div></div>
-      <div class="mat-slab r2" onclick="openMaterial('porcelain')"><img src="./material5.png" alt="Porcelain"><div class="mat-slab-lbl">Porcelain <span>Ultra modern</span></div></div>
+      <div class="mat-slab r" onclick="openMaterial('granite')"><img src="./assets/img/material1-800.jpg" data-avif="./assets/img/material1-800.avif" alt="Granite" width="800" height="533" loading="lazy" decoding="async"><div class="mat-slab-lbl">Granite <span>Most durable</span></div></div>
+      <div class="mat-slab r2" onclick="openMaterial('quartz')"><img src="./assets/img/material2-800.jpg" data-avif="./assets/img/material2-800.avif" alt="Quartz" width="800" height="533" loading="lazy" decoding="async"><div class="mat-slab-lbl">Quartz <span>20% off now</span></div></div>
+      <div class="mat-slab r3" onclick="openMaterial('marble')"><img src="./assets/img/material3-800.jpg" data-avif="./assets/img/material3-800.avif" alt="Marble" width="533" height="800" loading="lazy" decoding="async"><div class="mat-slab-lbl">Marble <span>Timeless elegance</span></div></div>
+      <div class="mat-slab r" onclick="openMaterial('quartzite')"><img src="./assets/img/material4-800.jpg" data-avif="./assets/img/material4-800.avif" alt="Quartzite" width="800" height="534" loading="lazy" decoding="async"><div class="mat-slab-lbl">Quartzite <span>Natural stone</span></div></div>
+      <div class="mat-slab r2" onclick="openMaterial('porcelain')"><img src="./assets/img/material5-800.jpg" data-avif="./assets/img/material5-800.avif" alt="Porcelain" width="800" height="407" loading="lazy" decoding="async"><div class="mat-slab-lbl">Porcelain <span>Ultra modern</span></div></div>
     </div>
   </div>
 </section>
@@ -533,7 +534,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   <div class="sw">
     <div class="story-grid">
       <div class="story-imgs r" style="display:block">
-        <div class="story-img-main" style="width:100%; height:100%; aspect-ratio:4/5"><img src="./story1.jpg" alt="Owner and team" loading="lazy"></div>
+        <div class="story-img-main" style="width:100%; height:100%; aspect-ratio:4/5"><img src="./assets/img/story1-1200.jpg" data-avif="./assets/img/story1-1200.avif" alt="Owner and team" width="1200" height="900" loading="lazy" decoding="async"></div>
       </div>
       <div>
         <span class="s-tag r" style="color:var(--gold-lt)">Our Story</span>
@@ -572,16 +573,16 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 <section class="gallery" id="gallery">
   <div class="gallery-hd"><span class="s-tag r">Portfolio</span><h2 class="s-h r2">Our work speaks<br><em>for itself.</em></h2></div>
   <div class="gallery-scroll" id="galScroll">
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio1.jpg" alt="Kitchen project" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio2.jpg" alt="Kitchen renovation" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./vanity.jpg" alt="Bathroom vanity" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio3.jpg" alt="Stone detail" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio4.jpg" alt="Luxury kitchen" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_kitchen_grey.png" alt="Kitchen counter with grey cabinets and marble backsplash" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_island_view.png" alt="Kitchen island with scenic view" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_marble_backsplash.png" alt="Marble backsplash detailing" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_kitchen_green.png" alt="Kitchen counter with green cabinets" loading="lazy"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').src)"><img src="./portfolio_kitchen_peninsula.png" alt="Kitchen layout with grey cabinets and peninsula" loading="lazy"></div>
+    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio1-1000.jpg" data-avif="./assets/img/portfolio1-1000.avif" alt="Kitchen project" width="1000" height="764" loading="lazy" decoding="async"></div>
+    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio2-1000.jpg" data-avif="./assets/img/portfolio2-1000.avif" alt="Kitchen renovation" width="1000" height="995" loading="lazy" decoding="async"></div>
+    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/vanity-1200.jpg" data-avif="./assets/img/vanity-1200.avif" alt="Bathroom vanity" width="1200" height="800" loading="lazy" decoding="async"></div>
+    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio3-1000.jpg" data-avif="./assets/img/portfolio3-1000.avif" alt="Stone detail" width="1000" height="984" loading="lazy" decoding="async"></div>
+    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio4-1000.jpg" data-avif="./assets/img/portfolio4-1000.avif" alt="Luxury kitchen" width="1000" height="980" loading="lazy" decoding="async"></div>
+    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio_kitchen_grey-800.jpg" data-avif="./assets/img/portfolio_kitchen_grey-800.avif" alt="Kitchen counter with grey cabinets and marble backsplash" width="800" height="800" loading="lazy" decoding="async"></div>
+    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio_island_view-800.jpg" data-avif="./assets/img/portfolio_island_view-800.avif" alt="Kitchen island with scenic view" width="800" height="800" loading="lazy" decoding="async"></div>
+    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio_marble_backsplash-800.jpg" data-avif="./assets/img/portfolio_marble_backsplash-800.avif" alt="Marble backsplash detailing" width="800" height="800" loading="lazy" decoding="async"></div>
+    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio_kitchen_green-800.jpg" data-avif="./assets/img/portfolio_kitchen_green-800.avif" alt="Kitchen counter with green cabinets" width="800" height="800" loading="lazy" decoding="async"></div>
+    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio_kitchen_peninsula-800.jpg" data-avif="./assets/img/portfolio_kitchen_peninsula-800.avif" alt="Kitchen layout with grey cabinets and peninsula" width="800" height="800" loading="lazy" decoding="async"></div>
   </div>
 </section>
 
@@ -618,7 +619,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
         <p>Your words help neighbors find a family-owned countertop team they can trust. Mention your project, material, or the team member who helped you.</p>
       </div>
       <div class="review-ask-action">
-        <a class="review-btn" href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener"><span class="review-btn-mark">G</span>Write a Google Review</a>
+        <a class="review-btn" href="https://www.google.com/search?q=Stone+Bellisimo+LLC+618+23rd+Street+Union+City+NJ&amp;ludocid=14331752926500352385#lrd=0x89c25786c985b655:0xc6e49d5a90b7f181,3" target="_blank" rel="noopener"><span class="review-btn-mark">G</span>Write a Google Review</a>
       </div>
     </div>
   </div>
@@ -691,11 +692,11 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <div class="wz-q">Which material<br><em>interests you?</em></div>
       <div class="wz-hint">Not sure yet? Pick "Help me choose" — we'll guide you.</div>
       <div class="wz-opts wz-material-opts">
-        <div class="wz-opt" onclick="selectOpt(this,'material','Granite')"><div class="wz-opt-img"><img src="./material1.jpg" alt="Granite slab"></div><div class="wz-opt-label">Granite</div><div class="wz-opt-sub">Most durable</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'material','Quartz')"><div class="wz-opt-img"><img src="./material2.jpg" alt="Quartz slab"></div><div class="wz-opt-label">Quartz</div><div class="wz-opt-sub">20% off now</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'material','Marble')"><div class="wz-opt-img"><img src="./material3.jpg" alt="Marble slab"></div><div class="wz-opt-label">Marble</div><div class="wz-opt-sub">Timeless look</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'material','Quartzite')"><div class="wz-opt-img"><img src="./material4.jpg" alt="Quartzite slab"></div><div class="wz-opt-label">Quartzite</div><div class="wz-opt-sub">Natural stone</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'material','Porcelain')"><div class="wz-opt-img"><img src="./material5.png" alt="Porcelain slab"></div><div class="wz-opt-label">Porcelain</div><div class="wz-opt-sub">Ultra modern</div></div>
+        <div class="wz-opt" onclick="selectOpt(this,'material','Granite')"><div class="wz-opt-img"><img src="./assets/img/material1-800.jpg" data-avif="./assets/img/material1-800.avif" alt="Granite slab" width="800" height="533" loading="lazy" decoding="async"></div><div class="wz-opt-label">Granite</div><div class="wz-opt-sub">Most durable</div></div>
+        <div class="wz-opt" onclick="selectOpt(this,'material','Quartz')"><div class="wz-opt-img"><img src="./assets/img/material2-800.jpg" data-avif="./assets/img/material2-800.avif" alt="Quartz slab" width="800" height="533" loading="lazy" decoding="async"></div><div class="wz-opt-label">Quartz</div><div class="wz-opt-sub">20% off now</div></div>
+        <div class="wz-opt" onclick="selectOpt(this,'material','Marble')"><div class="wz-opt-img"><img src="./assets/img/material3-800.jpg" data-avif="./assets/img/material3-800.avif" alt="Marble slab" width="533" height="800" loading="lazy" decoding="async"></div><div class="wz-opt-label">Marble</div><div class="wz-opt-sub">Timeless look</div></div>
+        <div class="wz-opt" onclick="selectOpt(this,'material','Quartzite')"><div class="wz-opt-img"><img src="./assets/img/material4-800.jpg" data-avif="./assets/img/material4-800.avif" alt="Quartzite slab" width="800" height="534" loading="lazy" decoding="async"></div><div class="wz-opt-label">Quartzite</div><div class="wz-opt-sub">Natural stone</div></div>
+        <div class="wz-opt" onclick="selectOpt(this,'material','Porcelain')"><div class="wz-opt-img"><img src="./assets/img/material5-800.jpg" data-avif="./assets/img/material5-800.avif" alt="Porcelain slab" width="800" height="407" loading="lazy" decoding="async"></div><div class="wz-opt-label">Porcelain</div><div class="wz-opt-sub">Ultra modern</div></div>
         <div class="wz-opt" onclick="selectOpt(this,'material','Help me choose')"><div class="wz-opt-label">Help me choose</div><div class="wz-opt-sub">We'll advise</div></div>
       </div>
       <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(1)">← Back</button><button class="wz-next-btn" onclick="nextStep(3)" id="wz2next" disabled>Continue →</button></div>
@@ -804,7 +805,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
             <a href="tel:+12014437405" class="qc-btn"><div><div class="qc-label">Call Cristian (Sales)</div><div class="qc-sub">201.443.7405 · Quotes &amp; materials</div></div></a>
             <a href="sms:+12015531919" class="qc-btn"><div><div class="qc-label">Send a Text</div><div class="qc-sub">Quick questions? Text us anytime</div></div></a>
             <a href="mailto:cesaryunda@hotmail.com" class="qc-btn"><div><div class="qc-label">Send an Email</div><div class="qc-sub">cesaryunda@hotmail.com</div></div></a>
-            <a href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener" class="qc-btn"><div><div class="qc-label">Write a Google Review</div><div class="qc-sub">Share your experience in a minute</div></div></a>
+            <a href="https://www.google.com/search?q=Stone+Bellisimo+LLC+618+23rd+Street+Union+City+NJ&amp;ludocid=14331752926500352385#lrd=0x89c25786c985b655:0xc6e49d5a90b7f181,3" target="_blank" rel="noopener" class="qc-btn"><div><div class="qc-label">Write a Google Review</div><div class="qc-sub">Share your experience in a minute</div></div></a>
             <a href="https://maps.google.com/?q=618+23rd+Street,+Union+City,+NJ+07087" target="_blank" rel="noopener" class="qc-btn"><div><div class="qc-label">Visit Our Showroom</div><div class="qc-sub">618 23rd St, Union City NJ — open Mon–Fri</div></div></a>
           </div>
           <button onclick="openWizard()" class="qc-wizard-btn">Book a Free In-Home Estimate</button>
@@ -822,14 +823,14 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 <footer>
   <div class="foot-w">
     <div class="foot-top">
-      <a href="#" class="foot-logo" onclick="go('home')"><img src="./logo.png" alt="Stone Bellisimo LLC"></a>
+      <a href="#" class="foot-logo" onclick="go('home')"><img src="./assets/img/logo-280.png" alt="Stone Bellisimo LLC" width="93" height="36" loading="lazy" decoding="async"></a>
       <ul class="foot-nav">
         <li><a onclick="go('products')">Products</a></li>
         <li><a onclick="go('materials')">Materials</a></li>
         <li><a href="./about/">About</a></li>
         <li><a onclick="go('process')">Process</a></li>
         <li><a onclick="go('reviews')">Reviews</a></li>
-        <li><a href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener">Write Review</a></li>
+        <li><a href="https://www.google.com/search?q=Stone+Bellisimo+LLC+618+23rd+Street+Union+City+NJ&amp;ludocid=14331752926500352385#lrd=0x89c25786c985b655:0xc6e49d5a90b7f181,3" target="_blank" rel="noopener">Write Review</a></li>
         <li><a onclick="go('why')">Why Us</a></li>
         <li><a href="./contact-us/">Contact</a></li>
       </ul>
@@ -875,7 +876,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   <div class="chat-acts">
     <a class="chat-act" href="tel:+15512928353">Call Bella - 551.292.8353</a>
     <button class="chat-act" type="button" onclick="openWizard();toggleChat()">Book a Free Estimate</button>
-    <a class="chat-act" href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener">Write a Google Review</a>
+    <a class="chat-act" href="https://www.google.com/search?q=Stone+Bellisimo+LLC+618+23rd+Street+Union+City+NJ&amp;ludocid=14331752926500352385#lrd=0x89c25786c985b655:0xc6e49d5a90b7f181,3" target="_blank" rel="noopener">Write a Google Review</a>
     <a class="chat-act" href="tel:+12015531919">Call Us — 201.553.1919</a>
     <button class="chat-act" type="button" onclick="go('materials');toggleChat()">View Our Materials</button>
   </div>
@@ -893,11 +894,11 @@ function getContactEndpoint(){
   return CONTACT_API_ENDPOINT;
 }
 const matData = {
-  granite:{tag:'Natural Stone',title:'Granite',img:'./material1.jpg',desc:'Granite is one of the hardest natural stones on earth. Every slab is completely unique, with its own pattern of minerals and veining — no two kitchens will ever look the same.',pros:['Extremely scratch & heat resistant','Each slab is one-of-a-kind','Available in hundreds of colors','Very long-lasting — often 30+ years'],price:'$45 – $85 / sqft installed',note:'Exact price after free in-home measurement'},
-  quartz:{tag:'Engineered Stone',title:'Quartz',img:'./material2.jpg',desc:'Quartz countertops are engineered from natural quartz crystals and resin, creating a surface that is non-porous, consistent in color, and virtually maintenance-free. Currently 20% off at our showroom.',pros:['Non-porous — no sealing required','Very consistent, uniform look','Stain & bacteria resistant','Low maintenance, easy to clean'],price:'20% off — starting ~$50/sqft installed',note:'Stop by our Union City showroom to see current selection'},
-  marble:{tag:'Natural Stone',title:'Marble',img:'./material3.jpg',desc:'Marble has been the symbol of luxury and timeless design for centuries. Its natural veining creates a look that no engineered material can replicate — genuinely breathtaking in any kitchen or bathroom.',pros:['Unmatched classic elegance','Stays cool — great for baking','Adds significant home value','Beautiful natural veining'],price:'$60 – $120 / sqft installed',note:'Requires periodic sealing — we handle that for you'},
-  quartzite:{tag:'Natural Stone',title:'Quartzite',img:'./material4.jpg',desc:'Quartzite is a naturally occurring metamorphic rock that is harder than granite. It gives you the stunning look of marble with significantly better durability — the best of both worlds.',pros:['Harder than granite','Looks like marble but more durable','Heat & scratch resistant','Natural, unique patterns'],price:'$65 – $130 / sqft installed',note:'One of our most requested materials'},
-  porcelain:{tag:'Engineered',title:'Porcelain',img:'./material5.png',desc:'Large-format porcelain slabs are the modern choice for ultra-clean, contemporary spaces. Thin yet incredibly strong, they can be used on countertops, walls, and floors for a seamless look.',pros:['Ultra-thin, lightweight slabs','Completely non-porous','UV resistant — great for outdoors','Very consistent, modern aesthetic'],price:'$55 – $100 / sqft installed',note:'Available in large format — fewer seams'}
+  granite:{tag:'Natural Stone',title:'Granite',img:'./assets/img/material1-800.jpg',avif:'./assets/img/material1-800.avif',desc:'Granite is one of the hardest natural stones on earth. Every slab is completely unique, with its own pattern of minerals and veining — no two kitchens will ever look the same.',pros:['Extremely scratch & heat resistant','Each slab is one-of-a-kind','Available in hundreds of colors','Very long-lasting — often 30+ years'],price:'$45 – $85 / sqft installed',note:'Exact price after free in-home measurement'},
+  quartz:{tag:'Engineered Stone',title:'Quartz',img:'./assets/img/material2-800.jpg',avif:'./assets/img/material2-800.avif',desc:'Quartz countertops are engineered from natural quartz crystals and resin, creating a surface that is non-porous, consistent in color, and virtually maintenance-free. Currently 20% off at our showroom.',pros:['Non-porous — no sealing required','Very consistent, uniform look','Stain & bacteria resistant','Low maintenance, easy to clean'],price:'20% off — starting ~$50/sqft installed',note:'Stop by our Union City showroom to see current selection'},
+  marble:{tag:'Natural Stone',title:'Marble',img:'./assets/img/material3-800.jpg',avif:'./assets/img/material3-800.avif',desc:'Marble has been the symbol of luxury and timeless design for centuries. Its natural veining creates a look that no engineered material can replicate — genuinely breathtaking in any kitchen or bathroom.',pros:['Unmatched classic elegance','Stays cool — great for baking','Adds significant home value','Beautiful natural veining'],price:'$60 – $120 / sqft installed',note:'Requires periodic sealing — we handle that for you'},
+  quartzite:{tag:'Natural Stone',title:'Quartzite',img:'./assets/img/material4-800.jpg',avif:'./assets/img/material4-800.avif',desc:'Quartzite is a naturally occurring metamorphic rock that is harder than granite. It gives you the stunning look of marble with significantly better durability — the best of both worlds.',pros:['Harder than granite','Looks like marble but more durable','Heat & scratch resistant','Natural, unique patterns'],price:'$65 – $130 / sqft installed',note:'One of our most requested materials'},
+  porcelain:{tag:'Engineered',title:'Porcelain',img:'./assets/img/material5-800.jpg',avif:'./assets/img/material5-800.avif',desc:'Large-format porcelain slabs are the modern choice for ultra-clean, contemporary spaces. Thin yet incredibly strong, they can be used on countertops, walls, and floors for a seamless look.',pros:['Ultra-thin, lightweight slabs','Completely non-porous','UV resistant — great for outdoors','Very consistent, modern aesthetic'],price:'$55 – $100 / sqft installed',note:'Available in large format — fewer seams'}
 };
 
 /* ── NAV / SCROLL ── */
@@ -933,8 +934,9 @@ draggable('matScroll');draggable('galScroll');
 /* ── MATERIAL MODAL ── */
 function openMaterial(key){
   const d=matData[key];if(!d)return;
-  document.getElementById('modalImg').src=d.img;
-  document.getElementById('modalImg').alt=d.title;
+  const img=document.getElementById('modalImg');
+  img.src=window.__avifSupported&&d.avif?d.avif:d.img;
+  img.alt=d.title;
   document.getElementById('modalTag').textContent=d.tag;
   document.getElementById('modalTitle').textContent=d.title;
   document.getElementById('modalDesc').textContent=d.desc;
@@ -1104,5 +1106,6 @@ function closeChatIfOpen(){setChatOpen(false)}
 if(chatBubble)chatBubble.addEventListener('click',toggleChat);
 if(chatClose)chatClose.addEventListener('click',toggleChat);
 </script>
+<script src="./performance.js" defer></script>
 </body>
 </html>
