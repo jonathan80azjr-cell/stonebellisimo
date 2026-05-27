@@ -1,12 +1,31 @@
 # Fixing the Contact Form 405 on Static Hosting
 
-The site currently posts the estimate wizard to `/api/contact`. That route exists in `server.js`, but `npm run deploy` publishes only `public/` to GitHub Pages. GitHub Pages cannot run `server.js` or read `.env`, so production treats `/api/contact` like a static URL and returns a 405/404 instead of forwarding the lead to n8n.
+The site posts the estimate wizard to `/api/contact`. That route exists in `server.js` for local development and in `cloudflare-worker.mjs` for production. GitHub Pages cannot run `server.js` or read `.env`, so production should be deployed with Wrangler instead of relying on the GitHub Pages-only deploy.
 
-## Best Option If the Domain Uses Cloudflare
+## Current Production Setup
 
-Keep GitHub Pages for the static site and use a Cloudflare Worker only for `/api/*`.
+Cloudflare now serves both the static site files and the `/api/*` routes from the Worker deployment. This avoids the production image-loading issue caused by requests falling through to the GitHub Pages origin over a bad IPv6 DNS path.
 
-Do not use Cloudflare's "Upload and deploy" static-file screen for `cloudflare-worker.mjs`. A Worker JavaScript file has to be deployed with Wrangler.
+The `wrangler.jsonc` file deploys `public/` as Worker assets and routes the whole domain through the Worker:
+
+```text
+stonebellisimollc.com/*
+www.stonebellisimollc.com/*
+```
+
+Only `/api/*` runs the Worker code first. Regular pages, scripts, and images are served from the uploaded static assets.
+
+Use this command after changing files in `public/` or `cloudflare-worker.mjs`:
+
+```sh
+npm run deploy:worker
+```
+
+The older GitHub Pages deploy can still exist as a backup, but production traffic should not depend on GitHub Pages for images.
+
+## Contact Form Setup
+
+Do not use Cloudflare's "Upload and deploy" static-file screen for `cloudflare-worker.mjs`. A Worker JavaScript file and its assets have to be deployed with Wrangler.
 
 1. From this project folder, log in to Cloudflare:
 
@@ -22,18 +41,13 @@ Do not use Cloudflare's "Upload and deploy" static-file screen for `cloudflare-w
 
    Paste the production n8n webhook URL when Wrangler asks for the value.
 
-3. Deploy the Worker:
+3. Deploy the Worker and static assets:
 
    ```sh
    npm run deploy:worker
    ```
 
-4. Wrangler will deploy `cloudflare-worker.mjs` using `wrangler.jsonc`. The route is already configured as:
-
-   ```text
-   stonebellisimollc.com/api/*
-   www.stonebellisimollc.com/api/*
-   ```
+4. Wrangler will deploy `cloudflare-worker.mjs` and the files in `public/` using `wrangler.jsonc`. The route is already configured for the whole domain, while `/api/*` runs the Worker code first.
 
 5. Make sure the `stonebellisimollc.com` DNS record is proxied through Cloudflare, shown as the orange cloud.
 6. Confirm the route is hitting the Worker:

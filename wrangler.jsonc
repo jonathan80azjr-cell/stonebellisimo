@@ -3,13 +3,21 @@
   "name": "stonebellisimo-forms",
   "main": "cloudflare-worker.mjs",
   "compatibility_date": "2026-05-26",
+  "assets": {
+    "directory": "./public",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": [
+      "/api/*"
+    ]
+  },
   "routes": [
     {
-      "pattern": "stonebellisimollc.com/api/*",
+      "pattern": "stonebellisimollc.com/*",
       "zone_name": "stonebellisimollc.com"
     },
     {
-      "pattern": "www.stonebellisimollc.com/api/*",
+      "pattern": "www.stonebellisimollc.com/*",
       "zone_name": "stonebellisimollc.com"
     }
   ]
