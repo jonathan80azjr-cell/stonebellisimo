@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self'; frame-src https://www.google.com https://maps.google.com; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com; frame-src https://www.google.com https://maps.google.com; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Stone Bellisimo LLC — Countertops, Union City NJ</title>
 <meta name="description" content="Family-owned stone countertop fabrication and installation in Union City, NJ. Granite, quartz, marble and more. 25+ years of experience.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preload" as="image" href="./assets/img/hero-1920.avif" type="image/avif" fetchpriority="high">
+<link rel="icon" href="./assets/img/logo-280.png" type="image/png">
+<link rel="preload" as="image" href="./assets/img/hero-1920.jpg" type="image/jpeg" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -48,15 +49,17 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 
 /* HERO */
 .hero{position:relative;height:100vh;min-height:680px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:url('./assets/img/hero-1920.jpg') center/cover no-repeat;background-image:image-set(url('./assets/img/hero-1920.avif') type('image/avif'),url('./assets/img/hero-1920.jpg') type('image/jpeg'))}
-.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,7,5,.52) 0%,rgba(8,7,5,.38) 55%,rgba(8,7,5,.75) 100%)}
+.hero-bg{position:absolute;inset:0;overflow:hidden;background:#2b2924}
+.hero-bg picture,.hero-bg img{display:block;width:100%;height:100%}
+.hero-bg img{object-fit:cover;object-position:center}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,7,5,.46) 0%,rgba(8,7,5,.32) 42%,rgba(8,7,5,.62) 100%)}
 .hero-content{position:relative;z-index:2;padding:0 24px;max-width:940px}
-.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(156,127,82,.22);border:1px solid rgba(200,168,122,.35);border-radius:100px;padding:6px 16px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:28px;animation:fadeUp .9s .1s both}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(18,16,13,.72);border:1px solid rgba(200,168,122,.48);border-radius:100px;padding:7px 17px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#fff3d6;margin-bottom:28px;animation:fadeUp .9s .1s both;box-shadow:0 10px 30px rgba(0,0,0,.22);text-shadow:0 1px 2px rgba(0,0,0,.55)}
 .pill-dot{width:6px;height:6px;border-radius:50%;background:var(--gold-lt);animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(54px,9.5vw,108px);font-weight:300;color:#fff;line-height:1;letter-spacing:-.025em;animation:fadeUp .9s .25s both}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(54px,9.5vw,108px);font-weight:300;color:#fff;line-height:1;letter-spacing:-.025em;animation:fadeUp .9s .25s both;text-shadow:0 3px 24px rgba(0,0,0,.58),0 1px 2px rgba(0,0,0,.45)}
 .hero h1 em{font-style:italic;color:var(--gold-lt)}
-.hero-sub{font-size:clamp(16px,2vw,19px);font-weight:300;color:rgba(255,255,255,.62);margin-top:22px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.65;animation:fadeUp .9s .4s both}
+.hero-sub{font-size:clamp(16px,2vw,19px);font-weight:300;color:rgba(255,255,255,.86);margin-top:22px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.65;animation:fadeUp .9s .4s both;text-shadow:0 2px 16px rgba(0,0,0,.72),0 1px 2px rgba(0,0,0,.55)}
 .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:44px;animation:fadeUp .9s .55s both}
 .btn-gold{background:linear-gradient(135deg, var(--gold), #9e8151);color:#fff;font-family:'Inter',sans-serif;font-size:14.5px;font-weight:500;padding:15px 36px;border-radius:100px;text-decoration:none;display:inline-block;transition:all .35s cubic-bezier(0.25, 0.46, 0.45, 0.94);cursor:pointer;border:none;box-shadow:var(--shadow-soft)}
 .btn-gold:hover{background:linear-gradient(135deg, var(--gold-lt), var(--gold));transform:translateY(-2px) scale(1.02);box-shadow:var(--shadow-intense)}
@@ -67,10 +70,10 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 .scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,rgba(255,255,255,.38),transparent)}
 
 /* TICKER */
-.ticker{background:var(--gold);padding:11px 0;overflow:hidden;user-select:none}
+.ticker{background:#15120e;padding:11px 0;overflow:hidden;user-select:none;border-top:1px solid rgba(200,168,122,.22);border-bottom:1px solid rgba(200,168,122,.22)}
 .ticker-track{display:flex;white-space:nowrap;animation:ticker 32s linear infinite}
 .ticker-track:hover{animation-play-state:paused}
-.ticker-track span{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.92);padding:0 44px}
+.ticker-track span{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#fff1cf;padding:0 44px;text-shadow:0 1px 2px rgba(0,0,0,.55)}
 .ticker-track span::before{content:'◆';margin-right:44px;font-size:7px;opacity:.55;vertical-align:middle}
 @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
@@ -222,7 +225,7 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 
 /* CTA BAND */
 .cta-full{position:relative;padding:130px 28px;text-align:center;overflow:hidden}
-.cta-bg{position:absolute;inset:0;background:url('./assets/img/gallery-1600.jpg') center/cover no-repeat;background-image:image-set(url('./assets/img/gallery-1600.avif') type('image/avif'),url('./assets/img/gallery-1600.jpg') type('image/jpeg'))}
+.cta-bg{position:absolute;inset:0;background:url('./assets/img/gallery-1600.jpg') center/cover no-repeat}
 .cta-bg::after{content:'';position:absolute;inset:0;background:rgba(8,7,5,.75)}
 .cta-content{position:relative;z-index:2}
 .cta-content h2{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,6.5vw,76px);font-weight:300;color:#fff;letter-spacing:-.025em;line-height:1.05;margin-bottom:18px}
@@ -450,7 +453,9 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 
 <!-- HERO -->
 <section class="hero" id="home">
-  <div class="hero-bg"></div>
+  <div class="hero-bg" aria-hidden="true">
+    <img src="./assets/img/hero-1920.jpg" alt="" width="1920" height="1353" fetchpriority="high" decoding="async">
+  </div>
   <div class="hero-content">
     <div class="hero-pill"><span class="pill-dot"></span>20% off selected quartz — Union City showroom</div>
     <h1>Stone crafted for<br><em>timeless homes.</em></h1>

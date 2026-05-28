@@ -55,6 +55,10 @@ if (allowedOrigins.length > 0) {
 app.use(express.json({ limit: '20kb' }));
 app.use(express.urlencoded({ extended: false, limit: '20kb' }));
 
+app.get('/favicon.ico', (req, res) => {
+  res.redirect(302, '/assets/img/logo-280.png');
+});
+
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders(res, filePath) {

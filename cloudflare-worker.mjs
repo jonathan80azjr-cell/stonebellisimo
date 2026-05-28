@@ -154,6 +154,10 @@ export default {
       return forwardContact(request, env);
     }
 
+    if (url.pathname === '/favicon.ico') {
+      return Response.redirect(new URL('/assets/img/logo-280.png', url), 302);
+    }
+
     if (url.pathname === '/api/performance') {
       if (request.method === 'OPTIONS') return new Response(null, { status: 204 });
       if (request.method !== 'POST') return methodNotAllowed(['POST', 'OPTIONS']);
