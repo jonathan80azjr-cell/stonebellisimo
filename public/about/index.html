@@ -5,8 +5,64 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com; frame-src https://www.google.com https://maps.google.com; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<title>About Stone Bellisimo LLC - Union City, NJ</title>
-<meta name="description" content="Meet Cesar Yunda and the family behind Stone Bellisimo LLC, a Union City countertop fabrication and installation company serving New Jersey homes.">
+<title>About Stone Bellisimo LLC - Union City NJ Countertop Experts</title>
+<meta name="description" content="Meet Cesar Yunda and the family behind Stone Bellisimo LLC. Fabricating & installing premium custom quartz, granite, and marble countertops in Union City & NJ since 2013.">
+<link rel="canonical" href="https://stonebellisimollc.com/about/">
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stonebellisimollc.com/about/">
+<meta property="og:title" content="About Stone Bellisimo LLC - Union City NJ Countertop Experts">
+<meta property="og:description" content="Meet Cesar Yunda and the family behind Stone Bellisimo LLC. Fabricating & installing premium custom quartz, granite, and marble countertops in Union City & NJ since 2013.">
+<meta property="og:image" content="https://stonebellisimollc.com/assets/img/logo-280.png">
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://stonebellisimollc.com/about/">
+<meta property="twitter:title" content="About Stone Bellisimo LLC - Union City NJ Countertop Experts">
+<meta property="twitter:description" content="Meet Cesar Yunda and the family behind Stone Bellisimo LLC. Fabricating & installing premium custom quartz, granite, and marble countertops in Union City & NJ since 2013.">
+<meta property="twitter:image" content="https://stonebellisimollc.com/assets/img/logo-280.png">
+<!-- Schema JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "HomeAndConstructionBusiness",
+      "@id": "https://stonebellisimollc.com/#business",
+      "name": "Stone Bellisimo LLC",
+      "image": "https://stonebellisimollc.com/assets/img/logo-280.png",
+      "telephone": "+1-201-553-1919",
+      "email": "cesaryunda@hotmail.com",
+      "url": "https://stonebellisimollc.com/",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "618 23rd Street",
+        "addressLocality": "Union City",
+        "addressRegion": "NJ",
+        "postalCode": "07087",
+        "addressCountry": "US"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://stonebellisimollc.com/about/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://stonebellisimollc.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "About",
+          "item": "https://stonebellisimollc.com/about/"
+        }
+      ]
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="icon" href="../assets/img/logo-280.png" type="image/png">
 <link rel="preload" as="image" href="../assets/img/story1-1200.jpg" type="image/jpeg" fetchpriority="high">
@@ -37,6 +93,101 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 @media(max-width:1024px){.owner-grid,.family-grid{grid-template-columns:1fr;gap:52px}.owner-img{max-width:560px}.family-imgs{max-width:560px}.values{grid-template-columns:1fr 1fr}.owner-stats{grid-template-columns:1fr 1fr}}
 @media(max-width:860px){.nl{display:none}.n-ham{display:flex}.values{grid-template-columns:1fr}.page-hero{min-height:560px}}
 @media(max-width:600px){.s{padding:80px 20px}.page-hero{padding:128px 20px 72px}.family-imgs{grid-template-columns:1fr}.family-img:first-child{grid-row:auto;aspect-ratio:3/2}.family-img:nth-child(n+2){display:none}.owner-stats{grid-template-columns:1fr 1fr}.foot-top,.foot-bottom{flex-direction:column;align-items:flex-start}}
+
+/* Accessibility Focus States */
+a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+/* Quick Facts Styling */
+.facts-grid-container {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  margin-top: 64px;
+  background: var(--cream);
+  border: 1px solid rgba(200, 168, 122, 0.25);
+  border-radius: 24px;
+  padding: 48px;
+  box-shadow: var(--shadow-soft);
+  text-align: left;
+}
+.facts-card h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 400;
+  margin-bottom: 24px;
+  color: var(--ink);
+  border-bottom: 2px solid var(--gold-pale);
+  padding-bottom: 12px;
+}
+.facts-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 32px;
+}
+.facts-list li {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.facts-list li strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 4px;
+  letter-spacing: 0.08em;
+}
+.hours-card {
+  background: var(--gold-pale);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.hours-card h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.hours-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  color: var(--ink);
+}
+.hours-table td {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.hours-table tr:last-child td {
+  border-bottom: none;
+}
+.hours-table td.day {
+  font-weight: 500;
+}
+.hours-table td.time {
+  text-align: right;
+  color: var(--muted);
+}
+@media(max-width: 860px) {
+  .facts-grid-container {
+    grid-template-columns: 1fr;
+    padding: 32px;
+    gap: 32px;
+  }
+  .facts-list {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
 </style>
 </head>
 <body>
@@ -51,7 +202,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 </div>
 <nav id="nav">
   <div class="nav-w">
-    <a href="../" class="n-logo"><img src="../assets/img/logo-280.png" alt="Stone Bellisimo" width="140" height="54" decoding="async"></a>
+    <a href="../" class="n-logo"><img src="../assets/img/logo-280.png" alt="Stone Bellisimo LLC - Custom Countertops logo" width="140" height="54" decoding="async"></a>
     <ul class="nl">
       <li><a href="../#products">Products</a></li>
       <li><a href="../#materials">Materials</a></li>
@@ -76,7 +227,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 
 <section class="s owner">
   <div class="sw owner-grid">
-    <div class="owner-img r"><img src="../assets/img/story1-1200.jpg" data-avif="../assets/img/story1-1200.avif" alt="Cesar Yunda, owner of Stone Bellisimo LLC" width="1200" height="900" loading="lazy" decoding="async"></div>
+    <div class="owner-img r"><img src="../assets/img/story1-1200.jpg" data-avif="../assets/img/story1-1200.avif" alt="Cesar Yunda, founder of Stone Bellisimo LLC, fabricating custom stone countertops in Union City, NJ" width="1200" height="900" loading="lazy" decoding="async"></div>
     <div>
       <div class="owner-kicker r">Owner Highlight</div>
       <h2 class="owner-name r2">Meet Cesar<br><em>Yunda.</em></h2>
@@ -99,18 +250,73 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <span class="s-tag r">Our Team</span>
       <h2 class="s-h r2">A tight-knit shop with<br><em>hands on every detail.</em></h2>
       <p class="s-p r3" style="margin-top:22px">Cesar works alongside his son Cristian, his daughter-in-law, and a trusted family team. From your first conversation to the final polish, the people guiding the project are the people responsible for getting it right.</p>
-      <p class="s-p r3" style="margin-top:16px">That is why homeowners across Union City, Hoboken, Jersey City, and nearby NJ communities come back for kitchens, vanities, fireplaces, and custom stone work.</p>
+      <p class="s-p r3" style="margin-top:16px">That is why homeowners across Union City, Hoboken, Jersey City, North Bergen, Weehawken, West New York, Edgewater, and nearby NJ communities come back for kitchens, vanities, fireplaces, and custom stone work.</p>
     </div>
     <div class="family-imgs r2">
-      <div class="family-img"><img src="../assets/img/story2-1200.jpg" data-avif="../assets/img/story2-1200.avif" alt="Stone Bellisimo team at work" width="989" height="1200" loading="lazy" decoding="async"></div>
-      <div class="family-img"><img src="../assets/img/kitchen-1200.jpg" data-avif="../assets/img/kitchen-1200.avif" alt="Installed kitchen countertop" width="957" height="1200" loading="lazy" decoding="async"></div>
-      <div class="family-img"><img src="../assets/img/vanity-1200.jpg" data-avif="../assets/img/vanity-1200.avif" alt="Bathroom vanity countertop" width="1200" height="800" loading="lazy" decoding="async"></div>
+      <div class="family-img"><img src="../assets/img/story2-1200.jpg" data-avif="../assets/img/story2-1200.avif" alt="Cristian Yunda and the Stone Bellisimo team finishing a quartz countertop slab in their NJ warehouse" width="989" height="1200" loading="lazy" decoding="async"></div>
+      <div class="family-img"><img src="../assets/img/kitchen-1200.jpg" data-avif="../assets/img/kitchen-1200.avif" alt="Luxury quartz kitchen island countertop with waterfall edge installed in a Hoboken home" width="957" height="1200" loading="lazy" decoding="async"></div>
+      <div class="family-img"><img src="../assets/img/vanity-1200.jpg" data-avif="../assets/img/vanity-1200.avif" alt="Premium granite double-vanity bathroom countertop fabricated and installed in Jersey City" width="1200" height="800" loading="lazy" decoding="async"></div>
     </div>
   </div>
   <div class="sw values">
     <div class="value r"><h3>Personal Guidance</h3><p>We help you compare stones, colors, edges, and timing so the final choice fits your home and budget.</p></div>
     <div class="value r2"><h3>Precise Fabrication</h3><p>Every slab is measured, cut, and finished with close attention to fit, durability, and everyday use.</p></div>
     <div class="value r3"><h3>Clean Installation</h3><p>Our family team handles installation carefully, with respect for your schedule and your space.</p></div>
+  </div>
+
+  <!-- QUICK FACTS PANEL -->
+  <div class="sw facts-grid-container r2">
+    <div class="facts-card">
+      <h3>Quick Facts</h3>
+      <ul class="facts-list">
+        <li>
+          <strong>Company Name</strong>
+          Stone Bellisimo LLC
+        </li>
+        <li>
+          <strong>Master Craftsman</strong>
+          Cesar Yunda (Founder)
+        </li>
+        <li>
+          <strong>Company Founded</strong>
+          2013 (Cesar has 25+ years experience)
+        </li>
+        <li>
+          <strong>Showroom & Shop</strong>
+          618 23rd St, Union City, NJ 07087
+        </li>
+        <li>
+          <strong>Primary Service Areas</strong>
+          Union City, Hoboken, Jersey City, North Bergen, Weehawken, West New York, Edgewater, NJ
+        </li>
+        <li>
+          <strong>Core Specialities</strong>
+          Kitchen Countertops, Bathroom Vanities, Fireplace Surrounds, Custom Stone Work
+        </li>
+        <li>
+          <strong>Specialty Materials</strong>
+          Quartz, Granite, Marble, Quartzite, Porcelain
+        </li>
+        <li>
+          <strong>NJ License & Insurance</strong>
+          Fully Licensed & Insured
+        </li>
+      </ul>
+    </div>
+    <div class="hours-card">
+      <div>
+        <h4>Showroom Hours</h4>
+        <table class="hours-table">
+          <tr><td class="day">Mon – Fri</td><td class="time">8:00 AM – 5:00 PM</td></tr>
+          <tr><td class="day">Saturday</td><td class="time">By Appointment</td></tr>
+          <tr><td class="day">Sunday</td><td class="time">Closed</td></tr>
+        </table>
+      </div>
+      <div style="margin-top:24px; font-size:13px; color:var(--muted); line-height:1.6">
+        <p><strong>Need an estimate?</strong> We offer free in-home consultations in Hudson & Bergen Counties.</p>
+        <p style="margin-top:8px"><strong>Call Us:</strong> <a href="tel:+12015531919" style="color:var(--gold); font-weight:600; text-decoration:none">201.553.1919</a></p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -126,7 +332,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 <footer>
   <div class="foot-w">
     <div class="foot-top">
-      <a href="../" class="foot-logo"><img src="../assets/img/logo-280.png" alt="Stone Bellisimo LLC" width="93" height="36" loading="lazy" decoding="async"></a>
+      <a href="../" class="foot-logo"><img src="../assets/img/logo-280.png" alt="Stone Bellisimo LLC - Custom Countertops logo" width="93" height="36" loading="lazy" decoding="async"></a>
       <ul class="foot-nav">
         <li><a href="../#products">Products</a></li>
         <li><a href="../#materials">Materials</a></li>

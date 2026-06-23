@@ -5,8 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com; frame-src https://www.google.com https://maps.google.com; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<title>Stone Bellisimo LLC — Countertops, Union City NJ</title>
-<meta name="description" content="Family-owned stone countertop fabrication and installation in Union City, NJ. Granite, quartz, marble and more. 25+ years of experience.">
+<title>Quartz & Granite Countertops Union City NJ | Stone Bellisimo LLC</title>
+<meta name="description" content="Family-owned countertop fabrication and installation in Union City, NJ. Premium quartz, granite, marble, quartzite, and porcelain countertops. Free estimates!">
+<link rel="canonical" href="https://stonebellisimollc.com/">
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stonebellisimollc.com/">
+<meta property="og:title" content="Quartz & Granite Countertops Union City NJ | Stone Bellisimo LLC">
+<meta property="og:description" content="Family-owned countertop fabrication and installation in Union City, NJ. Premium quartz, granite, marble, quartzite, and porcelain countertops. Free estimates!">
+<meta property="og:image" content="https://stonebellisimollc.com/assets/img/logo-280.png">
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://stonebellisimollc.com/">
+<meta property="twitter:title" content="Quartz & Granite Countertops Union City NJ | Stone Bellisimo LLC">
+<meta property="twitter:description" content="Family-owned countertop fabrication and installation in Union City, NJ. Premium quartz, granite, marble, quartzite, and porcelain countertops. Free estimates!">
+<meta property="twitter:image" content="https://stonebellisimollc.com/assets/img/logo-280.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="icon" href="./assets/img/logo-280.png" type="image/png">
 <link rel="preload" as="image" href="./assets/img/hero-1920.jpg" type="image/jpeg" fetchpriority="high">
@@ -383,10 +396,281 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 .r3.in{opacity:1;transform:none}
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 
+/* FAQ ACCORDION */
+.faq-section { background: var(--sand); padding: 120px 28px; }
+.faq-grid { max-width: 800px; margin: 44px auto 0; display: flex; flex-direction: column; gap: 16px; }
+.faq-item { background: var(--cream); border-radius: 16px; border: 1px solid rgba(0,0,0,.05); overflow: hidden; transition: all .25s; }
+.faq-item:hover { border-color: var(--gold-lt); }
+.faq-trigger { width: 100%; text-align: left; background: none; border: none; padding: 22px 28px; font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--ink); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; outline: none; }
+.faq-trigger:focus-visible { outline: 2px solid var(--gold); }
+.faq-icon { font-size: 20px; color: var(--gold); transition: transform .3s; }
+.faq-trigger[aria-expanded="true"] .faq-icon { transform: rotate(45deg); }
+.faq-answer { padding: 0 28px 22px; font-size: 14.5px; font-weight: 300; color: var(--muted); line-height: 1.75; }
+
+/* WIZARD EXTRA STYLES */
+.wz-step-tag { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--gold-lt); margin-bottom: 12px; }
+.wz-opt:focus-visible { border-color: var(--gold); outline: 2px solid var(--gold); background: rgba(156,127,82,.15); }
+.wz-error-msg { color: #e05a5a; font-size: 12px; margin-top: 6px; display: none; }
+.wz-error-msg.show { display: block; }
+
+/* FAILURE STATE */
+#wz-failure { display: none; text-align: center; padding: 40px 0; }
+#wz-failure.show { display: block; animation: fadeUp .5s ease; }
+.wz-failure-icon { font-size: 52px; margin-bottom: 20px; color: #e05a5a; }
+#wz-failure h3 { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: #fff; margin-bottom: 12px; }
+#wz-failure p { font-size: 15px; color: rgba(255,255,255,.5); font-weight: 300; line-height: 1.7; max-width: 480px; margin: 0 auto 28px; }
+.wz-saved-data { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 18px; text-align: left; margin-bottom: 28px; }
+.wz-saved-data label { display: block; font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 8px; }
+.wz-saved-data textarea { width: 100%; height: 160px; background: rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.1); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #fff; resize: none; outline: none; }
+.wz-saved-data textarea:focus { border-color: var(--gold); }
+
+/* SERVICE AREAS */
+.service-areas { background: rgba(156,127,82,.06); border: 1px solid rgba(156,127,82,.15); border-radius: 18px; padding: 24px; margin-top: 24px; text-align: left; }
+.service-areas-title { font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #fff; margin-bottom: 8px; }
+.service-areas-list { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.6; font-weight: 300; }
+
 /* RESPONSIVE */
 @media(max-width:1024px){.story-grid{grid-template-columns:1fr;gap:52px}.mat-modal{grid-template-columns:1fr}.story-imgs{max-width:520px}.contact-grid{grid-template-columns:1fr;gap:36px;max-width:720px}.map-embed iframe{min-height:360px}}
 @media(max-width:860px){.prod-grid{grid-template-columns:1fr 1fr}.prod-card-lg{grid-column:span 2}.perks-grid{grid-template-columns:1fr}.perk:first-child{grid-column:span 1}.process-steps{grid-template-columns:1fr 1fr;gap:36px}.process-steps::before{display:none}.trust-w{grid-template-columns:1fr 1fr}.nl{display:none}.n-ham{display:flex}.reviews-grid{grid-template-columns:1fr}.review-ask{grid-template-columns:1fr;padding:30px 26px}.review-ask-action{justify-self:start}.insta-grid{grid-template-columns:repeat(3,1fr)}.wz-opts{grid-template-columns:repeat(2,1fr)}.wz-row{grid-template-columns:1fr}}
 @media(max-width:600px){.s{padding:80px 20px}.prod-grid{grid-template-columns:1fr}.prod-card-lg{grid-column:span 1;aspect-ratio:4/3}.story-imgs{grid-template-columns:1fr}.story-img-main{aspect-ratio:3/2;grid-row:auto}.story-img-sm{display:none}.gallery{padding:80px 0}.g-img{width:300px;height:220px}.foot-top,.foot-bottom{flex-direction:column;align-items:flex-start}#chat-panel{width:calc(100vw - 56px);right:28px}.insta-grid{grid-template-columns:repeat(2,1fr)}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "HomeAndConstructionBusiness",
+      "@id": "https://stonebellisimollc.com/#business",
+      "name": "Stone Bellisimo LLC",
+      "image": "https://stonebellisimollc.com/assets/img/logo-280.png",
+      "telephone": "+1-201-553-1919",
+      "email": "cesaryunda@hotmail.com",
+      "url": "https://stonebellisimollc.com/",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "618 23rd Street",
+        "addressLocality": "Union City",
+        "addressRegion": "NJ",
+        "postalCode": "07087",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 40.7719,
+        "longitude": -74.0258
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday"
+        ],
+        "opens": "08:00",
+        "closes": "17:00"
+      },
+      "sameAs": [
+        "https://www.instagram.com/stonebellisimollc/",
+        "https://www.facebook.com/StoneBellisimoLLC",
+        "https://x.com/Stonebellisimo",
+        "https://www.pinterest.com/stonebellisimollc/",
+        "https://www.houzz.com/pro/webuser-799389841/stone-bellisimo-llc"
+      ],
+      "priceRange": "$$",
+      "areaServed": [
+        {
+          "@type": "AdministrativeArea",
+          "name": "Union City"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Hoboken"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Jersey City"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "North Bergen"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Weehawken"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "West New York"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Edgewater"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Hudson County"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Bergen County"
+        }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Stone Fabrication & Installation Catalog",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Kitchen Countertop Fabrication & Installation"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Bathroom Vanity Fabrication & Installation"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Fireplace Surround Fabrication"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Commercial Stone Fabrication"
+            }
+          }
+        ]
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Maria G."
+          },
+          "reviewBody": "Cesar and his team did an incredible job on our kitchen. From the moment they came to measure to the final installation, everything was professional and seamless. The granite looks absolutely stunning — better than I imagined.",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5"
+          }
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Roberto S."
+          },
+          "reviewBody": "We used Stone Bellisimo for our bathroom vanity and couldn't be happier. Fair pricing, no surprises, and the quality is top-notch. Cristian was very helpful walking us through the material options. Highly recommend!",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5"
+          }
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Jennifer L."
+          },
+          "reviewBody": "Family-owned and it really shows — they treat every project like it's their own home. We had quartz installed in the kitchen and got the free sink too. Can't beat the value. We'll be using them again for the master bath.",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://stonebellisimollc.com/#website",
+      "url": "https://stonebellisimollc.com/",
+      "name": "Stone Bellisimo LLC",
+      "publisher": {
+        "@id": "https://stonebellisimollc.com/#business"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://stonebellisimollc.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do you offer free estimates?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, we offer 100% free in-home estimates and templating. Cristian or Cesar will visit your space, take precise measurements, and provide a full written quote with zero obligation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What countertop materials do you install?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We fabricate and install Quartz, Granite, Marble, Quartzite, and Porcelain. You can see our current collection at our Union City showroom or ask our 24/7 AI agent Bella for material availability."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you serve Union City, Hoboken, Jersey City, and nearby NJ towns?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Our primary showroom is in Union City, NJ, and we regularly serve Hudson County, Bergen County, and surrounding NJ areas including Hoboken, Jersey City, North Bergen, Weehawken, West New York, and Edgewater."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the estimate process work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It's simple: first, select your project details in our Free Estimate Wizard or call us. Next, we will schedule a quick, free in-home measurement visit. Once measured, we provide an exact quote, fabricate the stone in our local warehouse, and install it in your home."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can customers visit the showroom?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, customers are welcome to visit our showroom located at 618 23rd Street, Union City, NJ 07087. We recommend calling ahead (201.553.1919) to ensure Cristian or Cesar is available to guide you."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you install kitchen countertops and bathroom vanities?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, we specialize in kitchen countertops, bathroom vanity countertops, fireplace surrounds, custom stone work, and commercial stone fabrication."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What promotions are currently offered?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We are currently offering 20% off selected quartz slabs at our showroom, a free stainless steel sink on kitchen projects of 40+ square feet, and 3 standard edge profiles (Straight, Round, or Bevel) at no extra charge."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How fast can someone get started?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Very quickly! Once you request a free quote, Cesar or Cristian will call/text you within one business day to coordinate the in-home measurement. Fabrication and installation are handled entirely in-house, ensuring a fast turnaround time."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </style>
 </head>
 <body>
@@ -408,7 +692,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
         <div class="mat-modal-price-val" id="modalPrice"></div>
         <div class="mat-modal-price-note">Exact price after free in-home measurement</div>
       </div>
-      <button class="btn-gold" style="width:100%" onclick="openWizard();closeModal()">Book Free Estimate →</button>
+      <button class="btn-gold" style="width:100%" onclick="openWizard('Material Modal');closeModal()">Book Free Estimate →</button>
     </div>
     <button class="mat-modal-close" onclick="closeModal()">✕</button>
   </div>
@@ -431,13 +715,13 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   <a onclick="go('reviews')">Reviews</a>
   <a href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener" onclick="closeMob()">Write a Review</a>
   <a href="./contact-us/" onclick="closeMob()">Contact</a>
-  <div class="mob-cta-wrap"><a onclick="openWizard()">Get Free Estimate</a></div>
+  <div class="mob-cta-wrap"><a onclick="openWizard('Mobile Menu');closeMob()">Get Free Estimate</a></div>
 </div>
 
 <!-- NAV -->
 <nav id="nav">
   <div class="nav-w">
-    <a href="#" class="n-logo" onclick="go('home')"><img src="./assets/img/logo-280.png" alt="Stone Bellisimo" width="140" height="54" decoding="async"></a>
+    <a href="#" class="n-logo" onclick="go('home')"><img src="./assets/img/logo-280.png" alt="Stone Bellisimo LLC - Custom Countertops" width="140" height="54" decoding="async"></a>
     <ul class="nl">
       <li><a onclick="go('products')">Products</a></li>
       <li><a onclick="go('materials')">Materials</a></li>
@@ -446,7 +730,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <li><a onclick="go('reviews')">Reviews</a></li>
       <li><a href="./contact-us/">Contact</a></li>
     </ul>
-    <a onclick="openWizard()" class="n-cta">Free Estimate</a>
+    <a onclick="openWizard('Nav Bar')" class="n-cta">Free Estimate</a>
     <button class="n-ham" id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -454,7 +738,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 <!-- HERO -->
 <section class="hero" id="home">
   <div class="hero-bg" aria-hidden="true">
-    <img src="./assets/img/hero-1920.jpg" alt="" width="1920" height="1353" fetchpriority="high" decoding="async">
+    <img src="./assets/img/hero-1920.jpg" alt="Luxury quartz kitchen countertop fabrication and installation by Stone Bellisimo LLC" width="1920" height="1353" fetchpriority="high" decoding="async">
   </div>
   <div class="hero-content">
     <div class="hero-pill"><span class="pill-dot"></span>20% off selected quartz — Union City showroom</div>
@@ -462,7 +746,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
     <p class="hero-sub">Family-owned stone fabricators serving NJ since 2013. Granite, quartz, marble and more — precision-cut and installed.</p>
     <div class="hero-btns">
       <a onclick="go('products')" class="btn-gold">Explore Our Work</a>
-      <a onclick="openWizard()" class="btn-ghost">Get a Free Estimate →</a>
+      <a onclick="openWizard('Hero')" class="btn-ghost">Get a Free Estimate →</a>
     </div>
   </div>
   <div class="hero-scroll" onclick="go('trust')"><span>Scroll</span><div class="scroll-line"></div></div>
@@ -492,23 +776,23 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
     <span class="s-tag r">Our Work</span>
     <h2 class="s-h r2">Beautiful stone for every<br><em>space in your home.</em></h2>
     <div class="prod-grid">
-      <div class="prod-card r" onclick="openWizard('Kitchen Countertops')" title="Get a kitchen quote">
-        <img src="./assets/img/kitchen-1200.jpg" data-avif="./assets/img/kitchen-1200.avif" alt="Kitchen Countertops" width="957" height="1200" loading="lazy" decoding="async">
+      <div class="prod-card r" onclick="openWizard('Products: Kitchen', 'Kitchen Countertops')" title="Get a kitchen quote" data-cta="products-kitchen">
+        <img src="./assets/img/kitchen-1200.jpg" data-avif="./assets/img/kitchen-1200.avif" alt="Stunning white quartz kitchen island with waterfall edge in a modern NJ home" width="957" height="1200" loading="lazy" decoding="async">
         <div class="prod-ovl"></div>
         <div class="prod-body"><h3>Kitchens</h3><p>The centerpiece of every home.</p><span class="prod-link">Request a quote →</span></div>
       </div>
-      <div class="prod-card r2" onclick="openWizard('Bathroom Vanity')" title="Get a vanity quote">
-        <img src="./assets/img/vanity-1200.jpg" data-avif="./assets/img/vanity-1200.avif" alt="Bathroom Vanity" width="1200" height="800" loading="lazy" decoding="async">
+      <div class="prod-card r2" onclick="openWizard('Products: Vanity', 'Bathroom Vanity')" title="Get a vanity quote" data-cta="products-vanity">
+        <img src="./assets/img/vanity-1200.jpg" data-avif="./assets/img/vanity-1200.avif" alt="Elegant custom marble bathroom vanity countertop with double under-mount sinks" width="1200" height="800" loading="lazy" decoding="async">
         <div class="prod-ovl"></div>
         <div class="prod-body"><h3>Vanities</h3><p>Elegant stone for your bathroom retreat.</p><span class="prod-link">Request a quote →</span></div>
       </div>
-      <div class="prod-card r3" onclick="openWizard('Fireplace Surround')" title="Get a fireplace quote">
-        <img src="./assets/img/fireplace-1200.jpg" data-avif="./assets/img/fireplace-1200.avif" alt="Fireplace Surround" width="1200" height="1187" loading="lazy" decoding="async">
+      <div class="prod-card r3" onclick="openWizard('Products: Fireplace', 'Fireplace Surround')" title="Get a fireplace quote" data-cta="products-fireplace">
+        <img src="./assets/img/fireplace-1200.jpg" data-avif="./assets/img/fireplace-1200.avif" alt="Custom quartzite fireplace surround and hearth, fabricated and installed in New Jersey" width="1200" height="1187" loading="lazy" decoding="async">
         <div class="prod-ovl"></div>
         <div class="prod-body"><h3>Fireplaces</h3><p>A bold statement in any living space.</p><span class="prod-link">Request a quote →</span></div>
       </div>
-      <div class="prod-card r" onclick="openWizard('Custom Projects')" title="Get a custom quote">
-        <img src="./assets/img/portfolio2-1000.jpg" data-avif="./assets/img/portfolio2-1000.avif" alt="Custom Stone Projects" width="1000" height="995" loading="lazy" decoding="async">
+      <div class="prod-card r" onclick="openWizard('Products: Custom', 'Custom Projects')" title="Get a custom quote" data-cta="products-custom">
+        <img src="./assets/img/portfolio2-1000.jpg" data-avif="./assets/img/portfolio2-1000.avif" alt="Custom fabricated porcelain stone slab work for a modern residential interior" width="1000" height="995" loading="lazy" decoding="async">
         <div class="prod-ovl"></div>
         <div class="prod-body"><h3>Custom Projects</h3><p>Unique stone applications and designs.</p><span class="prod-link">Request a quote →</span></div>
       </div>
@@ -525,11 +809,11 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   </div>
   <div style="max-width:1256px;margin:44px auto 0;padding:0 28px">
     <div class="mat-scroll" id="matScroll">
-      <div class="mat-slab r" onclick="openMaterial('granite')"><img src="./assets/img/material1-800.jpg" data-avif="./assets/img/material1-800.avif" alt="Granite" width="800" height="533" loading="lazy" decoding="async"><div class="mat-slab-lbl">Granite <span>Most durable</span></div></div>
-      <div class="mat-slab r2" onclick="openMaterial('quartz')"><img src="./assets/img/material2-800.jpg" data-avif="./assets/img/material2-800.avif" alt="Quartz" width="800" height="533" loading="lazy" decoding="async"><div class="mat-slab-lbl">Quartz <span>20% off now</span></div></div>
-      <div class="mat-slab r3" onclick="openMaterial('marble')"><img src="./assets/img/material3-800.jpg" data-avif="./assets/img/material3-800.avif" alt="Marble" width="533" height="800" loading="lazy" decoding="async"><div class="mat-slab-lbl">Marble <span>Timeless elegance</span></div></div>
-      <div class="mat-slab r" onclick="openMaterial('quartzite')"><img src="./assets/img/material4-800.jpg" data-avif="./assets/img/material4-800.avif" alt="Quartzite" width="800" height="534" loading="lazy" decoding="async"><div class="mat-slab-lbl">Quartzite <span>Natural stone</span></div></div>
-      <div class="mat-slab r2" onclick="openMaterial('porcelain')"><img src="./assets/img/material5-800.jpg" data-avif="./assets/img/material5-800.avif" alt="Porcelain" width="800" height="407" loading="lazy" decoding="async"><div class="mat-slab-lbl">Porcelain <span>Ultra modern</span></div></div>
+      <div class="mat-slab r" tabindex="0" role="button" aria-pressed="false" onclick="openMaterial('granite')" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openMaterial('granite')}"><img src="./assets/img/material1-800.jpg" data-avif="./assets/img/material1-800.avif" alt="Premium polished Granite countertop slab showing natural mineral patterns" width="800" height="533" loading="lazy" decoding="async"><div class="mat-slab-lbl">Granite <span>Most durable</span></div></div>
+      <div class="mat-slab r2" tabindex="0" role="button" aria-pressed="false" onclick="openMaterial('quartz')" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openMaterial('quartz')}"><img src="./assets/img/material2-800.jpg" data-avif="./assets/img/material2-800.avif" alt="High-quality engineered Quartz countertop slab in white and grey veining" width="800" height="533" loading="lazy" decoding="async"><div class="mat-slab-lbl">Quartz <span>20% off now</span></div></div>
+      <div class="mat-slab r3" tabindex="0" role="button" aria-pressed="false" onclick="openMaterial('marble')" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openMaterial('marble')}"><img src="./assets/img/material3-800.jpg" data-avif="./assets/img/material3-800.avif" alt="Classic Carrara Marble countertop slab with elegant natural grey veining" width="533" height="800" loading="lazy" decoding="async"><div class="mat-slab-lbl">Marble <span>Timeless elegance</span></div></div>
+      <div class="mat-slab r" tabindex="0" role="button" aria-pressed="false" onclick="openMaterial('quartzite')" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openMaterial('quartzite')}"><img src="./assets/img/material4-800.jpg" data-avif="./assets/img/material4-800.avif" alt="Durable Quartzite countertop slab showcasing natural quartzite texture" width="800" height="534" loading="lazy" decoding="async"><div class="mat-slab-lbl">Quartzite <span>Natural stone</span></div></div>
+      <div class="mat-slab r2" tabindex="0" role="button" aria-pressed="false" onclick="openMaterial('porcelain')" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openMaterial('porcelain')}"><img src="./assets/img/material5-800.jpg" data-avif="./assets/img/material5-800.avif" alt="Sleek large-format Porcelain countertop slab in modern matte finish" width="800" height="407" loading="lazy" decoding="async"><div class="mat-slab-lbl">Porcelain <span>Ultra modern</span></div></div>
     </div>
   </div>
 </section>
@@ -539,7 +823,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   <div class="sw">
     <div class="story-grid">
       <div class="story-imgs r" style="display:block">
-        <div class="story-img-main" style="width:100%; height:100%; aspect-ratio:4/5"><img src="./assets/img/story1-1200.jpg" data-avif="./assets/img/story1-1200.avif" alt="Owner and team" width="1200" height="900" loading="lazy" decoding="async"></div>
+        <div class="story-img-main" style="width:100%; height:100%; aspect-ratio:4/5"><img src="./assets/img/story1-1200.jpg" data-avif="./assets/img/story1-1200.avif" alt="Owner Cesar Yunda and the Stone Bellisimo family team in Union City, NJ" width="1200" height="900" loading="lazy" decoding="async"></div>
       </div>
       <div>
         <span class="s-tag r" style="color:var(--gold-lt)">Our Story</span>
@@ -569,7 +853,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <div class="p-step r"><div class="p-num">04</div><h4>Expert Installation</h4><p>Our family team installs with meticulous care, guaranteeing a flawless fit every time.</p></div>
     </div>
     <div style="text-align:center;margin-top:56px" class="r2">
-      <button onclick="openWizard()" class="btn-gold">Start Your Project →</button>
+      <button onclick="openWizard('Process Step')" class="btn-gold">Start Your Project →</button>
     </div>
   </div>
 </section>
@@ -578,16 +862,16 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 <section class="gallery" id="gallery">
   <div class="gallery-hd"><span class="s-tag r">Portfolio</span><h2 class="s-h r2">Our work speaks<br><em>for itself.</em></h2></div>
   <div class="gallery-scroll" id="galScroll">
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio1-1000.jpg" data-avif="./assets/img/portfolio1-1000.avif" alt="Kitchen project" width="1000" height="764" loading="lazy" decoding="async"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio2-1000.jpg" data-avif="./assets/img/portfolio2-1000.avif" alt="Kitchen renovation" width="1000" height="995" loading="lazy" decoding="async"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/vanity-1200.jpg" data-avif="./assets/img/vanity-1200.avif" alt="Bathroom vanity" width="1200" height="800" loading="lazy" decoding="async"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio3-1000.jpg" data-avif="./assets/img/portfolio3-1000.avif" alt="Stone detail" width="1000" height="984" loading="lazy" decoding="async"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio4-1000.jpg" data-avif="./assets/img/portfolio4-1000.avif" alt="Luxury kitchen" width="1000" height="980" loading="lazy" decoding="async"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio_kitchen_grey-800.jpg" data-avif="./assets/img/portfolio_kitchen_grey-800.avif" alt="Kitchen counter with grey cabinets and marble backsplash" width="800" height="800" loading="lazy" decoding="async"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio_island_view-800.jpg" data-avif="./assets/img/portfolio_island_view-800.avif" alt="Kitchen island with scenic view" width="800" height="800" loading="lazy" decoding="async"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio_marble_backsplash-800.jpg" data-avif="./assets/img/portfolio_marble_backsplash-800.avif" alt="Marble backsplash detailing" width="800" height="800" loading="lazy" decoding="async"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio_kitchen_green-800.jpg" data-avif="./assets/img/portfolio_kitchen_green-800.avif" alt="Kitchen counter with green cabinets" width="800" height="800" loading="lazy" decoding="async"></div>
-    <div class="g-img" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)"><img src="./assets/img/portfolio_kitchen_peninsula-800.jpg" data-avif="./assets/img/portfolio_kitchen_peninsula-800.avif" alt="Kitchen layout with grey cabinets and peninsula" width="800" height="800" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large kitchen portfolio image" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/portfolio1-1000.jpg" data-avif="./assets/img/portfolio1-1000.avif" alt="Clean white quartz countertop installation in a modern Hoboken kitchen" width="1000" height="764" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large kitchen renovation portfolio image" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/portfolio2-1000.jpg" data-avif="./assets/img/portfolio2-1000.avif" alt="Sleek grey quartz countertops with waterfall edge fabricated in Union City, NJ" width="1000" height="995" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large bathroom vanity portfolio image" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/vanity-1200.jpg" data-avif="./assets/img/vanity-1200.avif" alt="Polished marble double vanity countertop in a luxury Jersey City home" width="1200" height="800" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large stone detail portfolio image" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/portfolio3-1000.jpg" data-avif="./assets/img/portfolio3-1000.avif" alt="Close-up detail of custom stone fabrication and seamless seams by Stone Bellisimo" width="1000" height="984" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large luxury kitchen portfolio image" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/portfolio4-1000.jpg" data-avif="./assets/img/portfolio4-1000.avif" alt="Spacious kitchen featuring premium granite countertops and custom backsplash" width="1000" height="980" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large kitchen counter with grey cabinets and marble backsplash" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/portfolio_kitchen_grey-800.jpg" data-avif="./assets/img/portfolio_kitchen_grey-800.avif" alt="Quartz kitchen countertops paired with grey cabinets and marble backsplash in New Jersey" width="800" height="800" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large kitchen island with scenic view" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/portfolio_island_view-800.jpg" data-avif="./assets/img/portfolio_island_view-800.avif" alt="Large quartz kitchen island countertop with modern seating and scenic view" width="800" height="800" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large marble backsplash detailing" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/portfolio_marble_backsplash-800.jpg" data-avif="./assets/img/portfolio_marble_backsplash-800.avif" alt="Detailed view of elegant bookmatched marble backsplash and countertop installation" width="800" height="800" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large kitchen counter with green cabinets" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/portfolio_kitchen_green-800.jpg" data-avif="./assets/img/portfolio_kitchen_green-800.avif" alt="Polished quartz countertop installed on olive green kitchen cabinets in Jersey City" width="800" height="800" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large kitchen layout with grey cabinets and peninsula" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/portfolio_kitchen_peninsula-800.jpg" data-avif="./assets/img/portfolio_kitchen_peninsula-800.avif" alt="Quartz kitchen peninsula countertop with seamless joint in a custom NJ home" width="800" height="800" loading="lazy" decoding="async"></div>
   </div>
 </section>
 
@@ -650,9 +934,107 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   <div class="cta-content">
     <h2 class="r">Ready to transform<br>your <em>space?</em></h2>
     <p class="r2">Get your free in-home estimate today. We measure, you choose, we build.</p>
-    <button onclick="openWizard()" class="btn-gold r3" style="font-size:15px;padding:16px 44px">Schedule My Free Estimate</button>
+    <button onclick="openWizard('CTA Band')" class="btn-gold r3" style="font-size:15px;padding:16px 44px">Schedule My Free Estimate</button>
   </div>
 </div>
+
+<!-- FAQ SECTION -->
+<section class="faq-section" id="faq">
+  <div class="sw">
+    <span class="s-tag r" style="text-align:center; display:block">Common Questions</span>
+    <h2 class="s-h r2" style="text-align:center">Frequently Asked<br><em>Questions.</em></h2>
+    <div class="faq-grid">
+      <div class="faq-item r">
+        <h3>
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-1">
+            Do you offer free estimates?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-ans-1" hidden>
+          <p>Yes, we offer 100% free in-home estimates and templating. Cristian or Cesar will visit your space, take precise measurements, and provide a full written quote with zero obligation.</p>
+        </div>
+      </div>
+      <div class="faq-item r2">
+        <h3>
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-2">
+            What countertop materials do you install?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-ans-2" hidden>
+          <p>We fabricate and install Quartz, Granite, Marble, Quartzite, and Porcelain. You can see our current collection at our Union City showroom or ask our 24/7 AI agent Bella for material availability.</p>
+        </div>
+      </div>
+      <div class="faq-item r3">
+        <h3>
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-3">
+            Do you serve Union City, Hoboken, Jersey City, and nearby NJ towns?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-ans-3" hidden>
+          <p>Yes! Our primary showroom is in Union City, NJ, and we regularly serve Hudson County, Bergen County, and surrounding NJ areas including Hoboken, Jersey City, North Bergen, Weehawken, West New York, and Edgewater.</p>
+        </div>
+      </div>
+      <div class="faq-item r">
+        <h3>
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-4">
+            How does the estimate process work?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-ans-4" hidden>
+          <p>It's simple: first, select your project details in our Free Estimate Wizard or call us. Next, we will schedule a quick, free in-home measurement visit. Once measured, we provide an exact quote, fabricate the stone in our local warehouse, and install it in your home.</p>
+        </div>
+      </div>
+      <div class="faq-item r2">
+        <h3>
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-5">
+            Can customers visit the showroom?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-ans-5" hidden>
+          <p>Yes, customers are welcome to visit our showroom located at 618 23rd Street, Union City, NJ 07087. We recommend calling ahead (201.553.1919) to ensure Cristian or Cesar is available to guide you.</p>
+        </div>
+      </div>
+      <div class="faq-item r3">
+        <h3>
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-6">
+            Do you install kitchen countertops and bathroom vanities?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-ans-6" hidden>
+          <p>Yes, we specialize in kitchen countertops, bathroom vanity countertops, fireplace surrounds, custom stone work, and commercial stone fabrication.</p>
+        </div>
+      </div>
+      <div class="faq-item r">
+        <h3>
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-7">
+            What promotions are currently offered?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-ans-7" hidden>
+          <p>We are currently offering 20% off selected quartz slabs at our showroom, a free stainless steel sink on kitchen projects of 40+ square feet, and 3 standard edge profiles (Straight, Round, or Bevel) at no extra charge.</p>
+        </div>
+      </div>
+      <div class="faq-item r2">
+        <h3>
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-8">
+            How fast can someone get started?
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-ans-8" hidden>
+          <p>Very quickly! Once you request a free quote, Cesar or Cristian will call/text you within one business day to coordinate the in-home measurement. Fabrication and installation are handled entirely in-house, ensuring a fast turnaround time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ESTIMATE WIZARD -->
 <section class="wizard-section" id="wizard-section">
@@ -675,68 +1057,74 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 
     <!-- STEP 1: Project type -->
     <div class="wz-step active" id="wz1">
+      <div class="wz-step-tag">Step 1 of 5: Project Type *</div>
       <div class="wz-q">What are you<br><em>renovating?</em></div>
-      <div class="wz-hint">Select all that apply — we do it all.</div>
-      <div class="wz-opts">
-        <div class="wz-opt" onclick="selectOpt(this,'project','Kitchen Countertops')"><div class="wz-opt-label">Kitchen</div><div class="wz-opt-sub">Most popular</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'project','Bathroom Vanity')"><div class="wz-opt-label">Bathroom Vanity</div><div class="wz-opt-sub">Single or double</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'project','Fireplace Surround')"><div class="wz-opt-label">Fireplace</div><div class="wz-opt-sub">Surround &amp; hearth</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'project','Multiple Areas')"><div class="wz-opt-label">Multiple Areas</div><div class="wz-opt-sub">Full home</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'project','Commercial')"><div class="wz-opt-label">Commercial</div><div class="wz-opt-sub">Office / retail</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'project','Other')"><div class="wz-opt-label">Other</div><div class="wz-opt-sub">Tell us more</div></div>
+      <div class="wz-hint">Select your project type — we do custom fabrication &amp; installation.</div>
+      <div class="wz-opts" role="radiogroup" aria-label="Select what you are renovating">
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Kitchen Countertops')" onkeydown="handleWzKey(event, this, 'project', 'Kitchen Countertops')"><div class="wz-opt-label">Kitchen</div><div class="wz-opt-sub">Most popular</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Bathroom Vanity')" onkeydown="handleWzKey(event, this, 'project', 'Bathroom Vanity')"><div class="wz-opt-label">Bathroom Vanity</div><div class="wz-opt-sub">Single or double</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Fireplace Surround')" onkeydown="handleWzKey(event, this, 'project', 'Fireplace Surround')"><div class="wz-opt-label">Fireplace</div><div class="wz-opt-sub">Surround &amp; hearth</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Multiple Areas')" onkeydown="handleWzKey(event, this, 'project', 'Multiple Areas')"><div class="wz-opt-label">Multiple Areas</div><div class="wz-opt-sub">Full home</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Commercial')" onkeydown="handleWzKey(event, this, 'project', 'Commercial')"><div class="wz-opt-label">Commercial</div><div class="wz-opt-sub">Office / retail</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Other')" onkeydown="handleWzKey(event, this, 'project', 'Other')"><div class="wz-opt-label">Other</div><div class="wz-opt-sub">Tell us more</div></div>
       </div>
       <div class="wz-other wz-fg" id="projectOtherWrap">
-        <label for="projectOther">Tell us what you are renovating *</label>
-        <input type="text" id="projectOther" placeholder="e.g. Outdoor kitchen, laundry room, custom table" autocomplete="off">
+        <label for="projectOther">Tell us what you are renovating * (Required)</label>
+        <input type="text" id="projectOther" placeholder="e.g. Outdoor kitchen, laundry room, custom table" autocomplete="off" aria-required="true">
+        <div class="wz-error-msg" id="wz1-error">Please fill in this field to proceed.</div>
       </div>
       <div class="wz-nav"><div></div><button class="wz-next-btn" onclick="nextStep(2)" id="wz1next" disabled>Continue <span>→</span></button></div>
     </div>
 
     <!-- STEP 2: Material -->
     <div class="wz-step" id="wz2">
+      <div class="wz-step-tag">Step 2 of 5: Material Selection *</div>
       <div class="wz-q">Which material<br><em>interests you?</em></div>
-      <div class="wz-hint">Not sure yet? Pick "Help me choose" — we'll guide you.</div>
-      <div class="wz-opts wz-material-opts">
-        <div class="wz-opt" onclick="selectOpt(this,'material','Granite')"><div class="wz-opt-img"><img src="./assets/img/material1-800.jpg" data-avif="./assets/img/material1-800.avif" alt="Granite slab" width="800" height="533" loading="lazy" decoding="async"></div><div class="wz-opt-label">Granite</div><div class="wz-opt-sub">Most durable</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'material','Quartz')"><div class="wz-opt-img"><img src="./assets/img/material2-800.jpg" data-avif="./assets/img/material2-800.avif" alt="Quartz slab" width="800" height="533" loading="lazy" decoding="async"></div><div class="wz-opt-label">Quartz</div><div class="wz-opt-sub">20% off now</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'material','Marble')"><div class="wz-opt-img"><img src="./assets/img/material3-800.jpg" data-avif="./assets/img/material3-800.avif" alt="Marble slab" width="533" height="800" loading="lazy" decoding="async"></div><div class="wz-opt-label">Marble</div><div class="wz-opt-sub">Timeless look</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'material','Quartzite')"><div class="wz-opt-img"><img src="./assets/img/material4-800.jpg" data-avif="./assets/img/material4-800.avif" alt="Quartzite slab" width="800" height="534" loading="lazy" decoding="async"></div><div class="wz-opt-label">Quartzite</div><div class="wz-opt-sub">Natural stone</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'material','Porcelain')"><div class="wz-opt-img"><img src="./assets/img/material5-800.jpg" data-avif="./assets/img/material5-800.avif" alt="Porcelain slab" width="800" height="407" loading="lazy" decoding="async"></div><div class="wz-opt-label">Porcelain</div><div class="wz-opt-sub">Ultra modern</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'material','Help me choose')"><div class="wz-opt-label">Help me choose</div><div class="wz-opt-sub">We'll advise</div></div>
+      <div class="wz-hint">Select a stone material. Not sure? Choose "Help me choose" and our experts will guide you.</div>
+      <div class="wz-opts wz-material-opts" role="radiogroup" aria-label="Select material of interest">
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Granite')" onkeydown="handleWzKey(event, this, 'material', 'Granite')"><div class="wz-opt-img"><img src="./assets/img/material1-800.jpg" data-avif="./assets/img/material1-800.avif" alt="Premium polished Granite countertop slab showing natural mineral patterns" width="800" height="533" loading="lazy" decoding="async"></div><div class="wz-opt-label">Granite</div><div class="wz-opt-sub">Most durable</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Quartz')" onkeydown="handleWzKey(event, this, 'material', 'Quartz')"><div class="wz-opt-img"><img src="./assets/img/material2-800.jpg" data-avif="./assets/img/material2-800.avif" alt="High-quality engineered Quartz countertop slab in white and grey veining" width="800" height="533" loading="lazy" decoding="async"></div><div class="wz-opt-label">Quartz</div><div class="wz-opt-sub">20% off now</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Marble')" onkeydown="handleWzKey(event, this, 'material', 'Marble')"><div class="wz-opt-img"><img src="./assets/img/material3-800.jpg" data-avif="./assets/img/material3-800.avif" alt="Classic Carrara Marble countertop slab with elegant natural grey veining" width="533" height="800" loading="lazy" decoding="async"></div><div class="wz-opt-label">Marble</div><div class="wz-opt-sub">Timeless look</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Quartzite')" onkeydown="handleWzKey(event, this, 'material', 'Quartzite')"><div class="wz-opt-img"><img src="./assets/img/material4-800.jpg" data-avif="./assets/img/material4-800.avif" alt="Durable Quartzite countertop slab showcasing natural quartzite texture" width="800" height="534" loading="lazy" decoding="async"></div><div class="wz-opt-label">Quartzite</div><div class="wz-opt-sub">Natural stone</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Porcelain')" onkeydown="handleWzKey(event, this, 'material', 'Porcelain')"><div class="wz-opt-img"><img src="./assets/img/material5-800.jpg" data-avif="./assets/img/material5-800.avif" alt="Sleek large-format Porcelain countertop slab in modern matte finish" width="800" height="407" loading="lazy" decoding="async"></div><div class="wz-opt-label">Porcelain</div><div class="wz-opt-sub">Ultra modern</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Help me choose')" onkeydown="handleWzKey(event, this, 'material', 'Help me choose')"><div class="wz-opt-label">Help me choose</div><div class="wz-opt-sub">We'll advise</div></div>
       </div>
       <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(1)">← Back</button><button class="wz-next-btn" onclick="nextStep(3)" id="wz2next" disabled>Continue →</button></div>
     </div>
 
     <!-- STEP 3: Rough size -->
     <div class="wz-step" id="wz3">
+      <div class="wz-step-tag">Step 3 of 5: Project Size *</div>
       <div class="wz-q">Roughly how big<br><em>is the space?</em></div>
-      <div class="wz-hint">Just an estimate — we'll measure exactly during your free in-home visit.</div>
-      <div class="wz-opts">
-        <div class="wz-opt" onclick="selectOpt(this,'size','Under 30 sqft')"><div class="wz-opt-label">Under 30 sqft</div><div class="wz-opt-sub">Small vanity / bar</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'size','30–60 sqft')"><div class="wz-opt-label">30–60 sqft</div><div class="wz-opt-sub">Average kitchen</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'size','60–100 sqft')"><div class="wz-opt-label">60–100 sqft</div><div class="wz-opt-sub">Large kitchen</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'size','100+ sqft')"><div class="wz-opt-label">100+ sqft</div><div class="wz-opt-sub">Full home / commercial</div></div>
+      <div class="wz-hint">Provide an estimate — Cesar or Cristian will take exact measurements during our free visit.</div>
+      <div class="wz-opts" role="radiogroup" aria-label="Select estimated project size">
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','Under 30 sqft')" onkeydown="handleWzKey(event, this, 'size', 'Under 30 sqft')"><div class="wz-opt-label">Under 30 sqft</div><div class="wz-opt-sub">Small vanity / bar</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','30–60 sqft')" onkeydown="handleWzKey(event, this, 'size', '30–60 sqft')"><div class="wz-opt-label">30–60 sqft</div><div class="wz-opt-sub">Average kitchen</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','60–100 sqft')" onkeydown="handleWzKey(event, this, 'size', '60–100 sqft')"><div class="wz-opt-label">60–100 sqft</div><div class="wz-opt-sub">Large kitchen</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','100+ sqft')" onkeydown="handleWzKey(event, this, 'size', '100+ sqft')"><div class="wz-opt-label">100+ sqft</div><div class="wz-opt-sub">Full home / commercial</div></div>
       </div>
       <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(2)">← Back</button><button class="wz-next-btn" onclick="nextStep(4)" id="wz3next" disabled>Continue →</button></div>
     </div>
 
     <!-- STEP 4: Timeline -->
     <div class="wz-step" id="wz4">
+      <div class="wz-step-tag">Step 4 of 5: Project Timeline *</div>
       <div class="wz-q">When are you<br><em>looking to start?</em></div>
-      <div class="wz-hint">We work with your schedule — no rush required.</div>
-      <div class="wz-opts">
-        <div class="wz-opt" onclick="selectOpt(this,'timeline','As soon as possible')"><div class="wz-opt-label">ASAP</div><div class="wz-opt-sub">Ready to go</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'timeline','1–3 months')"><div class="wz-opt-label">1–3 months</div><div class="wz-opt-sub">Planning ahead</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'timeline','3–6 months')"><div class="wz-opt-label">3–6 months</div><div class="wz-opt-sub">Early stages</div></div>
-        <div class="wz-opt" onclick="selectOpt(this,'timeline','Just exploring')"><div class="wz-opt-label">Just exploring</div><div class="wz-opt-sub">No rush</div></div>
+      <div class="wz-hint">Choose a timeframe. We accommodate any timeline.</div>
+      <div class="wz-opts" role="radiogroup" aria-label="Select project timeline">
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','As soon as possible')" onkeydown="handleWzKey(event, this, 'timeline', 'As soon as possible')"><div class="wz-opt-label">ASAP</div><div class="wz-opt-sub">Ready to go</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','1–3 months')" onkeydown="handleWzKey(event, this, 'timeline', '1–3 months')"><div class="wz-opt-label">1–3 months</div><div class="wz-opt-sub">Planning ahead</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','3–6 months')" onkeydown="handleWzKey(event, this, 'timeline', '3–6 months')"><div class="wz-opt-label">3–6 months</div><div class="wz-opt-sub">Early stages</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','Just exploring')" onkeydown="handleWzKey(event, this, 'timeline', 'Just exploring')"><div class="wz-opt-label">Just exploring</div><div class="wz-opt-sub">No rush</div></div>
       </div>
       <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(3)">← Back</button><button class="wz-next-btn" onclick="nextStep(5)" id="wz4next" disabled>Continue →</button></div>
     </div>
 
     <!-- STEP 5: Contact info -->
     <div class="wz-step" id="wz5">
+      <div class="wz-step-tag">Step 5 of 5: Contact Information *</div>
       <div class="wz-q">Almost there —<br><em>let's confirm your details.</em></div>
-      <div class="wz-hint">We'll call or text to schedule your free in-home estimate at no cost.</div>
+      <div class="wz-hint">Enter your details below. Cesar or Cristian will call or text to schedule your free visit.</div>
       <!-- Summary -->
       <div class="wz-summary">
         <h4>Your project summary</h4>
@@ -748,15 +1136,37 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <!-- Fields -->
       <div class="wz-fields">
         <div class="wz-row">
-          <div class="wz-fg"><label for="wzFirst">First Name *</label><input type="text" id="wzFirst" placeholder="Jane" autocomplete="given-name"></div>
-          <div class="wz-fg"><label for="wzLast">Last Name *</label><input type="text" id="wzLast" placeholder="Smith" autocomplete="family-name"></div>
+          <div class="wz-fg">
+            <label for="wzFirst">First Name *</label>
+            <input type="text" id="wzFirst" placeholder="e.g. Jane" autocomplete="given-name" aria-required="true">
+            <div class="wz-error-msg" id="wzFirst-error">First name is required.</div>
+          </div>
+          <div class="wz-fg">
+            <label for="wzLast">Last Name *</label>
+            <input type="text" id="wzLast" placeholder="e.g. Smith" autocomplete="family-name" aria-required="true">
+            <div class="wz-error-msg" id="wzLast-error">Last name is required.</div>
+          </div>
         </div>
         <div class="wz-row">
-          <div class="wz-fg"><label for="wzPhone">Phone *</label><input type="tel" id="wzPhone" placeholder="(201) 000-0000" autocomplete="tel"></div>
-          <div class="wz-fg"><label for="wzEmail">Email *</label><input type="email" id="wzEmail" placeholder="jane@email.com" autocomplete="email"></div>
+          <div class="wz-fg">
+            <label for="wzPhone">Phone *</label>
+            <input type="tel" id="wzPhone" placeholder="e.g. (201) 555-0199" autocomplete="tel" aria-required="true">
+            <div class="wz-error-msg" id="wzPhone-error">A valid phone number is required.</div>
+          </div>
+          <div class="wz-fg">
+            <label for="wzEmail">Email *</label>
+            <input type="email" id="wzEmail" placeholder="e.g. jane.smith@gmail.com" autocomplete="email" aria-required="true">
+            <div class="wz-error-msg" id="wzEmail-error">A valid email address is required.</div>
+          </div>
         </div>
-        <div class="wz-fg"><label for="wzAddr">Your Address / City (for scheduling)</label><input type="text" id="wzAddr" placeholder="e.g. Union City, NJ" autocomplete="address-level2"></div>
-        <div class="wz-fg"><label for="wzNote">Anything else we should know?</label><textarea id="wzNote" placeholder="Special requests, existing countertop material, preferred days for a visit…"></textarea></div>
+        <div class="wz-fg">
+          <label for="wzAddr">Your Address / City (optional - for scheduling)</label>
+          <input type="text" id="wzAddr" placeholder="e.g. Union City, NJ" autocomplete="street-address">
+        </div>
+        <div class="wz-fg">
+          <label for="wzNote">Anything else we should know? (optional)</label>
+          <textarea id="wzNote" placeholder="e.g. Preferred days for a visit, existing countertop material, custom dimensions..."></textarea>
+        </div>
       </div>
       <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(4)">← Back</button><button class="wz-next-btn" onclick="submitWizard()" id="wz5submit">Send Request</button></div>
     </div>
@@ -768,9 +1178,27 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <p>Thank you! Cesar or Cristian will call or text you within one business day to schedule your free in-home estimate.</p>
       <div class="wz-what-next">
         <p>📞 <strong>Need to reach us right now?</strong></p>
-        <p>Call <strong><a href="tel:+12015531919" style="color:var(--gold-lt)">201.553.1919</a></strong> or text <strong><a href="sms:+12012816423" style="color:var(--gold-lt)">201.281.6423</a></strong></p>
+        <p>Call the Office: <strong><a href="tel:+12015531919" style="color:var(--gold-lt)">201.553.1919</a></strong> or text Cesar: <strong><a href="sms:+12012816423" style="color:var(--gold-lt)">201.281.6423</a></strong></p>
+        <p style="margin-top: 8px">🤖 Or call <strong><a href="tel:+15512928353" style="color:var(--gold-lt)">551.292.8353</a></strong> to talk with Bella, our 24/7 AI Voice Agent.</p>
       </div>
       <button class="btn-gold" onclick="resetWizard()">Submit Another Request</button>
+    </div>
+
+    <!-- SUBMISSION FAILURE FALLBACK -->
+    <div id="wz-failure">
+      <div class="wz-failure-icon">⚠️</div>
+      <h3>Submission Error</h3>
+      <p>We are having trouble submitting your request online. To ensure Cristian or Cesar gets your request immediately, please call or text us directly with your project summary below.</p>
+      <div class="wz-saved-data">
+        <label for="wzSavedText">Your Saved Project Details (Copy &amp; Share)</label>
+        <textarea id="wzSavedText" readonly onclick="this.select()"></textarea>
+      </div>
+      <div class="wz-what-next" style="background: rgba(224,90,90,.1); border-color: rgba(224,90,90,.25)">
+        <p>📞 <strong>Call the Office:</strong> <a href="tel:+12015531919" style="color:var(--gold-lt)">201.553.1919</a></p>
+        <p>💬 <strong>Text Cesar (Owner):</strong> <a href="sms:+12012816423" style="color:var(--gold-lt)">201.281.6423</a></p>
+        <p>🤖 <strong>Or Call Bella (24/7 AI Agent):</strong> <a href="tel:+15512928353" style="color:var(--gold-lt)">551.292.8353</a></p>
+      </div>
+      <button class="btn-gold" style="margin-top: 20px" onclick="retryWizard()">Edit &amp; Try Again</button>
     </div>
   </div>
 </section>
@@ -813,7 +1241,15 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
             <a href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener" class="qc-btn"><div><div class="qc-label">Write a Google Review</div><div class="qc-sub">Share your experience in a minute</div></div></a>
             <a href="https://maps.google.com/?q=618+23rd+Street,+Union+City,+NJ+07087" target="_blank" rel="noopener" class="qc-btn"><div><div class="qc-label">Visit Our Showroom</div><div class="qc-sub">618 23rd St, Union City NJ — open Mon–Fri</div></div></a>
           </div>
-          <button onclick="openWizard()" class="qc-wizard-btn">Book a Free In-Home Estimate</button>
+          <button onclick="openWizard('Contact Section')" class="qc-wizard-btn" data-cta="contact-estimate">Book a Free In-Home Estimate</button>
+          
+          <!-- Local SEO Areas Served -->
+          <div class="service-areas">
+            <div class="service-areas-title">📍 Areas We Serve</div>
+            <div class="service-areas-list">
+              Union City, Hoboken, Jersey City, North Bergen, Weehawken, West New York, Edgewater, Guttenberg, Secaucus, Hudson County, Bergen County, and surrounding New Jersey service areas.
+            </div>
+          </div>
         </div>
       </div>
       <div class="map-embed r">
@@ -828,7 +1264,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 <footer>
   <div class="foot-w">
     <div class="foot-top">
-      <a href="#" class="foot-logo" onclick="go('home')"><img src="./assets/img/logo-280.png" alt="Stone Bellisimo LLC" width="93" height="36" loading="lazy" decoding="async"></a>
+      <a href="#" class="foot-logo" onclick="go('home')"><img src="./assets/img/logo-280.png" alt="Stone Bellisimo LLC Logo" width="93" height="36" loading="lazy" decoding="async"></a>
       <ul class="foot-nav">
         <li><a onclick="go('products')">Products</a></li>
         <li><a onclick="go('materials')">Materials</a></li>
@@ -880,7 +1316,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   </div>
   <div class="chat-acts">
     <a class="chat-act" href="tel:+15512928353">Call Bella - 551.292.8353</a>
-    <button class="chat-act" type="button" onclick="openWizard();toggleChat()">Book a Free Estimate</button>
+    <button class="chat-act" type="button" onclick="openWizard('Chat Widget');toggleChat()">Book a Free Estimate</button>
     <a class="chat-act" href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener">Write a Google Review</a>
     <a class="chat-act" href="tel:+12015531919">Call Us — 201.553.1919</a>
     <button class="chat-act" type="button" onclick="go('materials');toggleChat()">View Our Materials</button>
@@ -893,7 +1329,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 
 <script>
 /* ── DATA ── */
-const wzData = {project:'',material:'',size:'',timeline:''};
+const wzData = {project:'',material:'',size:'',timeline:'',sourceCta:'Direct'};
 const CONTACT_API_ENDPOINT = '/api/contact';
 function getContactEndpoint(){
   return CONTACT_API_ENDPOINT;
@@ -981,11 +1417,13 @@ function updateProjectOther(){
   input.classList.toggle('err',isOther && !input.value.trim());
   document.getElementById('wz1next').disabled=isOther ? !input.value.trim() : !wzData.project;
 }
-function openWizard(preselect){
+function openWizard(sourceCta, preselect){
+  wzData.sourceCta = sourceCta || 'Direct';
   if(preselect){
     wzData.project=preselect;
     document.querySelectorAll('#wz1 .wz-opt').forEach(o=>{
       o.classList.toggle('sel',o.getAttribute('onclick').includes(preselect));
+      o.setAttribute('aria-checked', o.getAttribute('onclick').includes(preselect) ? 'true' : 'false');
     });
     document.getElementById('wz1next').disabled=false;
     updateProjectOther();
@@ -994,13 +1432,25 @@ function openWizard(preselect){
 }
 function selectOpt(el,key,val){
   const parent=el.closest('.wz-opts');
-  parent.querySelectorAll('.wz-opt').forEach(o=>o.classList.remove('sel'));
+  parent.querySelectorAll('.wz-opt').forEach(o=>{
+    o.classList.remove('sel');
+    o.setAttribute('aria-checked', 'false');
+    o.setAttribute('aria-pressed', 'false');
+  });
   el.classList.add('sel');
+  el.setAttribute('aria-checked', 'true');
+  el.setAttribute('aria-pressed', 'true');
   wzData[key]=val;
   const step=el.closest('.wz-step').id;
   const nextMap={wz1:'wz1next',wz2:'wz2next',wz3:'wz3next',wz4:'wz4next'};
   if(nextMap[step])document.getElementById(nextMap[step]).disabled=false;
   if(key==='project')updateProjectOther();
+}
+function handleWzKey(e, el, key, val){
+  if(e.key === ' ' || e.key === 'Enter'){
+    e.preventDefault();
+    selectOpt(el, key, val);
+  }
 }
 function nextStep(n){
   if(wzStep===1 && n>1 && wzData.project==='Other' && !document.getElementById('projectOther').value.trim()){
@@ -1030,22 +1480,57 @@ function nextStep(n){
   }
   go('wizard-section');
 }
+function getUTMParameters(){
+  try {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      source: params.get('utm_source') || '',
+      medium: params.get('utm_medium') || '',
+      campaign: params.get('utm_campaign') || '',
+      term: params.get('utm_term') || '',
+      content: params.get('utm_content') || ''
+    };
+  } catch (e) {
+    return { source: '', medium: '', campaign: '', term: '', content: '' };
+  }
+}
+function retryWizard(){
+  document.getElementById('wz-failure').classList.remove('show');
+  document.getElementById('wzProgress').style.display='flex';
+  nextStep(5);
+}
 async function submitWizard(){
   const f=document.getElementById('wzFirst');
   const l=document.getElementById('wzLast');
   const p=document.getElementById('wzPhone');
   const e=document.getElementById('wzEmail');
+  const fErr=document.getElementById('wzFirst-error');
+  const lErr=document.getElementById('wzLast-error');
+  const pErr=document.getElementById('wzPhone-error');
+  const eErr=document.getElementById('wzEmail-error');
+  
+  // Hide visual errors
   [f,l,p,e].forEach(el=>el.classList.remove('err'));
+  [fErr,lErr,pErr,eErr].forEach(el=>el.classList.remove('show'));
+  
   let valid=true;
-  if(!f.value.trim()){f.classList.add('err');valid=false}
-  if(!l.value.trim()){l.classList.add('err');valid=false}
-  if(!p.value.trim()){p.classList.add('err');valid=false}
-  if(!e.value.trim()||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.value)){e.classList.add('err');valid=false}
+  if(!f.value.trim()){f.classList.add('err');fErr.classList.add('show');valid=false}
+  if(!l.value.trim()){l.classList.add('err');lErr.classList.add('show');valid=false}
+  if(!p.value.trim()){p.classList.add('err');pErr.classList.add('show');valid=false}
+  if(!e.value.trim()||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.value)){e.classList.add('err');eErr.classList.add('show');valid=false}
   if(!valid){go('wizard-section');return}
 
   const submitBtn = document.getElementById('wz5submit');
+  if (submitBtn.disabled) return; // Prevent duplicate submissions
   submitBtn.disabled = true;
   submitBtn.textContent = 'Sending...';
+
+  const utms = getUTMParameters();
+  const utmSummary = (utms.source || utms.medium || utms.campaign)
+    ? `Source: ${utms.source || 'N/A'}, Medium: ${utms.medium || 'N/A'}, Campaign: ${utms.campaign || 'N/A'}`
+    : 'None';
+  const trackingStr = `\n\n--- Metadata ---\nURL: ${window.location.href}\nReferrer: ${document.referrer || 'Direct'}\nUTM Params: ${utmSummary}\nTimestamp: ${new Date().toISOString()}\nCTA Source: ${wzData.sourceCta || 'Direct'}`;
+  const projectSummaryStr = `Project: ${getProjectValue() || 'Not specified'}\nMaterial: ${wzData.material || 'Not specified'}\nSize: ${wzData.size || 'N/A'}\nTimeline: ${wzData.timeline || 'N/A'}\nAddress: ${document.getElementById('wzAddr').value.trim() || 'Not provided'}\nNotes: ${document.getElementById('wzNote').value.trim() || 'None'}`;
 
   const payload = {
     firstName: f.value.trim(),
@@ -1054,8 +1539,8 @@ async function submitWizard(){
     phone: p.value.trim(),
     projectType: getProjectValue() || 'Not specified',
     material: wzData.material || 'Not specified',
-    message: `Size: ${wzData.size || 'N/A'}\nTimeline: ${wzData.timeline || 'N/A'}\nAddress: ${document.getElementById('wzAddr').value.trim() || 'Not provided'}\nNotes: ${document.getElementById('wzNote').value.trim() || 'None'}`,
-    source: 'Website Estimate Wizard',
+    message: `${projectSummaryStr}${trackingStr}`,
+    source: `Website Wizard - ${wzData.sourceCta || 'Direct'}`,
     dateCreated: new Date().toISOString().split('T')[0]
   };
 
@@ -1071,29 +1556,58 @@ async function submitWizard(){
       document.getElementById('wz-success').classList.add('show');
       document.getElementById('wzProgress').style.display='none';
     } else {
-      alert("Error submitting request. Please try again or call us directly.");
+      throw new Error("Server responded with error status");
     }
   } catch (err) {
-    alert("Network error. Please check your connection and try again.");
+    // Fallback failure state
+    document.querySelectorAll('.wz-step').forEach(s=>s.classList.remove('active'));
+    document.getElementById('wzProgress').style.display='none';
+    
+    const savedDataText = `Customer Name: ${f.value.trim()} ${l.value.trim()}\nPhone: ${p.value.trim()}\nEmail: ${e.value.trim()}\n\n${projectSummaryStr}`;
+    document.getElementById('wzSavedText').value = savedDataText;
+    
+    document.getElementById('wz-failure').classList.add('show');
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Send Request';
   }
 }
 function resetWizard(){
-  Object.keys(wzData).forEach(k=>wzData[k]='');
-  document.querySelectorAll('.wz-opt').forEach(o=>o.classList.remove('sel'));
+  Object.keys(wzData).forEach(k=>{
+    if (k === 'sourceCta') wzData[k] = 'Direct';
+    else wzData[k] = '';
+  });
+  document.querySelectorAll('.wz-opt').forEach(o=>{
+    o.classList.remove('sel');
+    o.setAttribute('aria-checked', 'false');
+    o.setAttribute('aria-pressed', 'false');
+  });
   document.querySelectorAll('.wz-next-btn').forEach(b=>b.disabled=true);
   document.getElementById('wz5submit').disabled=false;
   document.getElementById('projectOther').value='';
   updateProjectOther();
   document.getElementById('wz-success').classList.remove('show');
+  document.getElementById('wz-failure').classList.remove('show');
   document.getElementById('wzProgress').style.display='flex';
   nextStep(1);
 }
 // Remove err on type
-document.querySelectorAll('.wz-fg input').forEach(el=>el.addEventListener('input',()=>el.classList.remove('err')));
+document.querySelectorAll('.wz-fg input').forEach(el=>el.addEventListener('input',()=>{
+  el.classList.remove('err');
+  const errEl = document.getElementById(el.id + '-error');
+  if (errEl) errEl.classList.remove('show');
+}));
 document.getElementById('projectOther').addEventListener('input',updateProjectOther);
+
+/* FAQ ACCORDION INTERACTIVITY */
+document.querySelectorAll('.faq-trigger').forEach(trigger => {
+  trigger.addEventListener('click', () => {
+    const expanded = trigger.getAttribute('aria-expanded') === 'true';
+    const ans = document.getElementById(trigger.getAttribute('aria-controls'));
+    trigger.setAttribute('aria-expanded', !expanded);
+    ans.hidden = expanded;
+  });
+});
 
 /* ── CHAT ── */
 let chatOpen=false;
