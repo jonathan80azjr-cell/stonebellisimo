@@ -3,6 +3,18 @@ const JSON_HEADERS = {
   'cache-control': 'no-store'
 };
 
+const SECURITY_HEADERS = {
+  'strict-transport-security': 'max-age=31536000',
+  'x-content-type-options': 'nosniff',
+  'referrer-policy': 'strict-origin-when-cross-origin'
+};
+
+const SECURITY_TXT = `Contact: mailto:Stonebellisimollc@outlook.com
+Preferred-Languages: en
+Canonical: https://stonebellisimollc.com/.well-known/security.txt
+Expires: 2027-06-26T23:59:59Z
+`;
+
 const FIELD_LIMITS = {
   firstName: 80,
   lastName: 80,
@@ -17,7 +29,20 @@ const FIELD_LIMITS = {
 function json(body, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...JSON_HEADERS, ...extraHeaders }
+    headers: { ...JSON_HEADERS, ...SECURITY_HEADERS, ...extraHeaders }
+  });
+}
+
+function withSecurityHeaders(response) {
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
+    headers.set(name, value);
+  }
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers
   });
 }
 
@@ -150,8 +175,23 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (url.protocol === 'http:' || request.headers.get('x-forwarded-proto') === 'http') {
+      url.protocol = 'https:';
+      return Response.redirect(url, 301);
+    }
+
     if (url.pathname === '/api/contact') {
       return forwardContact(request, env);
+    }
+
+    if (url.pathname === '/.well-known/security.txt' || url.pathname === '/security.txt') {
+      return new Response(SECURITY_TXT, {
+        headers: {
+          ...SECURITY_HEADERS,
+          'content-type': 'text/plain; charset=utf-8',
+          'cache-control': 'public, max-age=3600'
+        }
+      });
     }
 
     if (url.pathname === '/favicon.ico') {
@@ -164,6 +204,6 @@ export default {
       return new Response(null, { status: 204 });
     }
 
-    return json({ success: false, message: 'Not found.' }, 404);
+    return withSecurityHeaders(await env.ASSETS.fetch(request));
   }
 };

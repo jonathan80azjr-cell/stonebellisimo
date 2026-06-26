@@ -11,6 +11,7 @@
     "predeploy": "gh-pages-clean",
     "deploy": "gh-pages -d public --message \"Deploy latest site\"",
     "deploy:worker": "wrangler deploy",
+    "ship": "git add . && git commit -m \"Ship latest changes\" && git push && npm run deploy:worker",
     "worker:secret": "wrangler secret put N8N_WEBHOOK_URL"
   },
   "keywords": [],
