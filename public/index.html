@@ -186,7 +186,7 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 .gallery-scroll{display:flex;gap:14px;padding:0 28px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory;cursor:grab}
 .gallery-scroll:active{cursor:grabbing}
 .gallery-scroll::-webkit-scrollbar{display:none}
-.g-img{flex-shrink:0;width:380px;height:280px;border-radius:18px;overflow:hidden;scroll-snap-align:start;cursor:pointer}
+.g-img{flex-shrink:0;width:380px;height:280px;border-radius:18px;overflow:hidden;scroll-snap-align:start;cursor:pointer;background:#111}
 /* GAL MODAL */
 .gal-modal-bg{display:none;position:fixed;inset:0;z-index:600;background:rgba(8,7,5,.95);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px}
 .gal-modal-bg.open{display:flex;animation:fadeUp .3s ease}
@@ -194,8 +194,10 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 .gal-modal-content img{width:100%;height:100%;object-fit:contain;border-radius:12px;box-shadow:var(--shadow-intense)}
 .gal-modal-close{position:absolute;top:-40px;right:-10px;background:none;border:none;color:#fff;font-size:32px;cursor:pointer;transition:transform .2s;padding:10px}
 .gal-modal-close:hover{transform:scale(1.1)}
-.g-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
-.g-img:hover img{transform:scale(1.06)}
+.g-img img,.g-img video{width:100%;height:100%;object-fit:cover;transition:transform .5s;display:block}
+.g-img:hover img,.g-img:hover video{transform:scale(1.06)}
+.g-video{cursor:default}
+.g-video video{background:#111}
 
 /* REVIEWS */
 .reviews{background:var(--cream)}
@@ -872,6 +874,12 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
     <div class="g-img" tabindex="0" role="button" aria-label="View large marble backsplash detailing" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/portfolio_marble_backsplash-800.jpg" data-avif="./assets/img/portfolio_marble_backsplash-800.avif" alt="Detailed view of elegant bookmatched marble backsplash and countertop installation" width="800" height="800" loading="lazy" decoding="async"></div>
     <div class="g-img" tabindex="0" role="button" aria-label="View large kitchen counter with green cabinets" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/portfolio_kitchen_green-800.jpg" data-avif="./assets/img/portfolio_kitchen_green-800.avif" alt="Polished quartz countertop installed on olive green kitchen cabinets in Jersey City" width="800" height="800" loading="lazy" decoding="async"></div>
     <div class="g-img" tabindex="0" role="button" aria-label="View large kitchen layout with grey cabinets and peninsula" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/portfolio_kitchen_peninsula-800.jpg" data-avif="./assets/img/portfolio_kitchen_peninsula-800.avif" alt="Quartz kitchen peninsula countertop with seamless joint in a custom NJ home" width="800" height="800" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large custom kitchen countertop installation" onclick="openGalleryModal(this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').src)}"><img src="./assets/img/portfolio_kitchen2-1440.jpg" alt="Custom kitchen countertop installation with polished stone surfaces" width="1440" height="1440" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large finished kitchen stone countertop project" onclick="openGalleryModal(this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').src)}"><img src="./assets/img/portfolio_kitchen3-1440.jpg" alt="Finished kitchen countertop project with custom stone fabrication" width="1440" height="1440" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large bathroom vanity countertop installation" onclick="openGalleryModal(this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').src)}"><img src="./assets/img/portfolio_vanity2-768.jpg" alt="Bathroom vanity countertop installation with polished stone" width="768" height="768" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large custom vanity stone countertop" onclick="openGalleryModal(this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').src)}"><img src="./assets/img/portfolio_vanity-2-1440.jpg" alt="Custom bathroom vanity stone countertop fabricated by Stone Bellisimo" width="1440" height="1440" loading="lazy" decoding="async"></div>
+    <div class="g-img" tabindex="0" role="button" aria-label="View large custom stone saddles and thresholds" onclick="openGalleryModal(this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').src)}"><img src="./assets/img/portfolio_saddles-1049.jpg" alt="Custom stone saddles and thresholds prepared for installation" width="1049" height="1049" loading="lazy" decoding="async"></div>
+    <div class="g-img g-video" aria-label="Watch kitchen countertop project video"><video src="./assets/video/kitchen.mp4" controls muted playsinline preload="metadata"></video></div>
   </div>
 </section>
 
