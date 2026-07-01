@@ -1,0 +1,9 @@
+A customer submitted feedback through {{feedback_source}}.
+
+Customer: {{customer_name}}
+Rating: {{rating}}
+Phone: {{phone}}
+Email: {{email}}
+Project type: {{project_type}}
+Material: {{material}}
+Comments: {{feedback_comment}}

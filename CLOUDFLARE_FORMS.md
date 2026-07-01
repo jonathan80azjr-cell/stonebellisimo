@@ -41,16 +41,39 @@ Do not use Cloudflare's "Upload and deploy" static-file screen for `cloudflare-w
 
    Paste the production n8n webhook URL when Wrangler asks for the value.
 
-3. Deploy the Worker and static assets:
+3. Create and migrate the D1 database used for lead storage and feedback automation:
+
+   ```sh
+   npm run worker:d1:create
+   ```
+
+   Copy the returned database id into the `LEADS_DB` entry in `wrangler.jsonc`, then run:
+
+   ```sh
+   npm run worker:d1:migrate
+   ```
+
+4. Add the Postmark and feedback secrets:
+
+   ```sh
+   npm run worker:secret:postmark
+   npm run worker:secret:feedback
+   npm run worker:secret:inbound
+   npm run worker:secret:webhook
+   ```
+
+   Required production secrets are `POSTMARK_SERVER_TOKEN`, `FEEDBACK_TOKEN_SECRET`, `POSTMARK_INBOUND_SECRET`, and optionally `POSTMARK_WEBHOOK_SECRET`.
+
+5. Deploy the Worker and static assets:
 
    ```sh
    npm run deploy:worker
    ```
 
-4. Wrangler will deploy `cloudflare-worker.mjs` and the files in `public/` using `wrangler.jsonc`. The route is already configured for the whole domain, while `/api/*` runs the Worker code first.
+6. Wrangler will deploy `cloudflare-worker.mjs` and the files in `public/` using `wrangler.jsonc`. The route is already configured for the whole domain, while `/api/*`, `/feedback`, and the scheduled feedback Cron run through the Worker.
 
-5. Make sure the `stonebellisimollc.com` DNS record is proxied through Cloudflare, shown as the orange cloud.
-6. Confirm the route is hitting the Worker:
+7. Make sure the `stonebellisimollc.com` DNS record is proxied through Cloudflare, shown as the orange cloud.
+8. Confirm the route is hitting the Worker:
 
    ```sh
    curl -i https://stonebellisimollc.com/api/contact
@@ -58,9 +81,26 @@ Do not use Cloudflare's "Upload and deploy" static-file screen for `cloudflare-w
    ```
 
    Both should return JSON with `405 Method not allowed` for a GET request. If you see an HTML `405` from GitHub/Fastly, the Worker route is not attached yet.
-7. Submit the form again. The frontend can keep posting to `/api/contact`.
+9. Submit the form again. The frontend can keep posting to `/api/contact`.
 
 You do not add the webhook to Cloudflare DNS. You add it as a Worker secret/env var. You also do not need a GitHub secret for this GitHub Pages deployment, because GitHub Pages has no backend runtime that can read it.
+
+## Postmark Automation
+
+The Worker now stores every valid lead in D1, keeps forwarding the submission to n8n, sends the immediate confirmation email through Postmark, and schedules the feedback request through Worker Cron.
+
+Postmark does not schedule the delayed email. The delay is controlled by:
+
+```jsonc
+"triggers": {
+  "crons": ["0 * * * *"]
+},
+"vars": {
+  "FEEDBACK_DELAY_DAYS": "3"
+}
+```
+
+See [POSTMARK_AUTOMATION.md](./POSTMARK_AUTOMATION.md) for Postmark dashboard setup, inbound reply parsing, D1 schema, local testing, and webhook payloads.
 
 ## Alternative
 

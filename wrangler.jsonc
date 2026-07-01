@@ -1,24 +1,55 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "stonebellisimo-forms",
-  "account_id": "b2306064c814ef6abf930b0d6afa1e2e",
-  "main": "cloudflare-worker.mjs",
-  "compatibility_date": "2026-05-26",
-  "assets": {
-    "directory": "./public",
-    "binding": "ASSETS",
-    "html_handling": "auto-trailing-slash",
-    "not_found_handling": "404-page",
-    "run_worker_first": true
-  },
-  "routes": [
-    {
-      "pattern": "stonebellisimollc.com/*",
-      "zone_name": "stonebellisimollc.com"
-    },
-    {
-      "pattern": "www.stonebellisimollc.com/*",
-      "zone_name": "stonebellisimollc.com"
-    }
-  ]
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "stonebellisimo-forms",
+	"account_id": "b2306064c814ef6abf930b0d6afa1e2e",
+	"main": "cloudflare-worker.mjs",
+	"compatibility_date": "2026-05-26",
+	"vars": {
+		"ENVIRONMENT": "production",
+		"PUBLIC_SITE_URL": "https://stonebellisimollc.com",
+		"POSTMARK_FROM_EMAIL": "admin@stonebellisimollc.com",
+		"POSTMARK_MESSAGE_STREAM": "outbound",
+		"POSTMARK_FEEDBACK_REPLY_DOMAIN": "stonebellisimollc.com",
+		"BUSINESS_NOTIFICATION_EMAIL": "cesaryunda@hotmail.com",
+		"BUSINESS_REPLY_TO_EMAIL": "cesaryunda@hotmail.com",
+		"FEEDBACK_DELAY_DAYS": "7"
+	},
+	"d1_databases": [
+		{
+			"binding": "LEADS_DB",
+			"database_name": "stonebellisimo-leads",
+			"database_id": "91342cdb-0836-4cbb-ace8-7469c9c87cd8",
+			"migrations_dir": "migrations"
+		},
+		{
+			"binding": "stonebellisimo_leads",
+			"database_name": "stonebellisimo-leads",
+			"database_id": "91342cdb-0836-4cbb-ace8-7469c9c87cd8"
+		}
+	],
+	"triggers": {
+		"crons": [
+			"0 * * * *"
+		]
+	},
+	"observability": {
+		"enabled": true
+	},
+	"assets": {
+		"directory": "./public",
+		"binding": "ASSETS",
+		"html_handling": "auto-trailing-slash",
+		"not_found_handling": "404-page",
+		"run_worker_first": true
+	},
+	"routes": [
+		{
+			"pattern": "stonebellisimollc.com/*",
+			"zone_name": "stonebellisimollc.com"
+		},
+		{
+			"pattern": "www.stonebellisimollc.com/*",
+			"zone_name": "stonebellisimollc.com"
+		}
+	]
 }

@@ -1,0 +1,17 @@
+Hi {{customer_name}},
+
+This is Stone Bellisimo checking in. Thank you for reaching out to us about your project.
+
+We wanted to ask for a quick piece of feedback about your experience. Whether we completed your project, were unable to meet your needs, or you did not receive the response you were looking for, your feedback would really help us improve.
+
+Please choose a rating from 1 to 5:
+1: {{feedback_url_1}}
+2: {{feedback_url_2}}
+3: {{feedback_url_3}}
+4: {{feedback_url_4}}
+5: {{feedback_url_5}}
+
+You can click a rating above, or simply reply to this email with a number from 1 to 5 and any comments.
+
+Thank you,
+Stone Bellisimo

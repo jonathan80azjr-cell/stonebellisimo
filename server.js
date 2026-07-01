@@ -4,12 +4,16 @@ const dotenv = require('dotenv');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
+const fs = require('fs/promises');
+const crypto = require('crypto');
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
+const DATA_DIR = path.join(__dirname, '.data');
+const DATA_FILE = path.join(DATA_DIR, 'lead-automation.json');
 
 // Middleware
 app.disable('x-powered-by');
@@ -100,15 +104,262 @@ const performanceLimiter = rateLimit({
   }
 });
 
-const FIELD_LIMITS = {
-  firstName: 80,
-  lastName: 80,
-  email: 254,
-  phone: 30,
-  projectType: 120,
-  material: 80,
-  source: 80,
-  message: 1000
+const webhookLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 120,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many webhook requests.'
+  }
+});
+
+let automationModulePromise;
+
+function automationModule() {
+  if (!automationModulePromise) {
+    automationModulePromise = import('./src/lead-automation.mjs');
+  }
+  return automationModulePromise;
+}
+
+function emptyLocalData() {
+  return {
+    leads: [],
+    emailEvents: [],
+    feedback: [],
+    inboundEvents: [],
+    deliveryEvents: []
+  };
+}
+
+async function readLocalData() {
+  try {
+    const raw = await fs.readFile(DATA_FILE, 'utf8');
+    return { ...emptyLocalData(), ...JSON.parse(raw) };
+  } catch (error) {
+    if (error.code === 'ENOENT') return emptyLocalData();
+    throw error;
+  }
+}
+
+async function writeLocalData(data) {
+  await fs.mkdir(DATA_DIR, { recursive: true });
+  const tmpFile = `${DATA_FILE}.tmp`;
+  await fs.writeFile(tmpFile, JSON.stringify(data, null, 2));
+  await fs.rename(tmpFile, DATA_FILE);
+}
+
+async function mutateLocalData(mutator) {
+  const data = await readLocalData();
+  const result = await mutator(data);
+  await writeLocalData(data);
+  return result;
+}
+
+function localId(prefix) {
+  return `${prefix}_${crypto.randomUUID()}`;
+}
+
+function localEnv(req) {
+  const fallbackOrigin = req
+    ? `${req.protocol}://${req.get('host') || `localhost:${PORT}`}`
+    : `http://localhost:${PORT}`;
+  const baseUrl = process.env.PUBLIC_SITE_URL || process.env.APP_BASE_URL || fallbackOrigin;
+
+  return {
+    ...process.env,
+    ENVIRONMENT: isProduction ? 'production' : 'development',
+    PUBLIC_SITE_URL: baseUrl,
+    APP_BASE_URL: baseUrl,
+    POSTMARK_MOCK_MODE: process.env.POSTMARK_MOCK_MODE || (isProduction ? 'false' : 'true'),
+    POSTMARK_INBOUND_SECRET: process.env.POSTMARK_INBOUND_SECRET || (isProduction ? '' : 'local-dev-inbound-secret')
+  };
+}
+
+function headersFromExpress(req, extra = {}) {
+  const headers = new Headers();
+  for (const [name, value] of Object.entries(req.headers)) {
+    if (Array.isArray(value)) headers.set(name, value.join(', '));
+    else if (value !== undefined) headers.set(name, String(value));
+  }
+  for (const [name, value] of Object.entries(extra)) {
+    if (value === undefined || value === null) headers.delete(name);
+    else headers.set(name, String(value));
+  }
+  return headers;
+}
+
+function absoluteRequestUrl(req) {
+  const origin = process.env.APP_BASE_URL || `${req.protocol}://${req.get('host') || `localhost:${PORT}`}`;
+  return new URL(req.originalUrl || req.url, origin).toString();
+}
+
+function makeFetchRequest(req, { body, contentType } = {}) {
+  const init = {
+    method: req.method,
+    headers: headersFromExpress(req, contentType ? { 'content-type': contentType } : {})
+  };
+
+  if (!['GET', 'HEAD'].includes(req.method) && body !== undefined) {
+    init.body = body;
+  }
+
+  return new Request(absoluteRequestUrl(req), init);
+}
+
+async function sendFetchResponse(res, response) {
+  response.headers.forEach((value, name) => {
+    res.setHeader(name, value);
+  });
+  res.status(response.status);
+  const buffer = Buffer.from(await response.arrayBuffer());
+  res.send(buffer);
+}
+
+const localStore = {
+  async countRecentByIpHash(ipHash, sinceIso) {
+    const data = await readLocalData();
+    return data.leads.filter(lead => lead.ipHash === ipHash && lead.submittedAt >= sinceIso).length;
+  },
+
+  async createLead(lead) {
+    await mutateLocalData(data => {
+      data.leads.push(lead);
+    });
+    return lead;
+  },
+
+  async getLeadById(id) {
+    const data = await readLocalData();
+    return data.leads.find(lead => lead.id === id) || null;
+  },
+
+  async markImmediateEmailSent(id, sentAt, messageId) {
+    await mutateLocalData(data => {
+      const lead = data.leads.find(item => item.id === id);
+      if (!lead) return;
+      lead.immediateEmailSentAt = sentAt;
+      lead.postmarkImmediateMessageId = messageId || null;
+      lead.updatedAt = sentAt;
+    });
+  },
+
+  async getDueFeedbackLeads(now, staleBefore, limit, maxAttempts) {
+    const data = await readLocalData();
+    return data.leads
+      .filter(lead => (
+        lead.feedbackEmailDueAt <= now &&
+        !lead.feedbackEmailSentAt &&
+        !['received', 'unparsed'].includes(lead.feedbackStatus || 'pending') &&
+        Number(lead.feedbackEmailAttemptCount || 0) < maxAttempts &&
+        (!lead.feedbackEmailClaimedAt || lead.feedbackEmailClaimedAt <= staleBefore)
+      ))
+      .sort((a, b) => a.feedbackEmailDueAt.localeCompare(b.feedbackEmailDueAt))
+      .slice(0, limit);
+  },
+
+  async claimFeedbackLead(id, claimedAt, staleBefore) {
+    return mutateLocalData(data => {
+      const lead = data.leads.find(item => item.id === id);
+      if (!lead) return false;
+      const canClaim = !lead.feedbackEmailSentAt &&
+        !['received', 'unparsed'].includes(lead.feedbackStatus || 'pending') &&
+        (!lead.feedbackEmailClaimedAt || lead.feedbackEmailClaimedAt <= staleBefore);
+      if (!canClaim) return false;
+      lead.feedbackEmailClaimedAt = claimedAt;
+      lead.feedbackStatus = 'sending';
+      lead.updatedAt = claimedAt;
+      return true;
+    });
+  },
+
+  async markFeedbackSent(id, sentAt, messageId) {
+    await mutateLocalData(data => {
+      const lead = data.leads.find(item => item.id === id);
+      if (!lead) return;
+      lead.feedbackEmailSentAt = sentAt;
+      lead.feedbackEmailClaimedAt = null;
+      lead.feedbackStatus = 'sent';
+      lead.feedbackEmailLastError = null;
+      lead.postmarkFeedbackMessageId = messageId || null;
+      lead.updatedAt = sentAt;
+    });
+  },
+
+  async markFeedbackSendFailed(id, failedAt, errorMessage) {
+    await mutateLocalData(data => {
+      const lead = data.leads.find(item => item.id === id);
+      if (!lead) return;
+      lead.feedbackEmailClaimedAt = null;
+      lead.feedbackStatus = 'pending';
+      lead.feedbackEmailAttemptCount = Number(lead.feedbackEmailAttemptCount || 0) + 1;
+      lead.feedbackEmailLastError = String(errorMessage || '').slice(0, 1000);
+      lead.updatedAt = failedAt;
+    });
+  },
+
+  async saveFeedback(feedback) {
+    return mutateLocalData(data => {
+      const lead = data.leads.find(item => item.id === feedback.leadId);
+      const accepted = Boolean(lead && lead.feedbackStatus !== 'received');
+      if (accepted) {
+        lead.rating = feedback.rating;
+        lead.feedbackComment = feedback.comment;
+        lead.feedbackReceivedAt = feedback.receivedAt;
+        lead.feedbackStatus = 'received';
+        lead.feedbackSource = feedback.source;
+        lead.updatedAt = feedback.receivedAt;
+      }
+      data.feedback.push({
+        id: localId('feedback'),
+        ...feedback,
+        status: accepted ? 'accepted' : 'duplicate',
+        createdAt: feedback.receivedAt
+      });
+      return { accepted };
+    });
+  },
+
+  async saveUnparsedFeedback(feedback) {
+    return mutateLocalData(data => {
+      const lead = data.leads.find(item => item.id === feedback.leadId);
+      const accepted = Boolean(lead && lead.feedbackStatus !== 'received');
+      if (accepted) {
+        lead.feedbackComment = feedback.comment;
+        lead.feedbackReceivedAt = feedback.receivedAt;
+        lead.feedbackStatus = 'unparsed';
+        lead.feedbackSource = feedback.source;
+        lead.updatedAt = feedback.receivedAt;
+      }
+      data.feedback.push({
+        id: localId('feedback'),
+        ...feedback,
+        status: accepted ? 'unparsed' : 'duplicate',
+        createdAt: feedback.receivedAt
+      });
+      return { accepted };
+    });
+  },
+
+  async saveEmailEvent(event) {
+    await mutateLocalData(data => {
+      data.emailEvents.push({ id: localId('email_event'), ...event, createdAt: event.createdAt || new Date().toISOString() });
+    });
+  },
+
+  async saveInboundEvent(event) {
+    await mutateLocalData(data => {
+      data.inboundEvents.push({ id: localId('inbound_event'), ...event, createdAt: event.createdAt || new Date().toISOString() });
+    });
+  },
+
+  async saveDeliveryEvent(event) {
+    await mutateLocalData(data => {
+      data.deliveryEvents.push({ id: localId('delivery_event'), ...event, createdAt: event.createdAt || new Date().toISOString() });
+    });
+  }
 };
 
 function normalizeText(value, maxLength, { preserveLines = false } = {}) {
@@ -120,29 +371,6 @@ function normalizeText(value, maxLength, { preserveLines = false } = {}) {
     .replace(preserveLines ? /[ \t]+/g : /\s+/g, ' ')
     .trim()
     .slice(0, maxLength);
-}
-
-function validateContact(body) {
-  const payload = {
-    firstName: normalizeText(body.firstName, FIELD_LIMITS.firstName),
-    lastName: normalizeText(body.lastName, FIELD_LIMITS.lastName),
-    email: normalizeText(body.email, FIELD_LIMITS.email).toLowerCase(),
-    phone: normalizeText(body.phone, FIELD_LIMITS.phone),
-    projectType: normalizeText(body.projectType, FIELD_LIMITS.projectType),
-    material: normalizeText(body.material, FIELD_LIMITS.material),
-    source: normalizeText(body.source, FIELD_LIMITS.source),
-    message: normalizeText(body.message, FIELD_LIMITS.message, { preserveLines: true })
-  };
-
-  if (!payload.firstName || !payload.lastName || !payload.email || !payload.phone) {
-    return { error: 'Please fill out all required fields.' };
-  }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
-    return { error: 'Please enter a valid email address.' };
-  }
-
-  return { payload };
 }
 
 function validatePerformanceMetric(body) {
@@ -167,25 +395,6 @@ function validatePerformanceMetric(body) {
   };
 }
 
-function getWebhookUrl() {
-  const rawUrl = process.env.N8N_WEBHOOK_URL;
-  if (!rawUrl || rawUrl === 'YOUR_N8N_WEBHOOK_URL_HERE') return null;
-
-  try {
-    const webhookUrl = new URL(rawUrl);
-    const isLocalWebhook = ['localhost', '127.0.0.1', '::1'].includes(webhookUrl.hostname);
-
-    if (webhookUrl.protocol !== 'https:' && !(webhookUrl.protocol === 'http:' && isLocalWebhook && !isProduction)) {
-      throw new Error('Webhook URL must use HTTPS outside local development.');
-    }
-
-    return webhookUrl.toString();
-  } catch (error) {
-    console.error('Invalid N8N_WEBHOOK_URL:', error.message);
-    return null;
-  }
-}
-
 app.post('/api/performance', performanceLimiter, (req, res) => {
   const { payload: metric, error } = validatePerformanceMetric(req.body || {});
 
@@ -198,56 +407,83 @@ app.post('/api/performance', performanceLimiter, (req, res) => {
 });
 
 // API Endpoint for Contact Form
-app.post('/api/contact', contactLimiter, async (req, res) => {
+app.all('/api/contact', contactLimiter, async (req, res) => {
   try {
-    const { payload: contact, error } = validateContact(req.body);
-
-    if (error) {
-      return res.status(400).json({ success: false, message: error });
-    }
-
-    // Generic webhook payload
-    const payload = {
-      ...contact,
-      source: contact.source || 'Website Contact Form',
-      dateCreated: new Date().toISOString().split('T')[0]
-    };
-
-    const webhookUrl = getWebhookUrl();
-
-    if (webhookUrl) {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000);
-
-      // Forward to n8n (or any generic webhook)
-      const response = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload),
-        signal: controller.signal
-      }).finally(() => clearTimeout(timeout));
-
-      if (!response.ok) {
-        console.error('Failed to forward contact request to webhook:', response.status, response.statusText);
-        return res.status(502).json({ success: false, message: 'We could not submit your request. Please call us directly.' });
-      } else {
-        console.log('Contact request forwarded to webhook.');
-      }
-    } else {
-      console.warn('No valid webhook URL configured.');
-      if (isProduction) {
-        return res.status(503).json({ success: false, message: 'Contact form is temporarily unavailable. Please call us directly.' });
-      }
-    }
-
-    res.status(200).json({ success: true, message: 'Thank you for your request! We will be in touch shortly.' });
+    const { handleContactRequest } = await automationModule();
+    const request = makeFetchRequest(req, {
+      body: ['GET', 'HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body || {}),
+      contentType: 'application/json'
+    });
+    const response = await handleContactRequest(request, localEnv(req), {
+      store: localStore,
+      requireWebhook: isProduction,
+      allowLocalWebhook: !isProduction
+    });
+    await sendFetchResponse(res, response);
   } catch (error) {
     console.error('Error handling contact form submission:', error);
     res.status(500).json({ success: false, message: 'An internal error occurred. Please try again later.' });
   }
 });
+
+app.all('/feedback', async (req, res) => {
+  try {
+    const { handleFeedbackRequest } = await automationModule();
+    const isPost = req.method === 'POST';
+    const request = makeFetchRequest(req, {
+      body: isPost ? new URLSearchParams(req.body || {}).toString() : undefined,
+      contentType: isPost ? 'application/x-www-form-urlencoded' : undefined
+    });
+    const response = await handleFeedbackRequest(request, localEnv(req), { store: localStore });
+    await sendFetchResponse(res, response);
+  } catch (error) {
+    console.error('Error handling feedback request:', error);
+    res.status(500).send('An internal error occurred.');
+  }
+});
+
+app.all('/api/postmark/inbound', webhookLimiter, async (req, res) => {
+  try {
+    const { handlePostmarkInboundRequest } = await automationModule();
+    const request = makeFetchRequest(req, {
+      body: ['GET', 'HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body || {}),
+      contentType: 'application/json'
+    });
+    const response = await handlePostmarkInboundRequest(request, localEnv(req), { store: localStore });
+    await sendFetchResponse(res, response);
+  } catch (error) {
+    console.error('Error handling Postmark inbound webhook:', error);
+    res.status(500).json({ success: false, message: 'An internal error occurred.' });
+  }
+});
+
+app.all('/api/postmark/webhook', webhookLimiter, async (req, res) => {
+  try {
+    const { handlePostmarkWebhookRequest } = await automationModule();
+    const request = makeFetchRequest(req, {
+      body: ['GET', 'HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body || {}),
+      contentType: 'application/json'
+    });
+    const response = await handlePostmarkWebhookRequest(request, localEnv(req), { store: localStore });
+    await sendFetchResponse(res, response);
+  } catch (error) {
+    console.error('Error handling Postmark event webhook:', error);
+    res.status(500).json({ success: false, message: 'An internal error occurred.' });
+  }
+});
+
+if (!isProduction) {
+  app.post('/api/dev/run-feedback-cron', async (req, res) => {
+    try {
+      const { processDueFeedbackEmails } = await automationModule();
+      const result = await processDueFeedbackEmails(localEnv(req), { store: localStore });
+      res.json({ success: true, result });
+    } catch (error) {
+      console.error('Error running local feedback cron:', error);
+      res.status(500).json({ success: false, message: 'Could not run feedback cron.' });
+    }
+  });
+}
 
 app.use((error, req, res, next) => {
   if (res.headersSent) {
