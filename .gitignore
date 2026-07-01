@@ -1,6 +1,11 @@
 node_modules/
+
+# Local secrets. Commit only sanitized templates such as .env.example.
 .env
+.env.*
+!.env.example
 .dev.vars
+.dev.vars.*
 .data/
 .DS_Store
 npm-debug.log*
