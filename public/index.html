@@ -1488,20 +1488,6 @@ function nextStep(n){
   }
   go('wizard-section');
 }
-function getUTMParameters(){
-  try {
-    const params = new URLSearchParams(window.location.search);
-    return {
-      source: params.get('utm_source') || '',
-      medium: params.get('utm_medium') || '',
-      campaign: params.get('utm_campaign') || '',
-      term: params.get('utm_term') || '',
-      content: params.get('utm_content') || ''
-    };
-  } catch (e) {
-    return { source: '', medium: '', campaign: '', term: '', content: '' };
-  }
-}
 function retryWizard(){
   document.getElementById('wz-failure').classList.remove('show');
   document.getElementById('wzProgress').style.display='flex';
@@ -1533,11 +1519,6 @@ async function submitWizard(){
   submitBtn.disabled = true;
   submitBtn.textContent = 'Sending...';
 
-  const utms = getUTMParameters();
-  const utmSummary = (utms.source || utms.medium || utms.campaign)
-    ? `Source: ${utms.source || 'N/A'}, Medium: ${utms.medium || 'N/A'}, Campaign: ${utms.campaign || 'N/A'}`
-    : 'None';
-  const trackingStr = `\n\n--- Metadata ---\nURL: ${window.location.href}\nReferrer: ${document.referrer || 'Direct'}\nUTM Params: ${utmSummary}\nTimestamp: ${new Date().toISOString()}\nCTA Source: ${wzData.sourceCta || 'Direct'}`;
   const projectSummaryStr = `Project: ${getProjectValue() || 'Not specified'}\nMaterial: ${wzData.material || 'Not specified'}\nSize: ${wzData.size || 'N/A'}\nTimeline: ${wzData.timeline || 'N/A'}\nAddress: ${document.getElementById('wzAddr').value.trim() || 'Not provided'}\nNotes: ${document.getElementById('wzNote').value.trim() || 'None'}`;
 
   const payload = {
@@ -1547,7 +1528,7 @@ async function submitWizard(){
     phone: p.value.trim(),
     projectType: getProjectValue() || 'Not specified',
     material: wzData.material || 'Not specified',
-    message: `${projectSummaryStr}${trackingStr}`,
+    message: projectSummaryStr,
     source: `Website Wizard - ${wzData.sourceCta || 'Direct'}`,
     dateCreated: new Date().toISOString().split('T')[0]
   };
