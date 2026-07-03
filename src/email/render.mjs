@@ -54,13 +54,22 @@ function nl2br(value = '') {
   return escapeHtml(value).replace(/\n/g, '<br>');
 }
 
+function customerVisibleMessage(value = '') {
+  if (typeof value !== 'string') return '';
+
+  return value
+    .replace(/\r\n?/g, '\n')
+    .replace(/(?:^|\n)\s*---\s*Metadata\s*---[\s\S]*$/i, '')
+    .trim();
+}
+
 function summaryRows(lead) {
   const rows = [
     ['Project type', lead.projectType],
     ['Material', lead.material],
     ['Phone', lead.phone],
     ['Email', lead.email],
-    ['Message', lead.message]
+    ['Message', customerVisibleMessage(lead.message)]
   ].filter(([, value]) => value && value !== 'Not specified' && value !== 'None');
 
   if (!rows.length) return '';
@@ -142,6 +151,7 @@ function emailShell({ preheader, eyebrow, title, bodyHtml }) {
 export function renderImmediateConfirmationEmail({ lead }) {
   const customerName = lead.customerName || `${lead.firstName || ''} ${lead.lastName || ''}`.trim() || 'there';
   const subject = 'We received your Stone Bellisimo request';
+  const message = customerVisibleMessage(lead.message);
   const bodyHtml = `
     <p style="margin:0 0 16px;font:400 16px/1.75 Arial,sans-serif;color:${COLORS.ink};">Hi ${escapeHtml(customerName)}, thank you for reaching out to Stone Bellisimo. We received your project request and our team will review it shortly. Cesar, Cristian, or Bella may contact you to help schedule your free estimate and answer any questions.</p>
     <p style="margin:0;font:400 15px/1.75 Arial,sans-serif;color:${COLORS.muted};">We are a family-owned stone fabrication team specializing in quartz, granite, marble, quartzite, porcelain, and custom countertop work throughout Union City and nearby New Jersey communities.</p>
@@ -163,7 +173,7 @@ export function renderImmediateConfirmationEmail({ lead }) {
     lead.material ? `Material: ${lead.material}` : '',
     lead.phone ? `Phone: ${lead.phone}` : '',
     lead.email ? `Email: ${lead.email}` : '',
-    lead.message ? `Message: ${lead.message}` : '',
+    message ? `Message: ${message}` : '',
     '',
     'Contact options:',
     `Office: ${BUSINESS_INFO.officePhone}`,

@@ -90,6 +90,15 @@ export function normalizeText(value, maxLength, { preserveLines = false } = {}) 
     .slice(0, maxLength);
 }
 
+export function stripSubmissionMetadata(value) {
+  if (typeof value !== 'string') return '';
+
+  return value
+    .replace(/\r\n?/g, '\n')
+    .replace(/(?:^|\n)\s*---\s*Metadata\s*---[\s\S]*$/i, '')
+    .trim();
+}
+
 export function validateContact(body) {
   const payload = {
     firstName: normalizeText(body?.firstName, FIELD_LIMITS.firstName),
@@ -99,7 +108,7 @@ export function validateContact(body) {
     projectType: normalizeText(body?.projectType, FIELD_LIMITS.projectType),
     material: normalizeText(body?.material, FIELD_LIMITS.material),
     source: normalizeText(body?.source, FIELD_LIMITS.source),
-    message: normalizeText(body?.message, FIELD_LIMITS.message, { preserveLines: true })
+    message: normalizeText(stripSubmissionMetadata(body?.message), FIELD_LIMITS.message, { preserveLines: true })
   };
 
   if (!payload.firstName || !payload.lastName || !payload.email || !payload.phone) {
