@@ -8,6 +8,7 @@ import {
   SECURITY_HEADERS,
   withSecurityHeaders
 } from './src/lead-automation.mjs';
+import { handleGoogleReviewsRequest } from './src/google-reviews.mjs';
 
 const SECURITY_TXT = `Contact: mailto:Stonebellisimollc@outlook.com
 Preferred-Languages: en
@@ -26,6 +27,10 @@ export default {
 
     if (url.pathname === '/api/contact') {
       return handleContactRequest(request, env, { requireWebhook: true });
+    }
+
+    if (url.pathname === '/api/google-reviews') {
+      return handleGoogleReviewsRequest(request, env);
     }
 
     if (url.pathname === '/feedback') {

@@ -85,6 +85,33 @@ Do not use Cloudflare's "Upload and deploy" static-file screen for `cloudflare-w
 
 You do not add the webhook to Cloudflare DNS. You add it as a Worker secret/env var. You also do not need a GitHub secret for this GitHub Pages deployment, because GitHub Pages has no backend runtime that can read it.
 
+## Google Reviews Setup
+
+The homepage calls `/api/google-reviews` to load the newest 5-star Google reviews for Stone Bellisimo. The API key must stay server-side as a Worker secret.
+
+1. In Google Cloud, enable the Places API for the project that owns the Maps API key.
+2. Add the key to the Worker:
+
+   ```sh
+   npm run worker:secret:google
+   ```
+
+   Paste the Google Maps Platform API key when Wrangler asks for the value.
+
+3. Deploy the Worker:
+
+   ```sh
+   npm run deploy:worker
+   ```
+
+4. Confirm the live endpoint:
+
+   ```sh
+   curl -i https://stonebellisimollc.com/api/google-reviews
+   ```
+
+The public place ID, review limit, and cache duration live in `wrangler.jsonc`. Official Google Place Details responses can return up to 5 reviews, so the page keeps static fallback reviews if the live response has no matching 5-star reviews.
+
 ## Postmark Automation
 
 The Worker now stores every valid lead in D1, keeps forwarding the submission to n8n, sends the immediate confirmation email through Postmark, and schedules the feedback request through Worker Cron.

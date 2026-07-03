@@ -116,12 +116,20 @@ const webhookLimiter = rateLimit({
 });
 
 let automationModulePromise;
+let googleReviewsModulePromise;
 
 function automationModule() {
   if (!automationModulePromise) {
     automationModulePromise = import('./src/lead-automation.mjs');
   }
   return automationModulePromise;
+}
+
+function googleReviewsModule() {
+  if (!googleReviewsModulePromise) {
+    googleReviewsModulePromise = import('./src/google-reviews.mjs');
+  }
+  return googleReviewsModulePromise;
 }
 
 function emptyLocalData() {
@@ -404,6 +412,17 @@ app.post('/api/performance', performanceLimiter, (req, res) => {
 
   console.info('Performance metric:', metric);
   res.status(204).send();
+});
+
+app.all('/api/google-reviews', performanceLimiter, async (req, res) => {
+  try {
+    const { handleGoogleReviewsRequest } = await googleReviewsModule();
+    const response = await handleGoogleReviewsRequest(makeFetchRequest(req), localEnv(req));
+    await sendFetchResponse(res, response);
+  } catch (error) {
+    console.error('Error handling Google reviews request:', error);
+    res.status(500).json({ success: false, message: 'An internal error occurred.' });
+  }
 });
 
 // API Endpoint for Contact Form

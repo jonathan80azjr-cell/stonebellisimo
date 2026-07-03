@@ -200,18 +200,22 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 .g-video video{background:#111}
 
 /* REVIEWS */
-.reviews{background:var(--cream)}
-.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
-.review-card{background:var(--sand);border-radius:20px;padding:32px 28px;transition:transform .25s,box-shadow .25s;position:relative}
-.review-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.07)}
-.review-stars{display:flex;gap:3px;margin-bottom:14px}
-.review-stars span{color:#f5a623;font-size:14px}
-.review-text{font-size:14px;font-weight:300;color:var(--ink);line-height:1.75;margin-bottom:20px;font-style:italic}
+.reviews{background:linear-gradient(180deg,var(--cream) 0%,#fffdf8 54%,var(--gold-pale) 100%)}
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:56px}
+.review-card{background:rgba(255,255,255,.78);border:1px solid rgba(179,145,88,.16);border-radius:20px;padding:28px;transition:transform .25s,box-shadow .25s,border-color .25s;position:relative;overflow:hidden;box-shadow:0 14px 42px rgba(65,48,21,.06);min-height:300px;display:flex;flex-direction:column}
+.review-card::before{content:'"';position:absolute;right:20px;bottom:-34px;font-family:'Cormorant Garamond',serif;font-size:138px;line-height:1;color:rgba(179,145,88,.09);pointer-events:none}
+.review-card:hover{transform:translateY(-5px);box-shadow:0 20px 54px rgba(65,48,21,.12);border-color:rgba(179,145,88,.34)}
+.review-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;position:relative;z-index:1}
+.review-stars{display:flex;gap:3px;line-height:1}
+.review-stars span{color:#f7b733;font-size:17px;text-shadow:0 1px 0 rgba(104,69,13,.15)}
+.review-text{font-size:14px;font-weight:300;color:var(--ink);line-height:1.78;margin-bottom:24px;font-style:italic;position:relative;z-index:1;flex:1}
 .review-author{display:flex;align-items:center;gap:12px}
-.review-avatar{width:38px;height:38px;border-radius:50%;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--gold);flex-shrink:0}
+.review-avatar{width:42px;height:42px;border-radius:50%;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--gold);flex-shrink:0;overflow:hidden}
+.review-avatar img{width:100%;height:100%;object-fit:cover;display:block}
 .review-name{font-size:13px;font-weight:500;color:var(--ink)}
 .review-loc{font-size:11px;color:var(--muted);margin-top:2px}
-.review-source{position:absolute;top:24px;right:24px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.review-source{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);text-decoration:none;background:rgba(179,145,88,.12);border:1px solid rgba(179,145,88,.18);border-radius:100px;padding:6px 10px;white-space:nowrap}
+.review-source:hover{background:rgba(179,145,88,.2)}
 .reviews-footer{text-align:center;margin-top:32px;font-size:13px;color:var(--muted)}
 .reviews-footer a{color:var(--gold);text-decoration:none;font-weight:500}
 .reviews-footer a:hover{text-decoration:underline}
@@ -888,27 +892,33 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   <div class="sw">
     <span class="s-tag r">Customer Reviews</span>
     <h2 class="s-h r2">What NJ homeowners<br><em>are saying.</em></h2>
-    <div class="reviews-grid">
+    <div class="reviews-grid" id="reviewsGrid">
       <div class="review-card r">
-        <div class="review-source">Google Review</div>
-        
+        <div class="review-top">
+          <div class="review-stars" aria-label="5 out of 5 stars"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></div>
+          <a class="review-source" href="https://www.google.com/maps/search/?api=1&amp;query=Stone%20Bellisimo%20LLC&amp;query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener">Google</a>
+        </div>
         <p class="review-text">"Cesar and his team did an incredible job on our kitchen. From the moment they came to measure to the final installation, everything was professional and seamless. The granite looks absolutely stunning — better than I imagined."</p>
         <div class="review-author"><div class="review-avatar">M</div><div><div class="review-name">Maria G.</div><div class="review-loc">Union City, NJ</div></div></div>
       </div>
       <div class="review-card r2">
-        <div class="review-source">Google Review</div>
-        
+        <div class="review-top">
+          <div class="review-stars" aria-label="5 out of 5 stars"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></div>
+          <a class="review-source" href="https://www.google.com/maps/search/?api=1&amp;query=Stone%20Bellisimo%20LLC&amp;query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener">Google</a>
+        </div>
         <p class="review-text">"We used Stone Bellisimo for our bathroom vanity and couldn't be happier. Fair pricing, no surprises, and the quality is top-notch. Cristian was very helpful walking us through the material options. Highly recommend!"</p>
         <div class="review-author"><div class="review-avatar">R</div><div><div class="review-name">Roberto S.</div><div class="review-loc">Hoboken, NJ</div></div></div>
       </div>
       <div class="review-card r3">
-        <div class="review-source">Google Review</div>
-        
+        <div class="review-top">
+          <div class="review-stars" aria-label="5 out of 5 stars"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></div>
+          <a class="review-source" href="https://www.google.com/maps/search/?api=1&amp;query=Stone%20Bellisimo%20LLC&amp;query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener">Google</a>
+        </div>
         <p class="review-text">"Family-owned and it really shows — they treat every project like it's their own home. We had quartz installed in the kitchen and got the free sink too. Can't beat the value. We'll be using them again for the master bath."</p>
         <div class="review-author"><div class="review-avatar">J</div><div><div class="review-name">Jennifer L.</div><div class="review-loc">Jersey City, NJ</div></div></div>
       </div>
     </div>
-    <div class="reviews-footer r">4.9 average across Google, Houzz &amp; Facebook · <a href="https://www.google.com/maps/search/?api=1&amp;query=Stone%20Bellisimo%20LLC&amp;query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener">See all reviews →</a></div>
+    <div class="reviews-footer r" id="reviewsFooter">4.9 average across Google, Houzz &amp; Facebook · <a href="https://www.google.com/maps/search/?api=1&amp;query=Stone%20Bellisimo%20LLC&amp;query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener">See all reviews →</a></div>
     <div class="review-ask r2">
       <div class="review-ask-copy">
         <div class="review-ask-kicker">Loved your new stone?</div>
@@ -1339,8 +1349,98 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 /* ── DATA ── */
 const wzData = {project:'',material:'',size:'',timeline:'',sourceCta:'Direct'};
 const CONTACT_API_ENDPOINT = '/api/contact';
+const GOOGLE_REVIEWS_API_ENDPOINT = '/api/google-reviews';
 function getContactEndpoint(){
   return CONTACT_API_ENDPOINT;
+}
+function makeStarRating(rating){
+  const stars=document.createElement('div');
+  stars.className='review-stars';
+  stars.setAttribute('aria-label',`${rating} out of 5 stars`);
+  for(let i=0;i<5;i++){
+    const star=document.createElement('span');
+    star.setAttribute('aria-hidden','true');
+    star.textContent='★';
+    stars.appendChild(star);
+  }
+  return stars;
+}
+function makeReviewCard(review,index,googleMapsUrl){
+  const card=document.createElement('div');
+  card.className=`review-card r${index%3===0?'':index%3+1}`;
+
+  const top=document.createElement('div');
+  top.className='review-top';
+  top.appendChild(makeStarRating(5));
+  const source=document.createElement('a');
+  source.className='review-source';
+  source.href=googleMapsUrl || 'https://www.google.com/maps/search/?api=1&query=Stone%20Bellisimo%20LLC&query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY';
+  source.target='_blank';
+  source.rel='noopener';
+  source.textContent='Google';
+  top.appendChild(source);
+  card.appendChild(top);
+
+  const text=document.createElement('p');
+  text.className='review-text';
+  text.textContent=`"${review.text}"`;
+  card.appendChild(text);
+
+  const author=document.createElement('div');
+  author.className='review-author';
+  const avatar=document.createElement('div');
+  avatar.className='review-avatar';
+  if(review.profilePhotoUrl){
+    const img=document.createElement('img');
+    img.src=review.profilePhotoUrl;
+    img.alt='';
+    img.loading='lazy';
+    avatar.appendChild(img);
+  }else{
+    avatar.textContent=review.authorInitial || 'G';
+  }
+  const meta=document.createElement('div');
+  const name=document.createElement('div');
+  name.className='review-name';
+  name.textContent=review.authorName || 'Google reviewer';
+  const when=document.createElement('div');
+  when.className='review-loc';
+  when.textContent=review.relativeTime || 'Recent Google review';
+  meta.append(name,when);
+  author.append(avatar,meta);
+  card.appendChild(author);
+
+  return card;
+}
+function renderGoogleReviews(data){
+  if(!data || !data.configured || !Array.isArray(data.reviews) || data.reviews.length===0)return;
+  const grid=document.getElementById('reviewsGrid');
+  if(!grid)return;
+  const url=data.googleMapsUrl || 'https://www.google.com/maps/search/?api=1&query=Stone%20Bellisimo%20LLC&query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY';
+  grid.replaceChildren(...data.reviews.map((review,index)=>makeReviewCard(review,index,url)));
+  const footer=document.getElementById('reviewsFooter');
+  if(footer){
+    footer.replaceChildren();
+    const summary=document.createTextNode(`${data.rating ? `${data.rating.toFixed(1)} Google rating` : 'Latest Google reviews'}${data.userRatingsTotal ? ` across ${data.userRatingsTotal} reviews` : ''} · Showing newest 5-star reviews · `);
+    const link=document.createElement('a');
+    link.href=url;
+    link.target='_blank';
+    link.rel='noopener';
+    link.textContent='See all reviews →';
+    footer.append(summary,link);
+  }
+  if(typeof ro!=='undefined'){
+    grid.querySelectorAll('.r,.r2,.r3').forEach(el=>ro.observe(el));
+  }
+}
+async function loadGoogleReviews(){
+  try{
+    const response=await fetch(GOOGLE_REVIEWS_API_ENDPOINT,{headers:{accept:'application/json'}});
+    if(!response.ok)return;
+    renderGoogleReviews(await response.json());
+  }catch(error){
+    console.info('Using static review fallback.');
+  }
 }
 const matData = {
   granite:{tag:'Natural Stone',title:'Granite',img:'./assets/img/material1-800.jpg',avif:'./assets/img/material1-800.avif',desc:'Granite is one of the hardest natural stones on earth. Every slab is completely unique, with its own pattern of minerals and veining — no two kitchens will ever look the same.',pros:['Extremely scratch & heat resistant','Each slab is one-of-a-kind','Available in hundreds of colors','Very long-lasting — often 30+ years'],price:'$45 – $85 / sqft installed',note:'Exact price after free in-home measurement'},
@@ -1368,6 +1468,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMob();closeMod
 /* ── REVEAL ── */
 const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}}),{threshold:0.1});
 document.querySelectorAll('.r,.r2,.r3').forEach(el=>ro.observe(el));
+loadGoogleReviews();
 
 /* ── DRAG SCROLL ── */
 function draggable(id){

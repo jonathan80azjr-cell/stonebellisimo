@@ -12,7 +12,10 @@
 		"POSTMARK_FEEDBACK_REPLY_DOMAIN": "stonebellisimollc.com",
 		"BUSINESS_NOTIFICATION_EMAIL": "cesaryunda@hotmail.com",
 		"BUSINESS_REPLY_TO_EMAIL": "cesaryunda@hotmail.com",
-		"FEEDBACK_DELAY_DAYS": "7"
+		"FEEDBACK_DELAY_DAYS": "7",
+		"GOOGLE_PLACE_ID": "ChIJVbaFyYZXwokRgfG3kFqd5MY",
+		"GOOGLE_REVIEWS_LIMIT": "5",
+		"GOOGLE_REVIEWS_CACHE_SECONDS": "900"
 	},
 	"d1_databases": [
 		{

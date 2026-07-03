@@ -879,10 +879,12 @@ export async function handleContactRequest(request, env, options = {}) {
   const webhookResult = await forwardToWebhook(webhookPayload, env, { allowLocal: options.allowLocalWebhook });
   if (webhookResult.ok === false) {
     console.error('Failed to forward contact request to webhook:', webhookResult);
-    return json(
-      { success: false, message: 'We could not submit your request. Please call us directly.' },
-      502
-    );
+    if (requireWebhook) {
+      return json(
+        { success: false, message: 'We could not submit your request. Please call us directly.' },
+        502
+      );
+    }
   }
 
   const confirmationEmail = renderImmediateConfirmationEmail({ lead });
