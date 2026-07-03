@@ -151,6 +151,74 @@ npm run email:test
 
 This command reads `.env`, sends to `POSTMARK_TEST_EMAIL`, and uses the configured `POSTMARK_FROM_EMAIL`, `POSTMARK_MESSAGE_STREAM`, and `BUSINESS_REPLY_TO_EMAIL`.
 
+## Testing the Reminder Email
+
+Generate local HTML and text previews for both customer emails:
+
+```sh
+npm run email:preview
+```
+
+Open these files in a browser or text editor:
+
+- `.data/email-previews/confirmation.html`
+- `.data/email-previews/feedback.html`
+- `.data/email-previews/confirmation.txt`
+- `.data/email-previews/feedback.txt`
+
+To send the seven-day feedback/reminder email template to yourself through Postmark, set `POSTMARK_TEST_EMAIL` and `POSTMARK_SERVER_TOKEN` in `.env`, then run:
+
+```sh
+npm run email:test:feedback
+```
+
+That proves the email design and Postmark credentials work. The rating buttons use a preview-only token; clicking them opens a preview page and does not submit feedback. This command does not prove the delayed scheduling path by itself.
+
+For a local end-to-end test of the scheduler:
+
+1. Keep `POSTMARK_MOCK_MODE=true` in `.env`.
+2. Run `npm run dev`.
+3. Submit the website form with your own email.
+4. Confirm `.data/lead-automation.json` contains a lead with `feedbackEmailDueAt` seven days after `submittedAt`.
+5. For that test lead only, edit `feedbackEmailDueAt` in `.data/lead-automation.json` to a timestamp in the past.
+6. Trigger the local scheduler:
+
+   ```sh
+   curl -X POST http://localhost:3000/api/dev/run-feedback-cron
+   ```
+
+7. Confirm the response has `"sent":1`, the lead has `feedbackEmailSentAt`, and `emailEvents` contains a successful `feedback_request` event.
+
+For a production smoke test:
+
+1. Submit the live website form using an email address you control.
+2. Find the newest test lead in remote D1:
+
+   ```sh
+   npx wrangler d1 execute stonebellisimo-leads --remote --command "SELECT id, email, submittedAt, feedbackEmailDueAt, feedbackEmailSentAt, feedbackStatus FROM leads WHERE email = 'you@example.com' ORDER BY submittedAt DESC LIMIT 3;"
+   ```
+
+3. Confirm `feedbackEmailDueAt` is exactly seven days after `submittedAt`.
+4. To avoid waiting seven days, move only that test lead into the due queue:
+
+   ```sh
+   npx wrangler d1 execute stonebellisimo-leads --remote --command "UPDATE leads SET feedbackEmailDueAt = strftime('%Y-%m-%dT%H:%M:%fZ','now','-1 minute'), feedbackEmailSentAt = NULL, feedbackEmailClaimedAt = NULL, feedbackStatus = 'pending', feedbackEmailAttemptCount = 0, feedbackEmailLastError = NULL WHERE id = 'lead_REPLACE_WITH_TEST_ID';"
+   ```
+
+5. The deployed Worker cron runs hourly at minute `0` UTC. After the next run, confirm send state:
+
+   ```sh
+   npx wrangler d1 execute stonebellisimo-leads --remote --command "SELECT id, email, feedbackEmailDueAt, feedbackEmailSentAt, feedbackStatus, postmarkFeedbackMessageId, feedbackEmailLastError FROM leads WHERE id = 'lead_REPLACE_WITH_TEST_ID';"
+   ```
+
+6. Confirm the send event:
+
+   ```sh
+   npx wrangler d1 execute stonebellisimo-leads --remote --command "SELECT eventType, recipient, subject, status, postmarkMessageId, error, createdAt FROM email_events WHERE leadId = 'lead_REPLACE_WITH_TEST_ID' ORDER BY createdAt DESC LIMIT 5;"
+   ```
+
+You can also run `npm run worker:dev` and visit `http://localhost:8787/__scheduled` to test the Worker scheduled handler locally with Wrangler.
+
 ## n8n Payload
 
 The existing n8n webhook still receives the original contact fields plus automation metadata:

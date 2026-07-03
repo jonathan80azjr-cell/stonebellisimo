@@ -35,6 +35,7 @@ const DEFAULT_TOKEN_TTL_DAYS = 90;
 const DEFAULT_CONTACT_RATE_LIMIT = 8;
 const DEFAULT_FEEDBACK_BATCH_LIMIT = 25;
 const DEFAULT_FEEDBACK_MAX_ATTEMPTS = 8;
+const FEEDBACK_PREVIEW_TOKEN = 'preview-token-only-links-will-not-submit';
 
 const encoder = new TextEncoder();
 
@@ -942,6 +943,10 @@ function isValidRating(value) {
   return Number.isInteger(rating) && rating >= 1 && rating <= 5;
 }
 
+function isFeedbackPreviewToken(token) {
+  return token === FEEDBACK_PREVIEW_TOKEN;
+}
+
 function feedbackPageShell({ title, body, status = 200 }) {
   return html(`<!doctype html>
 <html lang="en">
@@ -1076,6 +1081,30 @@ function renderCommentFormPage(token, rating) {
   });
 }
 
+function renderPreviewFeedbackPage(token, rating = '') {
+  const selectedRating = isValidRating(rating) ? Number(rating) : null;
+  const buttons = [1, 2, 3, 4, 5].map(value => {
+    const selected = value === selectedRating ? ' selected' : '';
+    const href = `/feedback?token=${encodeURIComponent(token)}&rating=${value}`;
+    return `<a class="rating${selected}" href="${href}" aria-label="Preview rate ${value} out of 5">${value}</a>`;
+  }).join('');
+  const heading = selectedRating ? `Preview rating: ${selectedRating} out of 5` : 'Preview feedback link';
+
+  return feedbackPageShell({
+    title: 'Feedback Preview',
+    body: `${renderFeedbackHeader('Feedback preview')}
+      <div class="body">
+        <h2>${escapeForPage(heading)}</h2>
+        <p>This is a test email preview, so no feedback was submitted. Real customer feedback emails include private signed links that open the live submission form.</p>
+        <div class="ratings">${buttons}</div>
+        <p class="muted">To test a real submission, create a test lead and send the scheduled feedback email for that lead.</p>
+        <div class="actions">
+          <a class="button" href="/">Return to Website</a>
+        </div>
+      </div>`
+  });
+}
+
 function renderThanksPage() {
   return feedbackPageShell({
     title: 'Feedback Received',
@@ -1126,15 +1155,15 @@ export async function handleFeedbackRequest(request, env, options = {}) {
   if (request.method === 'OPTIONS') return new Response(null, { status: 204 });
   if (!['GET', 'POST'].includes(request.method)) return methodNotAllowed(['GET', 'POST', 'OPTIONS']);
 
-  const store = getStore(env, options);
-
   if (request.method === 'GET') {
     const url = new URL(request.url);
     const token = normalizeText(url.searchParams.get('token') || '', 512);
     const rating = normalizeText(url.searchParams.get('rating') || '', 2);
 
     if (!token) return renderInvalidFeedbackPage('invalid');
+    if (isFeedbackPreviewToken(token)) return renderPreviewFeedbackPage(token, rating);
 
+    const store = getStore(env, options);
     const result = await getLeadForFeedbackToken(token, env, store);
     if (!result.ok) return renderInvalidFeedbackPage(result.reason);
 
@@ -1153,7 +1182,9 @@ export async function handleFeedbackRequest(request, env, options = {}) {
   const comment = normalizeText(body.comment, FIELD_LIMITS.comment, { preserveLines: true });
 
   if (!token || !isValidRating(rating)) return renderInvalidFeedbackPage('invalid');
+  if (isFeedbackPreviewToken(token)) return renderPreviewFeedbackPage(token, rating);
 
+  const store = getStore(env, options);
   const result = await getLeadForFeedbackToken(token, env, store);
   if (!result.ok) return renderInvalidFeedbackPage(result.reason);
   if (result.lead.feedbackStatus === 'received') return renderAlreadyReceivedPage();
