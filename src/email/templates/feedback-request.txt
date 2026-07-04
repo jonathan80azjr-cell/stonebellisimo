@@ -11,7 +11,10 @@ Please choose a rating from 1 to 5:
 4: {{feedback_url_4}}
 5: {{feedback_url_5}}
 
-You can click a rating above, or simply reply to this email with a number from 1 to 5 and any comments.
+Prefer to type your feedback? Use this link to write a comment:
+{{feedback_url}}
+
+A rating is helpful, but your written note is welcome either way. You can also reply to this email with a number from 1 to 5 and any comments.
 
 Thank you,
 Stone Bellisimo

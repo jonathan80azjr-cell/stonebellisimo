@@ -980,12 +980,18 @@ function feedbackPageShell({ title, body, status = 200 }) {
     .ratings{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:24px 0}
     .rating{display:flex;align-items:center;justify-content:center;min-height:56px;border-radius:999px;background:#171614;color:#fff;text-decoration:none;font-size:20px;font-weight:700;border:1px solid #171614}
     .rating.selected{background:#b39158;border-color:#b39158}
+    .rating-option{position:relative;display:block;min-width:0}
+    .rating-option input{position:absolute;opacity:0;pointer-events:none}
+    .rating-option span{display:flex;align-items:center;justify-content:center;min-height:56px;border-radius:999px;background:#171614;color:#fff;text-decoration:none;font-size:20px;font-weight:700;border:1px solid #171614;cursor:pointer}
+    .rating-option input:checked+span{background:#b39158;border-color:#b39158}
+    .rating-option input:focus-visible+span{outline:3px solid rgba(179,145,88,.35);outline-offset:3px}
     label{display:block;margin:18px 0 8px;font-size:13px;font-weight:700;color:#171614}
     textarea{width:100%;min-height:138px;resize:vertical;border:1px solid #d9cdbd;border-radius:12px;padding:14px 15px;font:400 15px/1.5 Inter,Arial,sans-serif;color:#171614;background:#fcfbf8}
     button,.button{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:999px;background:#b39158;color:#fff;text-decoration:none;padding:14px 24px;font-size:14px;font-weight:700;cursor:pointer}
     .muted{font-size:13px;color:#8b877f}
+    .error{padding:12px 14px;border-radius:10px;background:#fff5f2;border:1px solid #edc5ba;color:#7c2417}
     .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
-    @media(max-width:520px){body{padding:0;align-items:stretch}main{border-radius:0;min-height:100vh}.body,.head{padding-left:22px;padding-right:22px}.ratings{gap:8px}.rating{min-height:50px}}
+    @media(max-width:520px){body{padding:0;align-items:stretch}main{border-radius:0;min-height:100vh}.body,.head{padding-left:22px;padding-right:22px}.ratings{gap:8px}.rating,.rating-option span{min-height:50px}}
   </style>
 </head>
 <body>
@@ -1047,42 +1053,32 @@ function renderAlreadyReceivedPage() {
   });
 }
 
-function renderRatingChoicePage(token) {
-  const buttons = [1, 2, 3, 4, 5].map(rating => {
-    const href = `/feedback?token=${encodeURIComponent(token)}&rating=${rating}`;
-    return `<a class="rating" href="${href}" aria-label="Rate ${rating} out of 5">${rating}</a>`;
-  }).join('');
-
-  return feedbackPageShell({
-    title: 'How Was Your Experience?',
-    body: `${renderFeedbackHeader('How was your experience?')}
-      <div class="body">
-        <h2>Choose a rating</h2>
-        <p>Thank you for reaching out to Stone Bellisimo. Your feedback helps our family-owned team improve the way we communicate, schedule, fabricate, and install.</p>
-        <div class="ratings">${buttons}</div>
-        <p class="muted">1 means poor. 5 means excellent.</p>
-      </div>`
-  });
-}
-
-function renderCommentFormPage(token, rating) {
+function renderFeedbackSubmissionPage(token, rating = '', errorMessage = '') {
+  const selectedRating = isValidRating(rating) ? Number(rating) : null;
   const buttons = [1, 2, 3, 4, 5].map(value => {
-    const selected = value === Number(rating) ? ' selected' : '';
-    const href = `/feedback?token=${encodeURIComponent(token)}&rating=${value}`;
-    return `<a class="rating${selected}" href="${href}" aria-label="Rate ${value} out of 5">${value}</a>`;
+    const checked = value === selectedRating ? ' checked' : '';
+    return `<label class="rating-option" aria-label="Rate ${value} out of 5">
+      <input type="radio" name="rating" value="${value}"${checked}>
+      <span>${value}</span>
+    </label>`;
   }).join('');
 
+  const heading = selectedRating
+    ? `Your rating: ${selectedRating} out of 5`
+    : 'Share your feedback';
+
   return feedbackPageShell({
-    title: 'Add a Comment',
+    title: 'Share Feedback',
     body: `${renderFeedbackHeader('Thank you')}
       <div class="body">
-        <h2>Your rating: ${escapeForPage(rating)} out of 5</h2>
-        <p>You can submit the rating now or add a quick comment about your experience.</p>
-        <div class="ratings">${buttons}</div>
+        <h2>${escapeForPage(heading)}</h2>
+        <p>Thank you for reaching out to Stone Bellisimo. You can choose a rating, type a comment, or do both.</p>
+        ${errorMessage ? `<p class="error">${escapeForPage(errorMessage)}</p>` : ''}
         <form method="post" action="/feedback">
           <input type="hidden" name="token" value="${escapeForPage(token)}">
-          <input type="hidden" name="rating" value="${escapeForPage(rating)}">
-          <label for="comment">Optional comment</label>
+          <div class="ratings" role="radiogroup" aria-label="Experience rating">${buttons}</div>
+          <p class="muted">1 means poor. 5 means excellent. A rating is helpful, but your written feedback is welcome either way.</p>
+          <label for="comment">Your feedback</label>
           <textarea id="comment" name="comment" maxlength="${FIELD_LIMITS.comment}" placeholder="Tell us what went well or what we could improve."></textarea>
           <div class="actions">
             <button type="submit">Submit Feedback</button>
@@ -1178,37 +1174,43 @@ export async function handleFeedbackRequest(request, env, options = {}) {
     const result = await getLeadForFeedbackToken(token, env, store);
     if (!result.ok) return renderInvalidFeedbackPage(result.reason);
 
-    if (result.lead.feedbackStatus === 'received') return renderAlreadyReceivedPage();
-    if (!rating) return renderRatingChoicePage(token);
-    if (!isValidRating(rating)) return renderRatingChoicePage(token);
+    if (['received', 'unparsed'].includes(result.lead.feedbackStatus)) return renderAlreadyReceivedPage();
+    if (rating && !isValidRating(rating)) return renderFeedbackSubmissionPage(token);
 
-    return renderCommentFormPage(token, Number(rating));
+    return renderFeedbackSubmissionPage(token, rating);
   }
 
   const { body, error, status } = await readForm(request);
   if (error) return feedbackPageShell({ title: 'Feedback Error', status, body: `${renderFeedbackHeader('Feedback error')}<div class="body"><h2>We could not read that submission.</h2><p>${escapeForPage(error)}</p></div>` });
 
   const token = normalizeText(body.token, 512);
-  const rating = Number(body.rating);
+  const rawRating = normalizeText(body.rating, 2);
+  const rating = rawRating ? Number(rawRating) : null;
   const comment = normalizeText(body.comment, FIELD_LIMITS.comment, { preserveLines: true });
 
-  if (!token || !isValidRating(rating)) return renderInvalidFeedbackPage('invalid');
+  if (!token) return renderInvalidFeedbackPage('invalid');
+  if (rawRating && !isValidRating(rating)) return renderInvalidFeedbackPage('invalid');
+  if (!rawRating && !comment) {
+    return renderFeedbackSubmissionPage(token, '', 'Please choose a rating or type a quick comment before submitting.');
+  }
   if (isFeedbackPreviewToken(token)) return renderPreviewFeedbackPage(token, rating);
 
   const store = getStore(env, options);
   const result = await getLeadForFeedbackToken(token, env, store);
   if (!result.ok) return renderInvalidFeedbackPage(result.reason);
-  if (result.lead.feedbackStatus === 'received') return renderAlreadyReceivedPage();
+  if (['received', 'unparsed'].includes(result.lead.feedbackStatus)) return renderAlreadyReceivedPage();
 
   const feedback = {
     leadId: result.lead.id,
     rating,
     comment,
-    source: 'landing_page',
+    source: rating ? 'landing_page' : 'landing_page_unrated',
     receivedAt: nowIso(),
     rawMetadataJson: null
   };
-  const saved = await store.saveFeedback(feedback);
+  const saved = rating
+    ? await store.saveFeedback(feedback)
+    : await store.saveUnparsedFeedback(feedback);
   if (!saved.accepted) return renderAlreadyReceivedPage();
 
   await notifyBusinessOfFeedback({ env, store, lead: result.lead, feedback, request });

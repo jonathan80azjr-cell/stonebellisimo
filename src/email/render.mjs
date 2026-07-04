@@ -201,6 +201,8 @@ export function renderFeedbackRequestEmail({ lead, token, baseUrl }) {
   const customerName = lead.customerName || `${lead.firstName || ''} ${lead.lastName || ''}`.trim() || 'there';
   const origin = normalizeBaseUrl(baseUrl);
   const subject = 'How was your experience with Stone Bellisimo?';
+  const feedbackUrl = new URL('/feedback', origin);
+  feedbackUrl.searchParams.set('token', token);
   const ratingButtons = [1, 2, 3, 4, 5].map(rating => {
     const href = new URL('/feedback', origin);
     href.searchParams.set('token', token);
@@ -217,8 +219,10 @@ export function renderFeedbackRequestEmail({ lead, token, baseUrl }) {
       <table role="presentation" align="center" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 auto;">
         <tr>${ratingButtons}</tr>
       </table>
-      <p style="margin:16px 0 0;font:400 13px/1.6 Arial,sans-serif;color:${COLORS.muted};">You can click a rating above, or simply reply to this email with a number from 1 to 5 and any comments.</p>
+      <p style="margin:16px 0 0;font:400 13px/1.6 Arial,sans-serif;color:${COLORS.muted};">Click a rating to open the feedback form with that score selected.</p>
     </div>
+    <p style="margin:0 0 18px;font:400 15px/1.75 Arial,sans-serif;color:${COLORS.muted};">Prefer to type your feedback? Use the button below to write a comment. A rating is helpful, but your written note is welcome either way.</p>
+    <p style="margin:0 0 22px;"><a href="${feedbackUrl.toString()}" style="display:inline-block;border-radius:999px;background:${COLORS.gold};color:#ffffff;font:700 14px Arial,sans-serif;text-decoration:none;padding:14px 22px;">Write Feedback</a></p>
     <p style="margin:0;font:400 15px/1.75 Arial,sans-serif;color:${COLORS.muted};">Thank you for helping a family-owned stone shop keep improving.</p>
     ${contactGridHtml()}
   `;
@@ -240,7 +244,9 @@ export function renderFeedbackRequestEmail({ lead, token, baseUrl }) {
     'Please choose a rating from 1 to 5:',
     ratingLinks,
     '',
-    'You can click a rating above, or simply reply to this email with a number from 1 to 5 and any comments.',
+    `Prefer to type your feedback? Use this link to write a comment: ${feedbackUrl.toString()}`,
+    '',
+    'You can also reply to this email with a number from 1 to 5 and any comments.',
     '',
     'Thank you,',
     BUSINESS_INFO.name,
@@ -254,7 +260,7 @@ export function renderFeedbackRequestEmail({ lead, token, baseUrl }) {
   return {
     subject,
     html: emailShell({
-      preheader: 'Share a quick 1 to 5 rating for your Stone Bellisimo experience.',
+      preheader: 'Share a quick rating or written feedback for your Stone Bellisimo experience.',
       eyebrow: 'A quick favor',
       title: subject,
       bodyHtml
