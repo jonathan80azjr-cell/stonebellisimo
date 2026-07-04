@@ -62,6 +62,8 @@ npm run worker:secret:postmark
 npm run worker:secret:feedback
 npm run worker:secret:inbound
 npm run worker:secret:webhook
+npm run worker:secret:admin-password
+npm run worker:secret:admin-session
 ```
 
 Required secrets:
@@ -71,6 +73,8 @@ Required secrets:
 - `FEEDBACK_TOKEN_SECRET`: long random secret for signed feedback links.
 - `POSTMARK_INBOUND_SECRET`: shared secret for `/api/postmark/inbound`.
 - `POSTMARK_WEBHOOK_SECRET`: optional separate shared secret for delivery/bounce events. If omitted, the code falls back to `POSTMARK_INBOUND_SECRET`.
+- `ADMIN_PASSWORD`: password for `/admin`.
+- `ADMIN_SESSION_SECRET`: long random secret for signed admin session cookies.
 
 Non-secret Worker vars are in `wrangler.jsonc`:
 
@@ -79,7 +83,33 @@ Non-secret Worker vars are in `wrangler.jsonc`:
 - `POSTMARK_FEEDBACK_REPLY_DOMAIN=stonebellisimollc.com`
 - `BUSINESS_NOTIFICATION_EMAIL=cesaryunda@hotmail.com`
 - `BUSINESS_REPLY_TO_EMAIL=cesaryunda@hotmail.com`
-- `FEEDBACK_DELAY_DAYS=3`
+- `ADMIN_USERNAME=admin`
+- `FEEDBACK_DELAY_DAYS=7`
+
+## Admin Dashboard
+
+The Worker serves an authenticated dashboard at:
+
+```text
+https://stonebellisimollc.com/admin
+```
+
+Before using it in production, set the admin secrets:
+
+```sh
+npm run worker:secret:admin-password
+npm run worker:secret:admin-session
+```
+
+Use a strong random value for `ADMIN_SESSION_SECRET`. The dashboard lets you:
+
+- View form submissions from D1.
+- Confirm immediate and feedback email send records.
+- See feedback ratings, comments, inbound replies, and Postmark delivery events.
+- Preview the confirmation template, feedback request template, or a custom branded client email.
+- Send a selected template directly to a lead through Postmark.
+
+Sending a feedback request from the dashboard creates a real signed feedback link for that lead and records the send in `email_events`. If the lead already submitted feedback, the dashboard will not render or send another feedback request.
 
 ## Manual Postmark Setup
 

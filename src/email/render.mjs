@@ -323,3 +323,61 @@ export function renderInternalFeedbackNotificationEmail({ lead, feedback, baseUr
     text
   };
 }
+
+export function renderCustomBrandedEmail({ lead = {}, subject, message, ctaLabel = '', ctaUrl = '' }) {
+  const customerName = lead.customerName || `${lead.firstName || ''} ${lead.lastName || ''}`.trim() || 'there';
+  const cleanSubject = String(subject || '').trim() || 'A note from Stone Bellisimo';
+  const cleanMessage = String(message || '').replace(/\r\n?/g, '\n').trim();
+  const cleanCtaLabel = String(ctaLabel || '').trim().slice(0, 80);
+  const cleanCtaUrl = String(ctaUrl || '').trim();
+  let parsedCtaUrl = '';
+
+  if (cleanCtaUrl) {
+    try {
+      const url = new URL(cleanCtaUrl);
+      if (['http:', 'https:', 'mailto:', 'tel:'].includes(url.protocol)) {
+        parsedCtaUrl = url.toString();
+      }
+    } catch (error) {
+      parsedCtaUrl = '';
+    }
+  }
+
+  const bodyHtml = `
+    <p style="margin:0 0 16px;font:400 16px/1.75 Arial,sans-serif;color:${COLORS.ink};">Hi ${escapeHtml(customerName)},</p>
+    <div style="margin:0 0 22px;font:400 15px/1.75 Arial,sans-serif;color:${COLORS.muted};">${nl2br(cleanMessage || 'Thank you for reaching out to Stone Bellisimo. Our team is here if you need anything else about your project.')}</div>
+    ${parsedCtaUrl && cleanCtaLabel ? `<p style="margin:0 0 24px;"><a href="${escapeHtml(parsedCtaUrl)}" style="display:inline-block;border-radius:999px;background:${COLORS.gold};color:#ffffff;font:700 14px Arial,sans-serif;text-decoration:none;padding:14px 22px;">${escapeHtml(cleanCtaLabel)}</a></p>` : ''}
+    ${summaryRows(lead)}
+    ${contactGridHtml()}
+  `;
+
+  const text = [
+    `Hi ${customerName},`,
+    '',
+    cleanMessage || 'Thank you for reaching out to Stone Bellisimo. Our team is here if you need anything else about your project.',
+    '',
+    parsedCtaUrl && cleanCtaLabel ? `${cleanCtaLabel}: ${parsedCtaUrl}` : '',
+    '',
+    lead.projectType ? `Project type: ${lead.projectType}` : '',
+    lead.material ? `Material: ${lead.material}` : '',
+    '',
+    'Thank you,',
+    BUSINESS_INFO.name,
+    '',
+    `Office: ${BUSINESS_INFO.officePhone}`,
+    `Bella AI Voice Agent: ${BUSINESS_INFO.bellaPhone}`,
+    `Email: ${BUSINESS_INFO.email}`,
+    `Showroom: ${BUSINESS_INFO.showroom}`
+  ].filter(line => line !== '').join('\n');
+
+  return {
+    subject: cleanSubject,
+    html: emailShell({
+      preheader: cleanSubject,
+      eyebrow: 'Stone Bellisimo',
+      title: cleanSubject,
+      bodyHtml
+    }),
+    text
+  };
+}

@@ -8,6 +8,7 @@ import {
   SECURITY_HEADERS,
   withSecurityHeaders
 } from './src/lead-automation.mjs';
+import { handleAdminRequest } from './src/admin-dashboard.mjs';
 import { handleGoogleReviewsRequest } from './src/google-reviews.mjs';
 
 const SECURITY_TXT = `Contact: mailto:Stonebellisimollc@outlook.com
@@ -27,6 +28,10 @@ export default {
 
     if (url.pathname === '/api/contact') {
       return handleContactRequest(request, env, { requireWebhook: true });
+    }
+
+    if (url.pathname === '/admin' || url.pathname === '/admin/' || url.pathname.startsWith('/api/admin/')) {
+      return handleAdminRequest(request, env);
     }
 
     if (url.pathname === '/api/google-reviews') {

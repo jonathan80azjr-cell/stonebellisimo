@@ -134,7 +134,7 @@ function hasSpamTrap(body = {}) {
   );
 }
 
-async function readJson(request, limit = CONTACT_BODY_LIMIT) {
+export async function readJson(request, limit = CONTACT_BODY_LIMIT) {
   const contentLength = Number(request.headers.get('content-length') || 0);
   if (contentLength > limit) {
     return { error: 'Request is too large.', status: 413 };
@@ -161,7 +161,7 @@ async function readForm(request) {
   }
 }
 
-function getEnv(env, name, fallback = '') {
+export function getEnv(env, name, fallback = '') {
   const value = env?.[name];
   if (value === undefined || value === null || value === '') return fallback;
   return String(value);
@@ -183,7 +183,7 @@ function addDays(date, days) {
   return result;
 }
 
-function nowIso() {
+export function nowIso() {
   return new Date().toISOString();
 }
 
@@ -206,7 +206,7 @@ function arrayBufferToBase64Url(buffer) {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
-async function sha256Hex(value) {
+export async function sha256Hex(value) {
   const digest = await crypto.subtle.digest('SHA-256', encoder.encode(String(value)));
   return bytesToHex(new Uint8Array(digest));
 }
@@ -261,7 +261,7 @@ function getFeedbackTokenSecret(env) {
   throw new Error('FEEDBACK_TOKEN_SECRET is not configured.');
 }
 
-async function createFeedbackToken(leadId, expiresAt, env) {
+export async function createFeedbackToken(leadId, expiresAt, env) {
   const secret = getFeedbackTokenSecret(env);
   const expiresEpoch = Math.floor(new Date(expiresAt).getTime() / 1000);
   const data = `v1.${leadId}.${expiresEpoch}`;
@@ -382,7 +382,7 @@ function d1Changes(result) {
   return Number(result?.meta?.changes || result?.changes || 0);
 }
 
-function safeJsonStringify(value, maxLength = 12000) {
+export function safeJsonStringify(value, maxLength = 12000) {
   try {
     return JSON.stringify(value).slice(0, maxLength);
   } catch (error) {
@@ -652,7 +652,7 @@ export function createD1Store(db) {
   };
 }
 
-function getStore(env, options = {}) {
+export function getStore(env, options = {}) {
   if (options.store) return options.store;
   return createD1Store(env?.LEADS_DB);
 }
@@ -733,7 +733,7 @@ async function sendPostmarkEmail(env, email) {
   };
 }
 
-async function sendAndRecordEmail({ env, store, lead, eventType, email }) {
+export async function sendAndRecordEmail({ env, store, lead, eventType, email }) {
   const createdAt = nowIso();
   try {
     const result = await sendPostmarkEmail(env, email);
@@ -920,7 +920,7 @@ function getFeedbackReplyDomain(env) {
   return fromEmail.split('@')[1] || 'stonebellisimollc.com';
 }
 
-function getFeedbackReplyTo(env, lead) {
+export function getFeedbackReplyTo(env, lead) {
   const tokenRef = String(lead.replyTokenHash || '').slice(0, 24);
   const domain = getFeedbackReplyDomain(env);
   return `feedback+${lead.id}.${tokenRef}@${domain}`;

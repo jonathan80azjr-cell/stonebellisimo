@@ -31,7 +31,7 @@ app.use(helmet({
       fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
       imgSrc: ["'self'", 'data:', 'https:'],
       connectSrc: ["'self'"],
-      frameSrc: ['https://www.google.com', 'https://maps.google.com'],
+      frameSrc: ["'self'", 'https://www.google.com', 'https://maps.google.com'],
       formAction: ["'self'"],
       upgradeInsecureRequests: isProduction ? [] : null
     }
@@ -117,6 +117,7 @@ const webhookLimiter = rateLimit({
 
 let automationModulePromise;
 let googleReviewsModulePromise;
+let adminModulePromise;
 
 function automationModule() {
   if (!automationModulePromise) {
@@ -130,6 +131,13 @@ function googleReviewsModule() {
     googleReviewsModulePromise = import('./src/google-reviews.mjs');
   }
   return googleReviewsModulePromise;
+}
+
+function adminModule() {
+  if (!adminModulePromise) {
+    adminModulePromise = import('./src/admin-dashboard.mjs');
+  }
+  return adminModulePromise;
 }
 
 function emptyLocalData() {
@@ -182,7 +190,10 @@ function localEnv(req) {
     PUBLIC_SITE_URL: baseUrl,
     APP_BASE_URL: baseUrl,
     POSTMARK_MOCK_MODE: process.env.POSTMARK_MOCK_MODE || (isProduction ? 'false' : 'true'),
-    POSTMARK_INBOUND_SECRET: process.env.POSTMARK_INBOUND_SECRET || (isProduction ? '' : 'local-dev-inbound-secret')
+    POSTMARK_INBOUND_SECRET: process.env.POSTMARK_INBOUND_SECRET || (isProduction ? '' : 'local-dev-inbound-secret'),
+    ADMIN_USERNAME: process.env.ADMIN_USERNAME || 'admin',
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || (isProduction ? '' : 'admin'),
+    ADMIN_SESSION_SECRET: process.env.ADMIN_SESSION_SECRET || (isProduction ? '' : 'local-admin-session-secret')
   };
 }
 
@@ -370,6 +381,81 @@ const localStore = {
   }
 };
 
+function newestFirst(a, b) {
+  return String(b.createdAt || b.receivedAt || b.submittedAt || '').localeCompare(String(a.createdAt || a.receivedAt || a.submittedAt || ''));
+}
+
+function localLeadMatchesStatus(lead, status) {
+  if (status === 'needs_feedback') {
+    return ['pending', 'sending'].includes(lead.feedbackStatus || 'pending') && !lead.feedbackEmailSentAt;
+  }
+  if (status === 'feedback_sent') {
+    return Boolean(lead.feedbackEmailSentAt) && !['received', 'unparsed'].includes(lead.feedbackStatus || 'pending');
+  }
+  if (status === 'feedback_received') {
+    return ['received', 'unparsed'].includes(lead.feedbackStatus || 'pending');
+  }
+  if (status === 'email_failed') return Boolean(lead.feedbackEmailLastError);
+  return true;
+}
+
+function localLeadMatchesSearch(lead, search) {
+  if (!search) return true;
+  const haystack = [
+    lead.customerName,
+    lead.email,
+    lead.phone,
+    lead.projectType,
+    lead.material
+  ].join(' ').toLowerCase();
+  return haystack.includes(search.toLowerCase());
+}
+
+const localAdminStore = {
+  async listLeads({ search = '', status = 'all', limit = 25, offset = 0 } = {}) {
+    const data = await readLocalData();
+    const filtered = data.leads
+      .filter(lead => localLeadMatchesSearch(lead, search))
+      .filter(lead => localLeadMatchesStatus(lead, status))
+      .sort((a, b) => String(b.submittedAt || '').localeCompare(String(a.submittedAt || '')));
+
+    return {
+      count: filtered.length,
+      leads: filtered.slice(offset, offset + limit).map(lead => {
+        const latestEmail = data.emailEvents
+          .filter(event => event.leadId === lead.id)
+          .sort(newestFirst)[0];
+        const latestDelivery = data.deliveryEvents
+          .filter(event => event.leadId === lead.id)
+          .sort(newestFirst)[0];
+        return {
+          ...lead,
+          latestEmailEvent: latestEmail ? `${latestEmail.eventType || ''}|${latestEmail.status || ''}|${latestEmail.createdAt || ''}` : null,
+          latestDeliveryEvent: latestDelivery ? `${latestDelivery.eventType || ''}|${latestDelivery.receivedAt || latestDelivery.createdAt || ''}` : null
+        };
+      })
+    };
+  },
+
+  async getLeadById(id) {
+    const data = await readLocalData();
+    return data.leads.find(lead => lead.id === id) || null;
+  },
+
+  async getLeadDetail(id) {
+    const data = await readLocalData();
+    const lead = data.leads.find(item => item.id === id) || null;
+    if (!lead) return null;
+    return {
+      lead,
+      emailEvents: data.emailEvents.filter(event => event.leadId === id).sort(newestFirst).slice(0, 25),
+      feedback: data.feedback.filter(item => item.leadId === id).sort(newestFirst).slice(0, 25),
+      deliveryEvents: data.deliveryEvents.filter(event => event.leadId === id).sort(newestFirst).slice(0, 25),
+      inboundEvents: data.inboundEvents.filter(event => event.leadId === id).sort(newestFirst).slice(0, 25)
+    };
+  }
+};
+
 function normalizeText(value, maxLength, { preserveLines = false } = {}) {
   if (typeof value !== 'string') return '';
 
@@ -421,6 +507,30 @@ app.all('/api/google-reviews', performanceLimiter, async (req, res) => {
     await sendFetchResponse(res, response);
   } catch (error) {
     console.error('Error handling Google reviews request:', error);
+    res.status(500).json({ success: false, message: 'An internal error occurred.' });
+  }
+});
+
+app.use(async (req, res, next) => {
+  const isAdminRoute = req.path === '/admin' || req.path === '/admin/' || req.path.startsWith('/api/admin/');
+  if (!isAdminRoute) {
+    next();
+    return;
+  }
+
+  try {
+    const { handleAdminRequest } = await adminModule();
+    const request = makeFetchRequest(req, {
+      body: ['GET', 'HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body || {}),
+      contentType: ['GET', 'HEAD'].includes(req.method) ? undefined : 'application/json'
+    });
+    const response = await handleAdminRequest(request, localEnv(req), {
+      store: localStore,
+      adminStore: localAdminStore
+    });
+    await sendFetchResponse(res, response);
+  } catch (error) {
+    console.error('Error handling admin dashboard request:', error);
     res.status(500).json({ success: false, message: 'An internal error occurred.' });
   }
 });
