@@ -67,10 +67,53 @@
     window.__avifSupported = false;
   }
 
+  function setupBitesitesMobileExpand() {
+    var banners = Array.prototype.slice.call(document.querySelectorAll('.bitesites-banner'));
+    if (!banners.length || !window.matchMedia) return;
+
+    var mobileQuery = window.matchMedia('(max-width: 520px)');
+    var ticking = false;
+
+    function update() {
+      ticking = false;
+      var doc = document.documentElement;
+      var scrollTop = window.scrollY || doc.scrollTop || 0;
+      var viewportHeight = window.innerHeight || doc.clientHeight || 0;
+      var scrollHeight = Math.max(
+        doc.scrollHeight,
+        document.body ? document.body.scrollHeight : 0
+      );
+      var atBottom = mobileQuery.matches && scrollTop + viewportHeight >= scrollHeight - 80;
+
+      banners.forEach(function (banner) {
+        banner.classList.toggle('is-at-page-bottom', atBottom);
+      });
+    }
+
+    function scheduleUpdate() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+
+    update();
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+    if (mobileQuery.addEventListener) {
+      mobileQuery.addEventListener('change', scheduleUpdate);
+    } else if (mobileQuery.addListener) {
+      mobileQuery.addListener(scheduleUpdate);
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', detectAvif, { once: true });
+    document.addEventListener('DOMContentLoaded', function () {
+      detectAvif();
+      setupBitesitesMobileExpand();
+    }, { once: true });
   } else {
     detectAvif();
+    setupBitesitesMobileExpand();
   }
 
   observe('paint', function (list) {

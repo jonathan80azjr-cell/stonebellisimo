@@ -1,0 +1,231 @@
+.bitesites-banner {
+  --bitesites-logo-rest: url("../assets/img/bitesites/logo-2-light.png");
+  --bitesites-logo-hover: url("../assets/img/bitesites/logo-3-light.png");
+  --bitesites-bg: #050505;
+  --bitesites-bg-hover: #000;
+  --bitesites-border: rgba(255, 255, 255, .14);
+  --bitesites-text: rgba(255, 255, 255, .72);
+  --bitesites-text-hover: #fff;
+  --bitesites-ring: rgba(255, 255, 255, .32);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 178px;
+  height: 64px;
+  padding: 5px 15px;
+  overflow: hidden;
+  color: var(--bitesites-text);
+  font: 600 12px/1 Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: .08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  background: var(--bitesites-bg);
+  border: 1px solid var(--bitesites-border);
+  border-radius: 999px;
+  isolation: isolate;
+  transition: width .45s cubic-bezier(.22, 1, .36, 1), height .45s cubic-bezier(.22, 1, .36, 1), padding .45s cubic-bezier(.22, 1, .36, 1), border-radius .45s cubic-bezier(.22, 1, .36, 1), gap .35s cubic-bezier(.22, 1, .36, 1), background .3s ease, border-color .3s ease, transform .3s ease, box-shadow .3s ease;
+}
+
+.bitesites-banner::after {
+  content: "";
+  position: absolute;
+  inset: -60% -35%;
+  z-index: -1;
+  background: linear-gradient(115deg, transparent 34%, rgba(255, 255, 255, .28) 45%, rgba(255, 255, 255, .52) 50%, rgba(255, 255, 255, .22) 56%, transparent 68%);
+  opacity: 0;
+  transform: translateX(-65%) rotate(8deg);
+  transition: opacity .2s ease;
+}
+
+.bitesites-banner:hover,
+.bitesites-banner:focus-visible,
+.bitesites-banner.is-at-page-bottom {
+  justify-content: center;
+  gap: 0;
+  width: 228px;
+  height: 78px;
+  padding: 6px 22px;
+  color: var(--bitesites-text-hover);
+  background: var(--bitesites-bg-hover);
+  border-color: var(--bitesites-ring);
+  border-radius: 28px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .18);
+  transform: translateY(-2px);
+}
+
+.bitesites-banner:hover::after,
+.bitesites-banner:focus-visible::after,
+.bitesites-banner.is-at-page-bottom::after {
+  opacity: 1;
+  animation: bitesites-shimmer .9s cubic-bezier(.22, 1, .36, 1);
+}
+
+.bitesites-banner:focus-visible {
+  outline: 2px solid var(--bitesites-ring);
+  outline-offset: 3px;
+}
+
+.bitesites-banner__eyebrow {
+  flex: 0 0 auto;
+  max-width: 76px;
+  white-space: nowrap;
+  transition: opacity .28s ease, transform .35s cubic-bezier(.22, 1, .36, 1), max-width .35s cubic-bezier(.22, 1, .36, 1);
+}
+
+.bitesites-banner:hover .bitesites-banner__eyebrow,
+.bitesites-banner:focus-visible .bitesites-banner__eyebrow,
+.bitesites-banner.is-at-page-bottom .bitesites-banner__eyebrow {
+  max-width: 0;
+  opacity: 0;
+  transform: translateX(-14px);
+}
+
+.bitesites-banner__mark {
+  position: relative;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  transition: flex-basis .45s cubic-bezier(.22, 1, .36, 1), width .45s cubic-bezier(.22, 1, .36, 1), height .45s cubic-bezier(.22, 1, .36, 1), transform .45s cubic-bezier(.22, 1, .36, 1);
+}
+
+.bitesites-banner:hover .bitesites-banner__mark,
+.bitesites-banner:focus-visible .bitesites-banner__mark,
+.bitesites-banner.is-at-page-bottom .bitesites-banner__mark {
+  flex-basis: 78px;
+  width: 78px;
+  height: 78px;
+  transform: none;
+}
+
+.bitesites-banner__logo {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  transition: opacity .38s ease, transform .45s cubic-bezier(.22, 1, .36, 1), filter .3s ease;
+}
+
+.bitesites-banner__logo--rest {
+  background-image: var(--bitesites-logo-rest);
+  opacity: .9;
+}
+
+.bitesites-banner__logo--hover {
+  background-image: var(--bitesites-logo-hover);
+  opacity: 0;
+  transform: scale(.9);
+}
+
+.bitesites-banner:hover .bitesites-banner__logo--rest,
+.bitesites-banner:focus-visible .bitesites-banner__logo--rest,
+.bitesites-banner.is-at-page-bottom .bitesites-banner__logo--rest {
+  opacity: 0;
+  transform: scale(.86);
+}
+
+.bitesites-banner:hover .bitesites-banner__logo--hover,
+.bitesites-banner:focus-visible .bitesites-banner__logo--hover,
+.bitesites-banner.is-at-page-bottom .bitesites-banner__logo--hover {
+  opacity: 1;
+  transform: scale(1.14) translateX(0);
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, .18));
+}
+
+.bitesites-credit {
+  display: flex;
+  justify-content: center;
+  margin-top: 26px;
+}
+
+.bitesites-banner--light,
+[data-theme="light"] .bitesites-banner {
+  --bitesites-logo-rest: url("../assets/img/bitesites/logo-2-light.png");
+  --bitesites-logo-hover: url("../assets/img/bitesites/logo-3-light.png");
+  --bitesites-bg: #050505;
+  --bitesites-bg-hover: #000;
+  --bitesites-border: rgba(255, 255, 255, .14);
+  --bitesites-text: rgba(255, 255, 255, .72);
+  --bitesites-text-hover: #fff;
+  --bitesites-ring: rgba(255, 255, 255, .32);
+}
+
+.bitesites-banner--dark,
+[data-theme="dark"] .bitesites-banner {
+  --bitesites-logo-rest: url("../assets/img/bitesites/logo-8-dark.png");
+  --bitesites-logo-hover: url("../assets/img/bitesites/logo-9-dark.png");
+}
+
+@media (max-width: 520px) {
+  .bitesites-credit {
+    justify-content: center;
+  }
+
+  .bitesites-banner {
+    justify-content: center;
+    gap: 0;
+    width: min(96px, 100%);
+    height: 64px;
+    padding: 5px 15px;
+  }
+
+  .bitesites-banner:hover,
+  .bitesites-banner:focus-visible,
+  .bitesites-banner.is-at-page-bottom {
+    width: min(124px, 100%);
+    height: 78px;
+    padding: 6px 20px;
+  }
+
+  .bitesites-banner .bitesites-banner__eyebrow {
+    max-width: 0;
+    opacity: 0;
+  }
+
+  .bitesites-banner .bitesites-banner__mark,
+  .bitesites-banner:hover .bitesites-banner__mark,
+  .bitesites-banner:focus-visible .bitesites-banner__mark,
+  .bitesites-banner.is-at-page-bottom .bitesites-banner__mark {
+    flex-basis: 78px;
+    width: 78px;
+    height: 78px;
+  }
+
+  .bitesites-banner.is-at-page-bottom .bitesites-banner__logo--rest {
+    opacity: 0;
+    transform: scale(.86);
+  }
+
+  .bitesites-banner.is-at-page-bottom .bitesites-banner__logo--hover {
+    opacity: 1;
+    transform: scale(1.14) translateX(0);
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, .18));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bitesites-banner,
+  .bitesites-banner::after,
+  .bitesites-banner__eyebrow,
+  .bitesites-banner__mark,
+  .bitesites-banner__logo {
+    transition: none;
+  }
+
+  .bitesites-banner:hover::after,
+  .bitesites-banner:focus-visible::after {
+    animation: none;
+  }
+}
+
+@keyframes bitesites-shimmer {
+  from {
+    transform: translateX(-65%) rotate(8deg);
+  }
+
+  to {
+    transform: translateX(65%) rotate(8deg);
+  }
+}
