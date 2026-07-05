@@ -25,12 +25,12 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       baseUri: ["'self'"],
       objectSrc: ["'none'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", 'https://static.cloudflareinsights.com', 'https://maps.googleapis.com', 'https://maps.gstatic.com'],
       scriptSrcAttr: ["'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
       fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
       imgSrc: ["'self'", 'data:', 'https:'],
-      connectSrc: ["'self'"],
+      connectSrc: ["'self'", 'https://cloudflareinsights.com', 'https://maps.googleapis.com', 'https://maps.gstatic.com'],
       frameSrc: ["'self'", 'https://www.google.com', 'https://maps.google.com'],
       formAction: ["'self'"],
       upgradeInsecureRequests: isProduction ? [] : null
@@ -61,6 +61,12 @@ app.use(express.urlencoded({ extended: false, limit: '20kb' }));
 
 app.get('/favicon.ico', (req, res) => {
   res.redirect(302, '/assets/img/logo-280.png');
+});
+
+app.get('/api/google-map-config', (req, res) => {
+  const apiKey = (process.env.GOOGLE_MAPS_BROWSER_API_KEY || '').trim();
+  res.setHeader('Cache-Control', apiKey ? 'public, max-age=300' : 'no-store');
+  res.json({ configured: Boolean(apiKey), apiKey });
 });
 
 // Serve static files from the 'public' directory

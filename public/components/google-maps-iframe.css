@@ -17,6 +17,35 @@
   isolation: isolate;
 }
 
+.map-embed.map-embed--styled,
+.map-embed--styled {
+  position: relative;
+  min-height: 520px;
+  background: #f4f1eb;
+}
+
+.map-embed--styled .google-maps-iframe {
+  border-radius: inherit;
+}
+
+.google-map--loading::after {
+  content: "Loading map...";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  color: var(--map-banner-muted);
+  font: 600 13px/1.2 Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f4f1eb;
+}
+
+.google-map__canvas {
+  position: absolute;
+  inset: 0;
+  min-height: 100%;
+}
+
 .google-maps-iframe iframe {
   display: block;
   width: 100%;
@@ -24,6 +53,7 @@
   min-height: 100%;
   border: 0;
   filter: var(--map-filter);
+  pointer-events: none;
 }
 
 .google-maps-iframe__marker {
@@ -46,6 +76,11 @@
   box-shadow: 0 18px 48px var(--map-marker-shadow);
   transform: translate(-50%, -68%);
   transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.google-maps-iframe__marker--js {
+  top: auto;
+  left: auto;
 }
 
 .google-maps-iframe__marker::before,
@@ -106,13 +141,12 @@
 
 .google-maps-iframe__banner {
   position: absolute;
-  right: 18px;
-  bottom: 18px;
+  top: 18px;
   left: 18px;
   z-index: 3;
   display: grid;
   gap: 4px;
-  max-width: 520px;
+  max-width: min(calc(100% - 36px), 520px);
   padding: 16px 18px;
   color: var(--map-banner-text);
   text-decoration: none;
@@ -121,6 +155,7 @@
   border-radius: 4px;
   box-shadow: 0 18px 42px rgba(0, 0, 0, .12);
   backdrop-filter: blur(12px);
+  pointer-events: none;
 }
 
 .google-maps-iframe__banner strong {
@@ -133,6 +168,11 @@
 }
 
 @media (max-width: 560px) {
+  .map-embed.map-embed--styled,
+  .map-embed--styled {
+    min-height: 380px;
+  }
+
   .google-maps-iframe__marker {
     width: 62px;
     height: 62px;
@@ -144,9 +184,9 @@
   }
 
   .google-maps-iframe__banner {
-    right: 12px;
-    bottom: 12px;
+    top: 12px;
     left: 12px;
+    max-width: calc(100% - 24px);
     padding: 14px;
   }
 }

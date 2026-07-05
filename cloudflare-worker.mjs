@@ -17,6 +17,18 @@ Canonical: https://stonebellisimollc.com/.well-known/security.txt
 Expires: 2027-06-26T23:59:59Z
 `;
 
+function handleGoogleMapConfigRequest(env) {
+  const apiKey = String(env.GOOGLE_MAPS_BROWSER_API_KEY || '').trim();
+
+  return new Response(JSON.stringify({ configured: Boolean(apiKey), apiKey }), {
+    headers: {
+      ...SECURITY_HEADERS,
+      'content-type': 'application/json; charset=utf-8',
+      'cache-control': apiKey ? 'public, max-age=300' : 'no-store'
+    }
+  });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -36,6 +48,10 @@ export default {
 
     if (url.pathname === '/api/google-reviews') {
       return handleGoogleReviewsRequest(request, env);
+    }
+
+    if (url.pathname === '/api/google-map-config') {
+      return handleGoogleMapConfigRequest(env);
     }
 
     if (url.pathname === '/feedback') {

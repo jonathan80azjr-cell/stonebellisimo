@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com; frame-src https://www.google.com https://maps.google.com; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://maps.googleapis.com https://maps.gstatic.com; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com https://maps.googleapis.com https://maps.gstatic.com; frame-src https://www.google.com https://maps.google.com; form-action 'self'">
+<meta name="google-maps-api-key-endpoint" content="/api/google-map-config">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Contact Stone Bellisimo LLC | Countertop Showroom Union City NJ</title>
 <meta name="description" content="Get in touch with Stone Bellisimo LLC. Contact our master stone fabricators, call Bella (our 24/7 AI agent) for estimates, or visit our Union City, NJ showroom.">
@@ -68,6 +69,7 @@
 <link rel="icon" href="../assets/img/logo-280.png" type="image/png">
 <link rel="preload" as="image" href="../assets/img/gallery-1600.jpg" type="image/jpeg" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../components/google-maps-iframe.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--ink:#171614;--muted:#8b8b85;--sand:#fcfbf8;--cream:#faf9f4;--gold:#b39158;--gold-lt:#d1b68e;--gold-pale:#f4eedf;--shadow-soft:0 12px 36px rgba(176,141,88,.12);--shadow-intense:0 24px 60px rgba(23,22,20,.18)}
@@ -154,9 +156,7 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
       </div>
     </div>
     <aside class="map-panel r2">
-      <div class="map-embed">
-        <iframe src="https://www.google.com/maps?q=Stone%20Bellisimo%20LLC%2C%20618%2023rd%20Street%2C%20Union%20City%2C%20NJ%2007087&output=embed" width="100%" height="520" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Google Map showing showroom location of Stone Bellisimo LLC in Union City, NJ"></iframe>
-      </div>
+      <div class="map-embed map-embed--styled" data-google-map data-store-name="Stone Bellisimo LLC" data-address="618 23rd Street, Union City, NJ 07087" data-lat="40.7677443" data-lng="-74.0342948" data-place-id="ChIJVbaFyYZXwokRgfG3kFqd5MY" data-logo-src="../assets/img/logo-280.png" data-logo-alt="Stone Bellisimo LLC logo" data-title="Google Map showing showroom location of Stone Bellisimo LLC in Union City, NJ"></div>
       <div class="map-caption">
         <h2>618 23rd Street<br>Union City, NJ 07087</h2>
         <p>Visit the showroom to compare granite, quartz, marble, quartzite, porcelain, and edge profiles in person.</p>
@@ -233,6 +233,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menuOpen)toggleMenu
 const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}}),{threshold:.1});
 document.querySelectorAll('.r,.r2,.r3').forEach(el=>ro.observe(el));
 </script>
+<script src="../components/google-map.js?v=3" defer></script>
 <script src="../performance.js?v=2" defer></script>
 </body>
 </html>

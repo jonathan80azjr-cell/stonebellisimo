@@ -17,6 +17,7 @@ export default function GoogleMapsIframe({
   embedUrl,
   logoAlt = '',
   logoSrc,
+  markerLabel,
   placeUrl,
   showBanner = true,
   showMarker = true,
@@ -24,6 +25,7 @@ export default function GoogleMapsIframe({
   title,
 }) {
   const mapTitle = title || `Google Map for ${storeName}`
+  const resolvedMarkerLabel = markerLabel || `Open ${storeName} in Google Maps`
   const mapStyle = mapColorwayToCssVars(colorway)
   const wrapperClassName = ['google-maps-iframe', className].filter(Boolean).join(' ')
 
@@ -35,6 +37,7 @@ export default function GoogleMapsIframe({
         loading="lazy"
         referrerPolicy="no-referrer-when-downgrade"
         allowFullScreen
+        tabIndex={-1}
       />
 
       {showMarker ? (
@@ -43,7 +46,7 @@ export default function GoogleMapsIframe({
           href={placeUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`Open ${storeName} in Google Maps`}
+          aria-label={resolvedMarkerLabel}
         >
           {logoSrc ? (
             <img src={logoSrc} alt={logoAlt} />
