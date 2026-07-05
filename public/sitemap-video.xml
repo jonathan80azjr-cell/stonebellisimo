@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>https://stonebellisimollc.com/</loc>
+    <video:video>
+      <video:thumbnail_loc>https://stonebellisimollc.com/assets/img/portfolio_kitchen2-1440.jpg</video:thumbnail_loc>
+      <video:title>Stone Bellisimo kitchen countertop project video</video:title>
+      <video:description>Kitchen countertop fabrication and installation project by Stone Bellisimo LLC, serving Union City, Hoboken, Jersey City, and Northern New Jersey.</video:description>
+      <video:content_loc>https://stonebellisimollc.com/assets/video/kitchen.mp4</video:content_loc>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+  </url>
+</urlset>
