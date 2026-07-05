@@ -10,6 +10,7 @@ Add a centered "Made by" Bite Sites banner that:
 - Expands on hover or keyboard focus.
 - Swaps to the expanded Bite Sites logo in the expanded state.
 - Supports light and dark theme logo variants.
+- Uses a white button background in dark mode so the dark logo assets remain visible.
 - Hides the "Made by" text on small screens.
 - Respects `prefers-reduced-motion`.
 
@@ -78,7 +79,7 @@ To force the default style:
 <a class="bitesites-banner bitesites-banner--light" href="https://bitesites.org" target="_blank" rel="noopener" aria-label="Made by Bite Sites">
 ```
 
-To use the dark theme logo assets:
+To use the dark theme logo assets, use `bitesites-banner--dark`. In this mode, the button background must be white so the dark Bite Sites logo assets are visible:
 
 ```html
 <a class="bitesites-banner bitesites-banner--dark" href="https://bitesites.org" target="_blank" rel="noopener" aria-label="Made by Bite Sites">
@@ -95,6 +96,8 @@ or:
 ```html
 <body data-theme="light">
 ```
+
+When `data-theme="dark"` is present on a parent element, the banner should switch to the dark logo assets and a white button background.
 
 ## Optional Bottom-of-Page Expanded State
 
@@ -275,6 +278,12 @@ Save this as `public/components/bitesites-banner.css`:
 [data-theme="dark"] .bitesites-banner {
   --bitesites-logo-rest: url("../assets/img/bitesites/logo-8-dark.png");
   --bitesites-logo-hover: url("../assets/img/bitesites/logo-9-dark.png");
+  --bitesites-bg: #fff;
+  --bitesites-bg-hover: #fff;
+  --bitesites-border: rgba(0, 0, 0, .14);
+  --bitesites-text: rgba(0, 0, 0, .72);
+  --bitesites-text-hover: #000;
+  --bitesites-ring: rgba(0, 0, 0, .28);
 }
 
 @media (max-width: 520px) {
@@ -358,5 +367,6 @@ After installation, verify:
 - Hovering with a mouse expands the button and shows the larger Bite Sites logo.
 - Tabbing to the link with a keyboard triggers the same expanded state.
 - The four PNG assets load without 404s.
+- In dark mode, the button background is white and the dark logo assets are visible.
 - On screens under `520px`, the text is hidden and the logo remains centered.
 - If the CSS file or asset folder moved, all `url(...)` paths were updated.
