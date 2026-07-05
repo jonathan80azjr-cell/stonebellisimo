@@ -99,9 +99,9 @@
 
 .google-maps-iframe__marker::after {
   top: auto;
-  right: 18px;
+  right: auto;
   bottom: -16px;
-  left: 18px;
+  left: 50%;
   width: 28px;
   height: 28px;
   margin: auto;
@@ -109,7 +109,7 @@
   border-right: 3px solid var(--map-accent);
   border-bottom: 3px solid var(--map-accent);
   border-radius: 0 0 6px 0;
-  transform: rotate(45deg);
+  transform: translateX(-50%) rotate(45deg);
   transition: border-color .2s ease;
 }
 
@@ -176,6 +176,12 @@
   .google-maps-iframe__marker {
     width: 62px;
     height: 62px;
+  }
+
+  .google-maps-iframe__marker::after {
+    bottom: -14px;
+    width: 24px;
+    height: 24px;
   }
 
   .google-maps-iframe__marker img {
