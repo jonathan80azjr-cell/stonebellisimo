@@ -1,10 +1,10 @@
 .bitesites-banner {
   --bitesites-logo-rest: url("../assets/img/bitesites/logo-2-light.png");
   --bitesites-logo-hover: url("../assets/img/bitesites/logo-3-light.png");
-  --bitesites-bg: #050505;
+  --bitesites-bg: #000;
   --bitesites-bg-hover: #000;
-  --bitesites-border: rgba(255, 255, 255, .14);
-  --bitesites-text: rgba(255, 255, 255, .72);
+  --bitesites-border: #000;
+  --bitesites-text: #fff;
   --bitesites-text-hover: #fff;
   --bitesites-ring: rgba(255, 255, 255, .32);
   position: relative;
@@ -144,10 +144,10 @@
 [data-theme="light"] .bitesites-banner {
   --bitesites-logo-rest: url("../assets/img/bitesites/logo-2-light.png");
   --bitesites-logo-hover: url("../assets/img/bitesites/logo-3-light.png");
-  --bitesites-bg: #050505;
+  --bitesites-bg: #000;
   --bitesites-bg-hover: #000;
-  --bitesites-border: rgba(255, 255, 255, .14);
-  --bitesites-text: rgba(255, 255, 255, .72);
+  --bitesites-border: #000;
+  --bitesites-text: #fff;
   --bitesites-text-hover: #fff;
   --bitesites-ring: rgba(255, 255, 255, .32);
 }
@@ -156,12 +156,12 @@
 [data-theme="dark"] .bitesites-banner {
   --bitesites-logo-rest: url("../assets/img/bitesites/logo-8-dark.png");
   --bitesites-logo-hover: url("../assets/img/bitesites/logo-9-dark.png");
-  --bitesites-bg: #fff;
-  --bitesites-bg-hover: #fff;
-  --bitesites-border: rgba(0, 0, 0, .14);
-  --bitesites-text: rgba(0, 0, 0, .72);
-  --bitesites-text-hover: #000;
-  --bitesites-ring: rgba(0, 0, 0, .28);
+  --bitesites-bg: #000;
+  --bitesites-bg-hover: #000;
+  --bitesites-border: #000;
+  --bitesites-text: #fff;
+  --bitesites-text-hover: #fff;
+  --bitesites-ring: rgba(255, 255, 255, .32);
 }
 
 @media (max-width: 520px) {

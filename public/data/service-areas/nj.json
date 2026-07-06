@@ -1,0 +1,5333 @@
+{
+  "generatedAt": "2026-07-06T07:39:53.833Z",
+  "source": {
+    "name": "scpike/us-state-county-zip geo-data.csv",
+    "url": "https://raw.githubusercontent.com/scpike/us-state-county-zip/master/geo-data.csv",
+    "note": "Records are ZIP/ZCTA-style city, state, and county associations. ZIP Codes are postal delivery identifiers and do not perfectly match municipal boundaries."
+  },
+  "serviceArea": "New Jersey",
+  "state": "NJ",
+  "records": [
+    {
+      "city": "Atlantic City",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08401"
+      ],
+      "slug": "atlantic-city-nj-atlantic"
+    },
+    {
+      "city": "Batsto",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08037"
+      ],
+      "slug": "batsto-nj-atlantic"
+    },
+    {
+      "city": "Brigantine",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08203"
+      ],
+      "slug": "brigantine-nj-atlantic"
+    },
+    {
+      "city": "Buena",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08310"
+      ],
+      "slug": "buena-nj-atlantic"
+    },
+    {
+      "city": "Dorothy",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08317"
+      ],
+      "slug": "dorothy-nj-atlantic"
+    },
+    {
+      "city": "Egg Harbor City",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08215"
+      ],
+      "slug": "egg-harbor-city-nj-atlantic"
+    },
+    {
+      "city": "Elwood",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08217"
+      ],
+      "slug": "elwood-nj-atlantic"
+    },
+    {
+      "city": "Estell Manor",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08319"
+      ],
+      "slug": "estell-manor-nj-atlantic"
+    },
+    {
+      "city": "Landisville",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08326"
+      ],
+      "slug": "landisville-nj-atlantic"
+    },
+    {
+      "city": "Linwood",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08221"
+      ],
+      "slug": "linwood-nj-atlantic"
+    },
+    {
+      "city": "Longport",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08403"
+      ],
+      "slug": "longport-nj-atlantic"
+    },
+    {
+      "city": "Margate City",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08402"
+      ],
+      "slug": "margate-city-nj-atlantic"
+    },
+    {
+      "city": "Mays Landing",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08330"
+      ],
+      "slug": "mays-landing-nj-atlantic"
+    },
+    {
+      "city": "Milmay",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08340"
+      ],
+      "slug": "milmay-nj-atlantic"
+    },
+    {
+      "city": "Minotola",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08341"
+      ],
+      "slug": "minotola-nj-atlantic"
+    },
+    {
+      "city": "Newtonville",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08346"
+      ],
+      "slug": "newtonville-nj-atlantic"
+    },
+    {
+      "city": "Northfield",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08225"
+      ],
+      "slug": "northfield-nj-atlantic"
+    },
+    {
+      "city": "Pleasantville",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08232"
+      ],
+      "slug": "pleasantville-nj-atlantic"
+    },
+    {
+      "city": "Port Republic",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08241"
+      ],
+      "slug": "port-republic-nj-atlantic"
+    },
+    {
+      "city": "Richland",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08350"
+      ],
+      "slug": "richland-nj-atlantic"
+    },
+    {
+      "city": "Smithville",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08201"
+      ],
+      "slug": "smithville-nj-atlantic"
+    },
+    {
+      "city": "Somers Point",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08244"
+      ],
+      "slug": "somers-point-nj-atlantic"
+    },
+    {
+      "city": "Ventnor City",
+      "state": "NJ",
+      "county": "Atlantic",
+      "region": "Atlantic",
+      "zipCodes": [
+        "08406"
+      ],
+      "slug": "ventnor-city-nj-atlantic"
+    },
+    {
+      "city": "Allendale",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07401"
+      ],
+      "slug": "allendale-nj-bergen"
+    },
+    {
+      "city": "Alpine",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07620"
+      ],
+      "slug": "alpine-nj-bergen"
+    },
+    {
+      "city": "Bergenfield",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07621"
+      ],
+      "slug": "bergenfield-nj-bergen"
+    },
+    {
+      "city": "Bogota",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07603"
+      ],
+      "slug": "bogota-nj-bergen"
+    },
+    {
+      "city": "Carlstadt",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07072"
+      ],
+      "slug": "carlstadt-nj-bergen"
+    },
+    {
+      "city": "Cliffside Park",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07010"
+      ],
+      "slug": "cliffside-park-nj-bergen"
+    },
+    {
+      "city": "Closter",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07624"
+      ],
+      "slug": "closter-nj-bergen"
+    },
+    {
+      "city": "Cresskill",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07626"
+      ],
+      "slug": "cresskill-nj-bergen"
+    },
+    {
+      "city": "Demarest",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07627"
+      ],
+      "slug": "demarest-nj-bergen"
+    },
+    {
+      "city": "Dumont",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07628"
+      ],
+      "slug": "dumont-nj-bergen"
+    },
+    {
+      "city": "East Rutherford",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07073"
+      ],
+      "slug": "east-rutherford-nj-bergen"
+    },
+    {
+      "city": "Edgewater",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07020"
+      ],
+      "slug": "edgewater-nj-bergen"
+    },
+    {
+      "city": "Elmwood Park",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07407"
+      ],
+      "slug": "elmwood-park-nj-bergen"
+    },
+    {
+      "city": "Emerson",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07630"
+      ],
+      "slug": "emerson-nj-bergen"
+    },
+    {
+      "city": "Englewood",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07631"
+      ],
+      "slug": "englewood-nj-bergen"
+    },
+    {
+      "city": "Englewood Cliffs",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07632"
+      ],
+      "slug": "englewood-cliffs-nj-bergen"
+    },
+    {
+      "city": "Fair Lawn",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07410"
+      ],
+      "slug": "fair-lawn-nj-bergen"
+    },
+    {
+      "city": "Fairview",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07022"
+      ],
+      "slug": "fairview-nj-bergen"
+    },
+    {
+      "city": "Fort Lee",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07024"
+      ],
+      "slug": "fort-lee-nj-bergen"
+    },
+    {
+      "city": "Franklin Lakes",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07417"
+      ],
+      "slug": "franklin-lakes-nj-bergen"
+    },
+    {
+      "city": "Garfield",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07026"
+      ],
+      "slug": "garfield-nj-bergen"
+    },
+    {
+      "city": "Glen Rock",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07452"
+      ],
+      "slug": "glen-rock-nj-bergen"
+    },
+    {
+      "city": "Hackensack",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07601"
+      ],
+      "slug": "hackensack-nj-bergen"
+    },
+    {
+      "city": "Harrington Park",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07640"
+      ],
+      "slug": "harrington-park-nj-bergen"
+    },
+    {
+      "city": "Hasbrouck Height",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07604"
+      ],
+      "slug": "hasbrouck-height-nj-bergen"
+    },
+    {
+      "city": "Haworth",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07641"
+      ],
+      "slug": "haworth-nj-bergen"
+    },
+    {
+      "city": "Hillsdale",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07642"
+      ],
+      "slug": "hillsdale-nj-bergen"
+    },
+    {
+      "city": "Ho Ho Kus",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07423"
+      ],
+      "slug": "ho-ho-kus-nj-bergen"
+    },
+    {
+      "city": "Leonia",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07605"
+      ],
+      "slug": "leonia-nj-bergen"
+    },
+    {
+      "city": "Little Ferry",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07643"
+      ],
+      "slug": "little-ferry-nj-bergen"
+    },
+    {
+      "city": "Lodi",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07644"
+      ],
+      "slug": "lodi-nj-bergen"
+    },
+    {
+      "city": "Lyndhurst",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07071"
+      ],
+      "slug": "lyndhurst-nj-bergen"
+    },
+    {
+      "city": "Mahwah",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07430"
+      ],
+      "slug": "mahwah-nj-bergen"
+    },
+    {
+      "city": "Maywood",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07607"
+      ],
+      "slug": "maywood-nj-bergen"
+    },
+    {
+      "city": "Midland Park",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07432"
+      ],
+      "slug": "midland-park-nj-bergen"
+    },
+    {
+      "city": "Montvale",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07645"
+      ],
+      "slug": "montvale-nj-bergen"
+    },
+    {
+      "city": "Moonachie",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07074"
+      ],
+      "slug": "moonachie-nj-bergen"
+    },
+    {
+      "city": "New Milford",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07646"
+      ],
+      "slug": "new-milford-nj-bergen"
+    },
+    {
+      "city": "North Arlington",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07031"
+      ],
+      "slug": "north-arlington-nj-bergen"
+    },
+    {
+      "city": "Norwood",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07648"
+      ],
+      "slug": "norwood-nj-bergen"
+    },
+    {
+      "city": "Oakland",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07436"
+      ],
+      "slug": "oakland-nj-bergen"
+    },
+    {
+      "city": "Old Tappan",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07675"
+      ],
+      "slug": "old-tappan-nj-bergen"
+    },
+    {
+      "city": "Oradell",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07649"
+      ],
+      "slug": "oradell-nj-bergen"
+    },
+    {
+      "city": "Palisades Park",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07650"
+      ],
+      "slug": "palisades-park-nj-bergen"
+    },
+    {
+      "city": "Paramus",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07652"
+      ],
+      "slug": "paramus-nj-bergen"
+    },
+    {
+      "city": "Park Ridge",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07656"
+      ],
+      "slug": "park-ridge-nj-bergen"
+    },
+    {
+      "city": "Ramsey",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07446"
+      ],
+      "slug": "ramsey-nj-bergen"
+    },
+    {
+      "city": "Ridgefield",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07657"
+      ],
+      "slug": "ridgefield-nj-bergen"
+    },
+    {
+      "city": "Ridgefield Park",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07660"
+      ],
+      "slug": "ridgefield-park-nj-bergen"
+    },
+    {
+      "city": "Ridgewood",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07450"
+      ],
+      "slug": "ridgewood-nj-bergen"
+    },
+    {
+      "city": "River Edge",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07661"
+      ],
+      "slug": "river-edge-nj-bergen"
+    },
+    {
+      "city": "Rockleigh",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07647"
+      ],
+      "slug": "rockleigh-nj-bergen"
+    },
+    {
+      "city": "Rutherford",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07070"
+      ],
+      "slug": "rutherford-nj-bergen"
+    },
+    {
+      "city": "Saddle Brook",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07662"
+      ],
+      "slug": "saddle-brook-nj-bergen"
+    },
+    {
+      "city": "South Hackensack",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07606"
+      ],
+      "slug": "south-hackensack-nj-bergen"
+    },
+    {
+      "city": "Teaneck",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07666"
+      ],
+      "slug": "teaneck-nj-bergen"
+    },
+    {
+      "city": "Tenafly",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07670"
+      ],
+      "slug": "tenafly-nj-bergen"
+    },
+    {
+      "city": "Teterboro",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07608"
+      ],
+      "slug": "teterboro-nj-bergen"
+    },
+    {
+      "city": "Upper Saddle Riv",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07458"
+      ],
+      "slug": "upper-saddle-riv-nj-bergen"
+    },
+    {
+      "city": "Waldwick",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07463"
+      ],
+      "slug": "waldwick-nj-bergen"
+    },
+    {
+      "city": "Wallington",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07057"
+      ],
+      "slug": "wallington-nj-bergen"
+    },
+    {
+      "city": "Wood Ridge",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07075"
+      ],
+      "slug": "wood-ridge-nj-bergen"
+    },
+    {
+      "city": "Wyckoff",
+      "state": "NJ",
+      "county": "Bergen",
+      "region": "Bergen",
+      "zipCodes": [
+        "07481"
+      ],
+      "slug": "wyckoff-nj-bergen"
+    },
+    {
+      "city": "Beverly",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08010"
+      ],
+      "slug": "beverly-nj-burlington"
+    },
+    {
+      "city": "Birmingham",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08011"
+      ],
+      "slug": "birmingham-nj-burlington"
+    },
+    {
+      "city": "Bordentown",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08505"
+      ],
+      "slug": "bordentown-nj-burlington"
+    },
+    {
+      "city": "Browns Mills",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08015"
+      ],
+      "slug": "browns-mills-nj-burlington"
+    },
+    {
+      "city": "Burlington",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08016"
+      ],
+      "slug": "burlington-nj-burlington"
+    },
+    {
+      "city": "Chatsworth",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08019"
+      ],
+      "slug": "chatsworth-nj-burlington"
+    },
+    {
+      "city": "Cinnaminson",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08077"
+      ],
+      "slug": "cinnaminson-nj-burlington"
+    },
+    {
+      "city": "Columbus",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08022"
+      ],
+      "slug": "columbus-nj-burlington"
+    },
+    {
+      "city": "Cookstown",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08511"
+      ],
+      "slug": "cookstown-nj-burlington"
+    },
+    {
+      "city": "Crosswicks",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08515"
+      ],
+      "slug": "crosswicks-nj-burlington"
+    },
+    {
+      "city": "Delanco",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08075"
+      ],
+      "slug": "delanco-nj-burlington"
+    },
+    {
+      "city": "Eastampton Twp",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08060"
+      ],
+      "slug": "eastampton-twp-nj-burlington"
+    },
+    {
+      "city": "Florence",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08518"
+      ],
+      "slug": "florence-nj-burlington"
+    },
+    {
+      "city": "Fort Dix",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08640"
+      ],
+      "slug": "fort-dix-nj-burlington"
+    },
+    {
+      "city": "Hainesport",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08036"
+      ],
+      "slug": "hainesport-nj-burlington"
+    },
+    {
+      "city": "Jobstown",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08041"
+      ],
+      "slug": "jobstown-nj-burlington"
+    },
+    {
+      "city": "Juliustown",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08042"
+      ],
+      "slug": "juliustown-nj-burlington"
+    },
+    {
+      "city": "Lumberton",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08048"
+      ],
+      "slug": "lumberton-nj-burlington"
+    },
+    {
+      "city": "Maple Shade",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08052"
+      ],
+      "slug": "maple-shade-nj-burlington"
+    },
+    {
+      "city": "Marlton",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08053"
+      ],
+      "slug": "marlton-nj-burlington"
+    },
+    {
+      "city": "Mc Guire Afb",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08641"
+      ],
+      "slug": "mc-guire-afb-nj-burlington"
+    },
+    {
+      "city": "Medford Lakes",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08055"
+      ],
+      "slug": "medford-lakes-nj-burlington"
+    },
+    {
+      "city": "Moorestown",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08057"
+      ],
+      "slug": "moorestown-nj-burlington"
+    },
+    {
+      "city": "Mount Laurel",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08054"
+      ],
+      "slug": "mount-laurel-nj-burlington"
+    },
+    {
+      "city": "New Gretna",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08224"
+      ],
+      "slug": "new-gretna-nj-burlington"
+    },
+    {
+      "city": "New Lisbon",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08064"
+      ],
+      "slug": "new-lisbon-nj-burlington"
+    },
+    {
+      "city": "Palmyra",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08065"
+      ],
+      "slug": "palmyra-nj-burlington"
+    },
+    {
+      "city": "Pemberton",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08068"
+      ],
+      "slug": "pemberton-nj-burlington"
+    },
+    {
+      "city": "Rancocas",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08073"
+      ],
+      "slug": "rancocas-nj-burlington"
+    },
+    {
+      "city": "Roebling",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08554"
+      ],
+      "slug": "roebling-nj-burlington"
+    },
+    {
+      "city": "Southampton",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08088"
+      ],
+      "slug": "southampton-nj-burlington"
+    },
+    {
+      "city": "Willingboro",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08046"
+      ],
+      "slug": "willingboro-nj-burlington"
+    },
+    {
+      "city": "Wrightstown",
+      "state": "NJ",
+      "county": "Burlington",
+      "region": "Burlington",
+      "zipCodes": [
+        "08562"
+      ],
+      "slug": "wrightstown-nj-burlington"
+    },
+    {
+      "city": "Audubon",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08106"
+      ],
+      "slug": "audubon-nj-camden"
+    },
+    {
+      "city": "Barrington",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08007"
+      ],
+      "slug": "barrington-nj-camden"
+    },
+    {
+      "city": "Bellmawr",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08031"
+      ],
+      "slug": "bellmawr-nj-camden"
+    },
+    {
+      "city": "Berlin",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08009"
+      ],
+      "slug": "berlin-nj-camden"
+    },
+    {
+      "city": "Camden",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08102",
+        "08103",
+        "08104",
+        "08105"
+      ],
+      "slug": "camden-nj-camden"
+    },
+    {
+      "city": "Cherry Hill",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08002",
+        "08003",
+        "08034"
+      ],
+      "slug": "cherry-hill-nj-camden"
+    },
+    {
+      "city": "Collingswood",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08108"
+      ],
+      "slug": "collingswood-nj-camden"
+    },
+    {
+      "city": "Delair",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08110"
+      ],
+      "slug": "delair-nj-camden"
+    },
+    {
+      "city": "Gibbsboro",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08026"
+      ],
+      "slug": "gibbsboro-nj-camden"
+    },
+    {
+      "city": "Glendora",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08029"
+      ],
+      "slug": "glendora-nj-camden"
+    },
+    {
+      "city": "Gloucester City",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08030"
+      ],
+      "slug": "gloucester-city-nj-camden"
+    },
+    {
+      "city": "Haddon Heights",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08035"
+      ],
+      "slug": "haddon-heights-nj-camden"
+    },
+    {
+      "city": "Haddonfield",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08033"
+      ],
+      "slug": "haddonfield-nj-camden"
+    },
+    {
+      "city": "Laurel Springs",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08021"
+      ],
+      "slug": "laurel-springs-nj-camden"
+    },
+    {
+      "city": "Lawnside",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08045"
+      ],
+      "slug": "lawnside-nj-camden"
+    },
+    {
+      "city": "Magnolia",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08049"
+      ],
+      "slug": "magnolia-nj-camden"
+    },
+    {
+      "city": "Merchantville",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08109"
+      ],
+      "slug": "merchantville-nj-camden"
+    },
+    {
+      "city": "Mount Ephraim",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08059"
+      ],
+      "slug": "mount-ephraim-nj-camden"
+    },
+    {
+      "city": "Oaklyn",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08107"
+      ],
+      "slug": "oaklyn-nj-camden"
+    },
+    {
+      "city": "Runnemede",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08078"
+      ],
+      "slug": "runnemede-nj-camden"
+    },
+    {
+      "city": "Sicklerville",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08081"
+      ],
+      "slug": "sicklerville-nj-camden"
+    },
+    {
+      "city": "Somerdale",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08083"
+      ],
+      "slug": "somerdale-nj-camden"
+    },
+    {
+      "city": "Stratford",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08084"
+      ],
+      "slug": "stratford-nj-camden"
+    },
+    {
+      "city": "Voorhees",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08043"
+      ],
+      "slug": "voorhees-nj-camden"
+    },
+    {
+      "city": "Washington",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08012"
+      ],
+      "slug": "washington-nj-camden"
+    },
+    {
+      "city": "Waterford Works",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08089"
+      ],
+      "slug": "waterford-works-nj-camden"
+    },
+    {
+      "city": "West Berlin",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08091"
+      ],
+      "slug": "west-berlin-nj-camden"
+    },
+    {
+      "city": "Winslow",
+      "state": "NJ",
+      "county": "Camden",
+      "region": "Camden",
+      "zipCodes": [
+        "08004",
+        "08095"
+      ],
+      "slug": "winslow-nj-camden"
+    },
+    {
+      "city": "Avalon",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08202"
+      ],
+      "slug": "avalon-nj-cape-may"
+    },
+    {
+      "city": "Cape May Court H",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08210"
+      ],
+      "slug": "cape-may-court-h-nj-cape-may"
+    },
+    {
+      "city": "Cape May Point",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08212"
+      ],
+      "slug": "cape-may-point-nj-cape-may"
+    },
+    {
+      "city": "Corbin City",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08270"
+      ],
+      "slug": "corbin-city-nj-cape-may"
+    },
+    {
+      "city": "Marmora",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08223"
+      ],
+      "slug": "marmora-nj-cape-may"
+    },
+    {
+      "city": "North Cape May",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08204"
+      ],
+      "slug": "north-cape-may-nj-cape-may"
+    },
+    {
+      "city": "North Wildwood",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08260"
+      ],
+      "slug": "north-wildwood-nj-cape-may"
+    },
+    {
+      "city": "Ocean City",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08226"
+      ],
+      "slug": "ocean-city-nj-cape-may"
+    },
+    {
+      "city": "Ocean View",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08230"
+      ],
+      "slug": "ocean-view-nj-cape-may"
+    },
+    {
+      "city": "Rio Grande",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08242"
+      ],
+      "slug": "rio-grande-nj-cape-may"
+    },
+    {
+      "city": "South Dennis",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08245"
+      ],
+      "slug": "south-dennis-nj-cape-may"
+    },
+    {
+      "city": "Stone Harbor",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08247"
+      ],
+      "slug": "stone-harbor-nj-cape-may"
+    },
+    {
+      "city": "Strathmere",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08248"
+      ],
+      "slug": "strathmere-nj-cape-may"
+    },
+    {
+      "city": "Townsends Inlet",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08243"
+      ],
+      "slug": "townsends-inlet-nj-cape-may"
+    },
+    {
+      "city": "Villas",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08251"
+      ],
+      "slug": "villas-nj-cape-may"
+    },
+    {
+      "city": "Whitesboro",
+      "state": "NJ",
+      "county": "Cape May",
+      "region": "Cape May",
+      "zipCodes": [
+        "08252"
+      ],
+      "slug": "whitesboro-nj-cape-may"
+    },
+    {
+      "city": "Cedarville",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08311"
+      ],
+      "slug": "cedarville-nj-cumberland"
+    },
+    {
+      "city": "Deerfield Street",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08313"
+      ],
+      "slug": "deerfield-street-nj-cumberland"
+    },
+    {
+      "city": "Delmont",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08314"
+      ],
+      "slug": "delmont-nj-cumberland"
+    },
+    {
+      "city": "Dorchester",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08316"
+      ],
+      "slug": "dorchester-nj-cumberland"
+    },
+    {
+      "city": "Fortescue",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08321"
+      ],
+      "slug": "fortescue-nj-cumberland"
+    },
+    {
+      "city": "Greenwich",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08323"
+      ],
+      "slug": "greenwich-nj-cumberland"
+    },
+    {
+      "city": "Heislerville",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08324"
+      ],
+      "slug": "heislerville-nj-cumberland"
+    },
+    {
+      "city": "Leesburg",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08327"
+      ],
+      "slug": "leesburg-nj-cumberland"
+    },
+    {
+      "city": "Mauricetown",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08329"
+      ],
+      "slug": "mauricetown-nj-cumberland"
+    },
+    {
+      "city": "Millville",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08332"
+      ],
+      "slug": "millville-nj-cumberland"
+    },
+    {
+      "city": "Newport",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08345"
+      ],
+      "slug": "newport-nj-cumberland"
+    },
+    {
+      "city": "Port Elizabeth",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08348"
+      ],
+      "slug": "port-elizabeth-nj-cumberland"
+    },
+    {
+      "city": "Port Norris",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08349"
+      ],
+      "slug": "port-norris-nj-cumberland"
+    },
+    {
+      "city": "Rosenhayn",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08352"
+      ],
+      "slug": "rosenhayn-nj-cumberland"
+    },
+    {
+      "city": "Seabrook",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08302"
+      ],
+      "slug": "seabrook-nj-cumberland"
+    },
+    {
+      "city": "Shiloh",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08353"
+      ],
+      "slug": "shiloh-nj-cumberland"
+    },
+    {
+      "city": "Vineland",
+      "state": "NJ",
+      "county": "Cumberland",
+      "region": "Cumberland",
+      "zipCodes": [
+        "08360"
+      ],
+      "slug": "vineland-nj-cumberland"
+    },
+    {
+      "city": "Belleville",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07109"
+      ],
+      "slug": "belleville-nj-essex"
+    },
+    {
+      "city": "Bloomfield",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07003"
+      ],
+      "slug": "bloomfield-nj-essex"
+    },
+    {
+      "city": "Cedar Grove",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07009"
+      ],
+      "slug": "cedar-grove-nj-essex"
+    },
+    {
+      "city": "East Orange",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07017",
+        "07018"
+      ],
+      "slug": "east-orange-nj-essex"
+    },
+    {
+      "city": "Essex Fells",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07021"
+      ],
+      "slug": "essex-fells-nj-essex"
+    },
+    {
+      "city": "Fairfield",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07004"
+      ],
+      "slug": "fairfield-nj-essex"
+    },
+    {
+      "city": "Glen Ridge",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07028"
+      ],
+      "slug": "glen-ridge-nj-essex"
+    },
+    {
+      "city": "Irvington",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07111"
+      ],
+      "slug": "irvington-nj-essex"
+    },
+    {
+      "city": "Livingston",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07039"
+      ],
+      "slug": "livingston-nj-essex"
+    },
+    {
+      "city": "Maplewood",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07040"
+      ],
+      "slug": "maplewood-nj-essex"
+    },
+    {
+      "city": "Millburn",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07041"
+      ],
+      "slug": "millburn-nj-essex"
+    },
+    {
+      "city": "Montclair",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07042",
+        "07043"
+      ],
+      "slug": "montclair-nj-essex"
+    },
+    {
+      "city": "Newark",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07102",
+        "07103",
+        "07104",
+        "07105",
+        "07106",
+        "07107",
+        "07108",
+        "07112",
+        "07114"
+      ],
+      "slug": "newark-nj-essex"
+    },
+    {
+      "city": "Nutley",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07110"
+      ],
+      "slug": "nutley-nj-essex"
+    },
+    {
+      "city": "Orange",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07050"
+      ],
+      "slug": "orange-nj-essex"
+    },
+    {
+      "city": "Roseland",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07068"
+      ],
+      "slug": "roseland-nj-essex"
+    },
+    {
+      "city": "Short Hills",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07078"
+      ],
+      "slug": "short-hills-nj-essex"
+    },
+    {
+      "city": "South Orange",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07079"
+      ],
+      "slug": "south-orange-nj-essex"
+    },
+    {
+      "city": "Verona",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07044"
+      ],
+      "slug": "verona-nj-essex"
+    },
+    {
+      "city": "West Caldwell",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07006"
+      ],
+      "slug": "west-caldwell-nj-essex"
+    },
+    {
+      "city": "West Orange",
+      "state": "NJ",
+      "county": "Essex",
+      "region": "Essex",
+      "zipCodes": [
+        "07052"
+      ],
+      "slug": "west-orange-nj-essex"
+    },
+    {
+      "city": "Bridgeport",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08014"
+      ],
+      "slug": "bridgeport-nj-gloucester"
+    },
+    {
+      "city": "Clarksboro",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08020"
+      ],
+      "slug": "clarksboro-nj-gloucester"
+    },
+    {
+      "city": "Clayton",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08312"
+      ],
+      "slug": "clayton-nj-gloucester"
+    },
+    {
+      "city": "Deptford",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08096"
+      ],
+      "slug": "deptford-nj-gloucester"
+    },
+    {
+      "city": "Franklinville",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08322"
+      ],
+      "slug": "franklinville-nj-gloucester"
+    },
+    {
+      "city": "Gibbstown",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08027"
+      ],
+      "slug": "gibbstown-nj-gloucester"
+    },
+    {
+      "city": "Glassboro",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08028"
+      ],
+      "slug": "glassboro-nj-gloucester"
+    },
+    {
+      "city": "Grenloch",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08032"
+      ],
+      "slug": "grenloch-nj-gloucester"
+    },
+    {
+      "city": "Harrisonville",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08039"
+      ],
+      "slug": "harrisonville-nj-gloucester"
+    },
+    {
+      "city": "Malaga",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08328"
+      ],
+      "slug": "malaga-nj-gloucester"
+    },
+    {
+      "city": "Mantua",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08051"
+      ],
+      "slug": "mantua-nj-gloucester"
+    },
+    {
+      "city": "Mickleton",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08056"
+      ],
+      "slug": "mickleton-nj-gloucester"
+    },
+    {
+      "city": "Monroeville",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08343"
+      ],
+      "slug": "monroeville-nj-gloucester"
+    },
+    {
+      "city": "Mount Royal",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08061"
+      ],
+      "slug": "mount-royal-nj-gloucester"
+    },
+    {
+      "city": "Mullica Hill",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08062"
+      ],
+      "slug": "mullica-hill-nj-gloucester"
+    },
+    {
+      "city": "National Park",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08063"
+      ],
+      "slug": "national-park-nj-gloucester"
+    },
+    {
+      "city": "Newfield",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08344"
+      ],
+      "slug": "newfield-nj-gloucester"
+    },
+    {
+      "city": "Paulsboro",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08066"
+      ],
+      "slug": "paulsboro-nj-gloucester"
+    },
+    {
+      "city": "Pitman",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08071"
+      ],
+      "slug": "pitman-nj-gloucester"
+    },
+    {
+      "city": "Richwood",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08074"
+      ],
+      "slug": "richwood-nj-gloucester"
+    },
+    {
+      "city": "Sewell",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08080"
+      ],
+      "slug": "sewell-nj-gloucester"
+    },
+    {
+      "city": "Swedesboro",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08085"
+      ],
+      "slug": "swedesboro-nj-gloucester"
+    },
+    {
+      "city": "Thorofare",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08086"
+      ],
+      "slug": "thorofare-nj-gloucester"
+    },
+    {
+      "city": "Wenonah",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08090"
+      ],
+      "slug": "wenonah-nj-gloucester"
+    },
+    {
+      "city": "Westville",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08093"
+      ],
+      "slug": "westville-nj-gloucester"
+    },
+    {
+      "city": "Williamstown",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08094"
+      ],
+      "slug": "williamstown-nj-gloucester"
+    },
+    {
+      "city": "Woodbury Heights",
+      "state": "NJ",
+      "county": "Gloucester",
+      "region": "Gloucester",
+      "zipCodes": [
+        "08097"
+      ],
+      "slug": "woodbury-heights-nj-gloucester"
+    },
+    {
+      "city": "",
+      "state": "NJ",
+      "county": "Hudson",
+      "region": "Hudson",
+      "zipCodes": [
+        "10004"
+      ],
+      "slug": "nj-hudson"
+    },
+    {
+      "city": "Bayonne",
+      "state": "NJ",
+      "county": "Hudson",
+      "region": "Hudson",
+      "zipCodes": [
+        "07002"
+      ],
+      "slug": "bayonne-nj-hudson"
+    },
+    {
+      "city": "Guttenberg",
+      "state": "NJ",
+      "county": "Hudson",
+      "region": "Hudson",
+      "zipCodes": [
+        "07093"
+      ],
+      "slug": "guttenberg-nj-hudson"
+    },
+    {
+      "city": "Hoboken",
+      "state": "NJ",
+      "county": "Hudson",
+      "region": "Hudson",
+      "zipCodes": [
+        "07030"
+      ],
+      "slug": "hoboken-nj-hudson"
+    },
+    {
+      "city": "Jersey City",
+      "state": "NJ",
+      "county": "Hudson",
+      "region": "Hudson",
+      "zipCodes": [
+        "07302",
+        "07304",
+        "07305",
+        "07306",
+        "07307",
+        "07310"
+      ],
+      "slug": "jersey-city-nj-hudson"
+    },
+    {
+      "city": "Kearny",
+      "state": "NJ",
+      "county": "Hudson",
+      "region": "Hudson",
+      "zipCodes": [
+        "07029",
+        "07032"
+      ],
+      "slug": "kearny-nj-hudson"
+    },
+    {
+      "city": "North Bergen",
+      "state": "NJ",
+      "county": "Hudson",
+      "region": "Hudson",
+      "zipCodes": [
+        "07047"
+      ],
+      "slug": "north-bergen-nj-hudson"
+    },
+    {
+      "city": "Secaucus",
+      "state": "NJ",
+      "county": "Hudson",
+      "region": "Hudson",
+      "zipCodes": [
+        "07094"
+      ],
+      "slug": "secaucus-nj-hudson"
+    },
+    {
+      "city": "Weehawken",
+      "state": "NJ",
+      "county": "Hudson",
+      "region": "Hudson",
+      "zipCodes": [
+        "07087"
+      ],
+      "slug": "weehawken-nj-hudson"
+    },
+    {
+      "city": "Annandale",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08801"
+      ],
+      "slug": "annandale-nj-hunterdon"
+    },
+    {
+      "city": "Bloomsbury",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08804"
+      ],
+      "slug": "bloomsbury-nj-hunterdon"
+    },
+    {
+      "city": "Califon",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "07830"
+      ],
+      "slug": "califon-nj-hunterdon"
+    },
+    {
+      "city": "Clinton",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08809"
+      ],
+      "slug": "clinton-nj-hunterdon"
+    },
+    {
+      "city": "Flemington",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08822"
+      ],
+      "slug": "flemington-nj-hunterdon"
+    },
+    {
+      "city": "Frenchtown",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08825"
+      ],
+      "slug": "frenchtown-nj-hunterdon"
+    },
+    {
+      "city": "Glen Gardner",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08826"
+      ],
+      "slug": "glen-gardner-nj-hunterdon"
+    },
+    {
+      "city": "Hampton",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08827"
+      ],
+      "slug": "hampton-nj-hunterdon"
+    },
+    {
+      "city": "High Bridge",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08829"
+      ],
+      "slug": "high-bridge-nj-hunterdon"
+    },
+    {
+      "city": "Lambertville",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08530"
+      ],
+      "slug": "lambertville-nj-hunterdon"
+    },
+    {
+      "city": "Lebanon",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08833"
+      ],
+      "slug": "lebanon-nj-hunterdon"
+    },
+    {
+      "city": "Milford",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08848"
+      ],
+      "slug": "milford-nj-hunterdon"
+    },
+    {
+      "city": "Oldwick",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08858"
+      ],
+      "slug": "oldwick-nj-hunterdon"
+    },
+    {
+      "city": "Pattenburg",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08802"
+      ],
+      "slug": "pattenburg-nj-hunterdon"
+    },
+    {
+      "city": "Pittstown",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08867"
+      ],
+      "slug": "pittstown-nj-hunterdon"
+    },
+    {
+      "city": "Pottersville",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "07979"
+      ],
+      "slug": "pottersville-nj-hunterdon"
+    },
+    {
+      "city": "Ringoes",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08551"
+      ],
+      "slug": "ringoes-nj-hunterdon"
+    },
+    {
+      "city": "Stockton",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08559"
+      ],
+      "slug": "stockton-nj-hunterdon"
+    },
+    {
+      "city": "Three Bridges",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08887"
+      ],
+      "slug": "three-bridges-nj-hunterdon"
+    },
+    {
+      "city": "Whitehouse Stati",
+      "state": "NJ",
+      "county": "Hunterdon",
+      "region": "Hunterdon",
+      "zipCodes": [
+        "08889"
+      ],
+      "slug": "whitehouse-stati-nj-hunterdon"
+    },
+    {
+      "city": "Cranbury",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08512"
+      ],
+      "slug": "cranbury-nj-mercer"
+    },
+    {
+      "city": "Hamilton",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08609",
+        "08610",
+        "08611",
+        "08629",
+        "08690",
+        "08691"
+      ],
+      "slug": "hamilton-nj-mercer"
+    },
+    {
+      "city": "Hightstown",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08520"
+      ],
+      "slug": "hightstown-nj-mercer"
+    },
+    {
+      "city": "Hopewell",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08525"
+      ],
+      "slug": "hopewell-nj-mercer"
+    },
+    {
+      "city": "Lawrenceville",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08648"
+      ],
+      "slug": "lawrenceville-nj-mercer"
+    },
+    {
+      "city": "Mercerville",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08619"
+      ],
+      "slug": "mercerville-nj-mercer"
+    },
+    {
+      "city": "Pennington",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08534"
+      ],
+      "slug": "pennington-nj-mercer"
+    },
+    {
+      "city": "Princeton",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08540",
+        "08542"
+      ],
+      "slug": "princeton-nj-mercer"
+    },
+    {
+      "city": "Princeton Juncti",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08550"
+      ],
+      "slug": "princeton-juncti-nj-mercer"
+    },
+    {
+      "city": "Titusville",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08560"
+      ],
+      "slug": "titusville-nj-mercer"
+    },
+    {
+      "city": "Trenton",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08608",
+        "08618",
+        "08625",
+        "08638"
+      ],
+      "slug": "trenton-nj-mercer"
+    },
+    {
+      "city": "West Trenton",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08628"
+      ],
+      "slug": "west-trenton-nj-mercer"
+    },
+    {
+      "city": "Windsor",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08561"
+      ],
+      "slug": "windsor-nj-mercer"
+    },
+    {
+      "city": "Yardville",
+      "state": "NJ",
+      "county": "Mercer",
+      "region": "Mercer",
+      "zipCodes": [
+        "08620"
+      ],
+      "slug": "yardville-nj-mercer"
+    },
+    {
+      "city": "Avenel",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "07001"
+      ],
+      "slug": "avenel-nj-middlesex"
+    },
+    {
+      "city": "Carteret",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "07008"
+      ],
+      "slug": "carteret-nj-middlesex"
+    },
+    {
+      "city": "Colonia",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "07067"
+      ],
+      "slug": "colonia-nj-middlesex"
+    },
+    {
+      "city": "Dayton",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08810"
+      ],
+      "slug": "dayton-nj-middlesex"
+    },
+    {
+      "city": "East Brunswick",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08816"
+      ],
+      "slug": "east-brunswick-nj-middlesex"
+    },
+    {
+      "city": "Edison",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08817",
+        "08820",
+        "08837"
+      ],
+      "slug": "edison-nj-middlesex"
+    },
+    {
+      "city": "Fords",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08863"
+      ],
+      "slug": "fords-nj-middlesex"
+    },
+    {
+      "city": "Green Brook",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08812"
+      ],
+      "slug": "green-brook-nj-middlesex"
+    },
+    {
+      "city": "Helmetta",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08828"
+      ],
+      "slug": "helmetta-nj-middlesex"
+    },
+    {
+      "city": "Highland Park",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08904"
+      ],
+      "slug": "highland-park-nj-middlesex"
+    },
+    {
+      "city": "Iselin",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08830"
+      ],
+      "slug": "iselin-nj-middlesex"
+    },
+    {
+      "city": "Jamesburg",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08831"
+      ],
+      "slug": "jamesburg-nj-middlesex"
+    },
+    {
+      "city": "Keasbey",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08832"
+      ],
+      "slug": "keasbey-nj-middlesex"
+    },
+    {
+      "city": "Kendall Park",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08824"
+      ],
+      "slug": "kendall-park-nj-middlesex"
+    },
+    {
+      "city": "Laurence Harbor",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08879"
+      ],
+      "slug": "laurence-harbor-nj-middlesex"
+    },
+    {
+      "city": "Metuchen",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08840"
+      ],
+      "slug": "metuchen-nj-middlesex"
+    },
+    {
+      "city": "Middlesex",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08846"
+      ],
+      "slug": "middlesex-nj-middlesex"
+    },
+    {
+      "city": "Milltown",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08850"
+      ],
+      "slug": "milltown-nj-middlesex"
+    },
+    {
+      "city": "Monmouth Junctio",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08852"
+      ],
+      "slug": "monmouth-junctio-nj-middlesex"
+    },
+    {
+      "city": "New Brunswick",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08901"
+      ],
+      "slug": "new-brunswick-nj-middlesex"
+    },
+    {
+      "city": "North Brunswick",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08902"
+      ],
+      "slug": "north-brunswick-nj-middlesex"
+    },
+    {
+      "city": "Old Bridge",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08857"
+      ],
+      "slug": "old-bridge-nj-middlesex"
+    },
+    {
+      "city": "Parlin",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08859"
+      ],
+      "slug": "parlin-nj-middlesex"
+    },
+    {
+      "city": "Perth Amboy",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08861"
+      ],
+      "slug": "perth-amboy-nj-middlesex"
+    },
+    {
+      "city": "Piscataway",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08854"
+      ],
+      "slug": "piscataway-nj-middlesex"
+    },
+    {
+      "city": "Plainsboro",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08536"
+      ],
+      "slug": "plainsboro-nj-middlesex"
+    },
+    {
+      "city": "Port Reading",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "07064"
+      ],
+      "slug": "port-reading-nj-middlesex"
+    },
+    {
+      "city": "Sayreville",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08872"
+      ],
+      "slug": "sayreville-nj-middlesex"
+    },
+    {
+      "city": "Sewaren",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "07077"
+      ],
+      "slug": "sewaren-nj-middlesex"
+    },
+    {
+      "city": "South Plainfield",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "07080"
+      ],
+      "slug": "south-plainfield-nj-middlesex"
+    },
+    {
+      "city": "South River",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08882"
+      ],
+      "slug": "south-river-nj-middlesex"
+    },
+    {
+      "city": "Spotswood",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "08884"
+      ],
+      "slug": "spotswood-nj-middlesex"
+    },
+    {
+      "city": "Woodbridge",
+      "state": "NJ",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "07095"
+      ],
+      "slug": "woodbridge-nj-middlesex"
+    },
+    {
+      "city": "Allenhurst",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07711"
+      ],
+      "slug": "allenhurst-nj-monmouth"
+    },
+    {
+      "city": "Allentown",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "08501"
+      ],
+      "slug": "allentown-nj-monmouth"
+    },
+    {
+      "city": "Allenwood",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "08720"
+      ],
+      "slug": "allenwood-nj-monmouth"
+    },
+    {
+      "city": "Atlantic Highlan",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07716"
+      ],
+      "slug": "atlantic-highlan-nj-monmouth"
+    },
+    {
+      "city": "Avon By The Sea",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07717"
+      ],
+      "slug": "avon-by-the-sea-nj-monmouth"
+    },
+    {
+      "city": "Belford",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07718"
+      ],
+      "slug": "belford-nj-monmouth"
+    },
+    {
+      "city": "Bradley Beach",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07720"
+      ],
+      "slug": "bradley-beach-nj-monmouth"
+    },
+    {
+      "city": "Brielle",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "08730"
+      ],
+      "slug": "brielle-nj-monmouth"
+    },
+    {
+      "city": "Clarksburg",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "08510"
+      ],
+      "slug": "clarksburg-nj-monmouth"
+    },
+    {
+      "city": "Cliffwood",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07721"
+      ],
+      "slug": "cliffwood-nj-monmouth"
+    },
+    {
+      "city": "Colts Neck",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07722"
+      ],
+      "slug": "colts-neck-nj-monmouth"
+    },
+    {
+      "city": "Creamridge",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "08514"
+      ],
+      "slug": "creamridge-nj-monmouth"
+    },
+    {
+      "city": "Deal",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07723"
+      ],
+      "slug": "deal-nj-monmouth"
+    },
+    {
+      "city": "Eatontown",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07724"
+      ],
+      "slug": "eatontown-nj-monmouth"
+    },
+    {
+      "city": "Fair Haven",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07704"
+      ],
+      "slug": "fair-haven-nj-monmouth"
+    },
+    {
+      "city": "Farmingdale",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07727"
+      ],
+      "slug": "farmingdale-nj-monmouth"
+    },
+    {
+      "city": "Fort Hancock",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07732"
+      ],
+      "slug": "fort-hancock-nj-monmouth"
+    },
+    {
+      "city": "Fort Monmouth",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07703"
+      ],
+      "slug": "fort-monmouth-nj-monmouth"
+    },
+    {
+      "city": "Freehold",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07728"
+      ],
+      "slug": "freehold-nj-monmouth"
+    },
+    {
+      "city": "Hazlet",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07730"
+      ],
+      "slug": "hazlet-nj-monmouth"
+    },
+    {
+      "city": "Holmdel",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07733"
+      ],
+      "slug": "holmdel-nj-monmouth"
+    },
+    {
+      "city": "Howell",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07731"
+      ],
+      "slug": "howell-nj-monmouth"
+    },
+    {
+      "city": "Keansburg",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07734"
+      ],
+      "slug": "keansburg-nj-monmouth"
+    },
+    {
+      "city": "Keyport",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07735"
+      ],
+      "slug": "keyport-nj-monmouth"
+    },
+    {
+      "city": "Leonardo",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07737"
+      ],
+      "slug": "leonardo-nj-monmouth"
+    },
+    {
+      "city": "Lincroft",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07738"
+      ],
+      "slug": "lincroft-nj-monmouth"
+    },
+    {
+      "city": "Little Silver",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07739"
+      ],
+      "slug": "little-silver-nj-monmouth"
+    },
+    {
+      "city": "Long Branch",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07740"
+      ],
+      "slug": "long-branch-nj-monmouth"
+    },
+    {
+      "city": "Manalapan",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07726"
+      ],
+      "slug": "manalapan-nj-monmouth"
+    },
+    {
+      "city": "Manasquan",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "08736"
+      ],
+      "slug": "manasquan-nj-monmouth"
+    },
+    {
+      "city": "Marlboro",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07746"
+      ],
+      "slug": "marlboro-nj-monmouth"
+    },
+    {
+      "city": "Matawan",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07747"
+      ],
+      "slug": "matawan-nj-monmouth"
+    },
+    {
+      "city": "Monmouth Beach",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07750"
+      ],
+      "slug": "monmouth-beach-nj-monmouth"
+    },
+    {
+      "city": "Morganville",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07751"
+      ],
+      "slug": "morganville-nj-monmouth"
+    },
+    {
+      "city": "Neptune City",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07753"
+      ],
+      "slug": "neptune-city-nj-monmouth"
+    },
+    {
+      "city": "New Monmouth",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07748"
+      ],
+      "slug": "new-monmouth-nj-monmouth"
+    },
+    {
+      "city": "Oakhurst",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07755"
+      ],
+      "slug": "oakhurst-nj-monmouth"
+    },
+    {
+      "city": "Ocean",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07712"
+      ],
+      "slug": "ocean-nj-monmouth"
+    },
+    {
+      "city": "Ocean Grove",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07756"
+      ],
+      "slug": "ocean-grove-nj-monmouth"
+    },
+    {
+      "city": "Oceanport",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07757"
+      ],
+      "slug": "oceanport-nj-monmouth"
+    },
+    {
+      "city": "Perrineville",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "08535"
+      ],
+      "slug": "perrineville-nj-monmouth"
+    },
+    {
+      "city": "Port Monmouth",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07758"
+      ],
+      "slug": "port-monmouth-nj-monmouth"
+    },
+    {
+      "city": "Roosevelt",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "08555"
+      ],
+      "slug": "roosevelt-nj-monmouth"
+    },
+    {
+      "city": "Sea Bright",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07760"
+      ],
+      "slug": "sea-bright-nj-monmouth"
+    },
+    {
+      "city": "Sea Girt",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "08750"
+      ],
+      "slug": "sea-girt-nj-monmouth"
+    },
+    {
+      "city": "Shrewsbury",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07702"
+      ],
+      "slug": "shrewsbury-nj-monmouth"
+    },
+    {
+      "city": "Spring Lake",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07762"
+      ],
+      "slug": "spring-lake-nj-monmouth"
+    },
+    {
+      "city": "Suburban",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07701"
+      ],
+      "slug": "suburban-nj-monmouth"
+    },
+    {
+      "city": "Wall",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07719"
+      ],
+      "slug": "wall-nj-monmouth"
+    },
+    {
+      "city": "West Long Branch",
+      "state": "NJ",
+      "county": "Monmouth",
+      "region": "Monmouth",
+      "zipCodes": [
+        "07764"
+      ],
+      "slug": "west-long-branch-nj-monmouth"
+    },
+    {
+      "city": "Boonton",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07005"
+      ],
+      "slug": "boonton-nj-morris"
+    },
+    {
+      "city": "Budd Lake",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07828"
+      ],
+      "slug": "budd-lake-nj-morris"
+    },
+    {
+      "city": "Cedar Knolls",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07927"
+      ],
+      "slug": "cedar-knolls-nj-morris"
+    },
+    {
+      "city": "Chatham",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07928"
+      ],
+      "slug": "chatham-nj-morris"
+    },
+    {
+      "city": "Chester",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07930"
+      ],
+      "slug": "chester-nj-morris"
+    },
+    {
+      "city": "Denville",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07834"
+      ],
+      "slug": "denville-nj-morris"
+    },
+    {
+      "city": "East Hanover",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07936"
+      ],
+      "slug": "east-hanover-nj-morris"
+    },
+    {
+      "city": "Flanders",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07836"
+      ],
+      "slug": "flanders-nj-morris"
+    },
+    {
+      "city": "Florham Park",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07932"
+      ],
+      "slug": "florham-park-nj-morris"
+    },
+    {
+      "city": "Gillette",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07933"
+      ],
+      "slug": "gillette-nj-morris"
+    },
+    {
+      "city": "Green Village",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07935"
+      ],
+      "slug": "green-village-nj-morris"
+    },
+    {
+      "city": "Greystone Park",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07950"
+      ],
+      "slug": "greystone-park-nj-morris"
+    },
+    {
+      "city": "Hibernia",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07842"
+      ],
+      "slug": "hibernia-nj-morris"
+    },
+    {
+      "city": "Kenvil",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07847"
+      ],
+      "slug": "kenvil-nj-morris"
+    },
+    {
+      "city": "Kinnelon",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07405"
+      ],
+      "slug": "kinnelon-nj-morris"
+    },
+    {
+      "city": "Lake Hiawatha",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07034"
+      ],
+      "slug": "lake-hiawatha-nj-morris"
+    },
+    {
+      "city": "Lake Hopatcong",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07849"
+      ],
+      "slug": "lake-hopatcong-nj-morris"
+    },
+    {
+      "city": "Landing",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07850"
+      ],
+      "slug": "landing-nj-morris"
+    },
+    {
+      "city": "Ledgewood",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07852"
+      ],
+      "slug": "ledgewood-nj-morris"
+    },
+    {
+      "city": "Lincoln Park",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07035"
+      ],
+      "slug": "lincoln-park-nj-morris"
+    },
+    {
+      "city": "Long Valley",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07853"
+      ],
+      "slug": "long-valley-nj-morris"
+    },
+    {
+      "city": "Madison",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07940"
+      ],
+      "slug": "madison-nj-morris"
+    },
+    {
+      "city": "Mendham",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07945"
+      ],
+      "slug": "mendham-nj-morris"
+    },
+    {
+      "city": "Millington",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07946"
+      ],
+      "slug": "millington-nj-morris"
+    },
+    {
+      "city": "Milton",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07438"
+      ],
+      "slug": "milton-nj-morris"
+    },
+    {
+      "city": "Mine Hill",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07801"
+      ],
+      "slug": "mine-hill-nj-morris"
+    },
+    {
+      "city": "Montville",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07045"
+      ],
+      "slug": "montville-nj-morris"
+    },
+    {
+      "city": "Morristown",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07960"
+      ],
+      "slug": "morristown-nj-morris"
+    },
+    {
+      "city": "Mount Arlington",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07856"
+      ],
+      "slug": "mount-arlington-nj-morris"
+    },
+    {
+      "city": "Mount Freedom",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07970"
+      ],
+      "slug": "mount-freedom-nj-morris"
+    },
+    {
+      "city": "Mount Tabor",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07878"
+      ],
+      "slug": "mount-tabor-nj-morris"
+    },
+    {
+      "city": "Mountain Lakes",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07046"
+      ],
+      "slug": "mountain-lakes-nj-morris"
+    },
+    {
+      "city": "Netcong",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07857"
+      ],
+      "slug": "netcong-nj-morris"
+    },
+    {
+      "city": "New Vernon",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07976"
+      ],
+      "slug": "new-vernon-nj-morris"
+    },
+    {
+      "city": "Parsippany",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07054"
+      ],
+      "slug": "parsippany-nj-morris"
+    },
+    {
+      "city": "Pequannock",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07440"
+      ],
+      "slug": "pequannock-nj-morris"
+    },
+    {
+      "city": "Pine Brook",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07058"
+      ],
+      "slug": "pine-brook-nj-morris"
+    },
+    {
+      "city": "Pompton Plains",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07444"
+      ],
+      "slug": "pompton-plains-nj-morris"
+    },
+    {
+      "city": "Randolph",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07869"
+      ],
+      "slug": "randolph-nj-morris"
+    },
+    {
+      "city": "Riverdale",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07457"
+      ],
+      "slug": "riverdale-nj-morris"
+    },
+    {
+      "city": "Rockaway",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07866"
+      ],
+      "slug": "rockaway-nj-morris"
+    },
+    {
+      "city": "Stirling",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07980"
+      ],
+      "slug": "stirling-nj-morris"
+    },
+    {
+      "city": "Succasunna",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07876"
+      ],
+      "slug": "succasunna-nj-morris"
+    },
+    {
+      "city": "Towaco",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07082"
+      ],
+      "slug": "towaco-nj-morris"
+    },
+    {
+      "city": "Wharton",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07885"
+      ],
+      "slug": "wharton-nj-morris"
+    },
+    {
+      "city": "Whippany",
+      "state": "NJ",
+      "county": "Morris",
+      "region": "Morris",
+      "zipCodes": [
+        "07981"
+      ],
+      "slug": "whippany-nj-morris"
+    },
+    {
+      "city": "Barnegat",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08005"
+      ],
+      "slug": "barnegat-nj-ocean"
+    },
+    {
+      "city": "Barnegat Light",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08006"
+      ],
+      "slug": "barnegat-light-nj-ocean"
+    },
+    {
+      "city": "Bay Head",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08742"
+      ],
+      "slug": "bay-head-nj-ocean"
+    },
+    {
+      "city": "Bayville",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08721"
+      ],
+      "slug": "bayville-nj-ocean"
+    },
+    {
+      "city": "Beachwood",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08722"
+      ],
+      "slug": "beachwood-nj-ocean"
+    },
+    {
+      "city": "Brick",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08724"
+      ],
+      "slug": "brick-nj-ocean"
+    },
+    {
+      "city": "Forked River",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08731"
+      ],
+      "slug": "forked-river-nj-ocean"
+    },
+    {
+      "city": "Harvey Cedars",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08008"
+      ],
+      "slug": "harvey-cedars-nj-ocean"
+    },
+    {
+      "city": "Island Heights",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08732"
+      ],
+      "slug": "island-heights-nj-ocean"
+    },
+    {
+      "city": "Jackson",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08527"
+      ],
+      "slug": "jackson-nj-ocean"
+    },
+    {
+      "city": "Lakehurst Naec",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08733"
+      ],
+      "slug": "lakehurst-naec-nj-ocean"
+    },
+    {
+      "city": "Lakewood",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08701"
+      ],
+      "slug": "lakewood-nj-ocean"
+    },
+    {
+      "city": "Lanoka Harbor",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08734"
+      ],
+      "slug": "lanoka-harbor-nj-ocean"
+    },
+    {
+      "city": "Lavallette",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08735"
+      ],
+      "slug": "lavallette-nj-ocean"
+    },
+    {
+      "city": "Manahawkin",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08050"
+      ],
+      "slug": "manahawkin-nj-ocean"
+    },
+    {
+      "city": "Mantoloking",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08738"
+      ],
+      "slug": "mantoloking-nj-ocean"
+    },
+    {
+      "city": "New Egypt",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08533"
+      ],
+      "slug": "new-egypt-nj-ocean"
+    },
+    {
+      "city": "Ocean Gate",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08740"
+      ],
+      "slug": "ocean-gate-nj-ocean"
+    },
+    {
+      "city": "Osbornsville",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08723"
+      ],
+      "slug": "osbornsville-nj-ocean"
+    },
+    {
+      "city": "Pine Beach",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08741"
+      ],
+      "slug": "pine-beach-nj-ocean"
+    },
+    {
+      "city": "Seaside Heights",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08751"
+      ],
+      "slug": "seaside-heights-nj-ocean"
+    },
+    {
+      "city": "Seaside Park",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08752"
+      ],
+      "slug": "seaside-park-nj-ocean"
+    },
+    {
+      "city": "Toms River",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08753",
+        "08755",
+        "08757"
+      ],
+      "slug": "toms-river-nj-ocean"
+    },
+    {
+      "city": "Tuckerton",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08087"
+      ],
+      "slug": "tuckerton-nj-ocean"
+    },
+    {
+      "city": "Waretown",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08758"
+      ],
+      "slug": "waretown-nj-ocean"
+    },
+    {
+      "city": "West Creek",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08092"
+      ],
+      "slug": "west-creek-nj-ocean"
+    },
+    {
+      "city": "Whiting",
+      "state": "NJ",
+      "county": "Ocean",
+      "region": "Ocean",
+      "zipCodes": [
+        "08759"
+      ],
+      "slug": "whiting-nj-ocean"
+    },
+    {
+      "city": "Bloomingdale",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07403"
+      ],
+      "slug": "bloomingdale-nj-passaic"
+    },
+    {
+      "city": "Clifton",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07011",
+        "07012",
+        "07013",
+        "07014"
+      ],
+      "slug": "clifton-nj-passaic"
+    },
+    {
+      "city": "Haledon",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07508"
+      ],
+      "slug": "haledon-nj-passaic"
+    },
+    {
+      "city": "Haskell",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07420"
+      ],
+      "slug": "haskell-nj-passaic"
+    },
+    {
+      "city": "Hawthorne",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07506"
+      ],
+      "slug": "hawthorne-nj-passaic"
+    },
+    {
+      "city": "Hewitt",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07421"
+      ],
+      "slug": "hewitt-nj-passaic"
+    },
+    {
+      "city": "Newfoundland",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07435"
+      ],
+      "slug": "newfoundland-nj-passaic"
+    },
+    {
+      "city": "Passaic",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07055"
+      ],
+      "slug": "passaic-nj-passaic"
+    },
+    {
+      "city": "Paterson",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07501",
+        "07502",
+        "07503",
+        "07504",
+        "07505",
+        "07513",
+        "07514",
+        "07522",
+        "07524"
+      ],
+      "slug": "paterson-nj-passaic"
+    },
+    {
+      "city": "Pompton Lakes",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07442"
+      ],
+      "slug": "pompton-lakes-nj-passaic"
+    },
+    {
+      "city": "Ringwood",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07456"
+      ],
+      "slug": "ringwood-nj-passaic"
+    },
+    {
+      "city": "Totowa",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07512"
+      ],
+      "slug": "totowa-nj-passaic"
+    },
+    {
+      "city": "Wanaque",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07465"
+      ],
+      "slug": "wanaque-nj-passaic"
+    },
+    {
+      "city": "Wayne",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07470"
+      ],
+      "slug": "wayne-nj-passaic"
+    },
+    {
+      "city": "West Milford",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07480"
+      ],
+      "slug": "west-milford-nj-passaic"
+    },
+    {
+      "city": "West Paterson",
+      "state": "NJ",
+      "county": "Passaic",
+      "region": "Passaic",
+      "zipCodes": [
+        "07424"
+      ],
+      "slug": "west-paterson-nj-passaic"
+    },
+    {
+      "city": "Alloway",
+      "state": "NJ",
+      "county": "Salem",
+      "region": "Salem",
+      "zipCodes": [
+        "08001"
+      ],
+      "slug": "alloway-nj-salem"
+    },
+    {
+      "city": "Carneys Point",
+      "state": "NJ",
+      "county": "Salem",
+      "region": "Salem",
+      "zipCodes": [
+        "08069"
+      ],
+      "slug": "carneys-point-nj-salem"
+    },
+    {
+      "city": "Deepwater",
+      "state": "NJ",
+      "county": "Salem",
+      "region": "Salem",
+      "zipCodes": [
+        "08023"
+      ],
+      "slug": "deepwater-nj-salem"
+    },
+    {
+      "city": "Elmer",
+      "state": "NJ",
+      "county": "Salem",
+      "region": "Salem",
+      "zipCodes": [
+        "08318"
+      ],
+      "slug": "elmer-nj-salem"
+    },
+    {
+      "city": "Hancocks Bridge",
+      "state": "NJ",
+      "county": "Salem",
+      "region": "Salem",
+      "zipCodes": [
+        "08038"
+      ],
+      "slug": "hancocks-bridge-nj-salem"
+    },
+    {
+      "city": "Pedricktown",
+      "state": "NJ",
+      "county": "Salem",
+      "region": "Salem",
+      "zipCodes": [
+        "08067"
+      ],
+      "slug": "pedricktown-nj-salem"
+    },
+    {
+      "city": "Pennsville",
+      "state": "NJ",
+      "county": "Salem",
+      "region": "Salem",
+      "zipCodes": [
+        "08070"
+      ],
+      "slug": "pennsville-nj-salem"
+    },
+    {
+      "city": "Quinton",
+      "state": "NJ",
+      "county": "Salem",
+      "region": "Salem",
+      "zipCodes": [
+        "08072"
+      ],
+      "slug": "quinton-nj-salem"
+    },
+    {
+      "city": "Salem",
+      "state": "NJ",
+      "county": "Salem",
+      "region": "Salem",
+      "zipCodes": [
+        "08079"
+      ],
+      "slug": "salem-nj-salem"
+    },
+    {
+      "city": "Woodstown",
+      "state": "NJ",
+      "county": "Salem",
+      "region": "Salem",
+      "zipCodes": [
+        "08098"
+      ],
+      "slug": "woodstown-nj-salem"
+    },
+    {
+      "city": "Basking Ridge",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "07920"
+      ],
+      "slug": "basking-ridge-nj-somerset"
+    },
+    {
+      "city": "Bedminster",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "07921"
+      ],
+      "slug": "bedminster-nj-somerset"
+    },
+    {
+      "city": "Belle Mead",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08502"
+      ],
+      "slug": "belle-mead-nj-somerset"
+    },
+    {
+      "city": "Bernardsville",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "07924"
+      ],
+      "slug": "bernardsville-nj-somerset"
+    },
+    {
+      "city": "Bound Brook",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08805"
+      ],
+      "slug": "bound-brook-nj-somerset"
+    },
+    {
+      "city": "Bridgewater",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08807"
+      ],
+      "slug": "bridgewater-nj-somerset"
+    },
+    {
+      "city": "Far Hills",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "07931"
+      ],
+      "slug": "far-hills-nj-somerset"
+    },
+    {
+      "city": "Flagtown",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08821"
+      ],
+      "slug": "flagtown-nj-somerset"
+    },
+    {
+      "city": "Franklin Park",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08823"
+      ],
+      "slug": "franklin-park-nj-somerset"
+    },
+    {
+      "city": "Gladstone",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "07934"
+      ],
+      "slug": "gladstone-nj-somerset"
+    },
+    {
+      "city": "Kingston",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08528"
+      ],
+      "slug": "kingston-nj-somerset"
+    },
+    {
+      "city": "Manville",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08835"
+      ],
+      "slug": "manville-nj-somerset"
+    },
+    {
+      "city": "Martinsville",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08836"
+      ],
+      "slug": "martinsville-nj-somerset"
+    },
+    {
+      "city": "Neshanic Station",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08853"
+      ],
+      "slug": "neshanic-station-nj-somerset"
+    },
+    {
+      "city": "North Branch",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08876"
+      ],
+      "slug": "north-branch-nj-somerset"
+    },
+    {
+      "city": "Peapack",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "07977"
+      ],
+      "slug": "peapack-nj-somerset"
+    },
+    {
+      "city": "Raritan",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08869"
+      ],
+      "slug": "raritan-nj-somerset"
+    },
+    {
+      "city": "Rocky Hill",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08553"
+      ],
+      "slug": "rocky-hill-nj-somerset"
+    },
+    {
+      "city": "Skillman",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08558"
+      ],
+      "slug": "skillman-nj-somerset"
+    },
+    {
+      "city": "Somerset",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08873"
+      ],
+      "slug": "somerset-nj-somerset"
+    },
+    {
+      "city": "South Bound Broo",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "08880"
+      ],
+      "slug": "south-bound-broo-nj-somerset"
+    },
+    {
+      "city": "Warren",
+      "state": "NJ",
+      "county": "Somerset",
+      "region": "Somerset",
+      "zipCodes": [
+        "07059"
+      ],
+      "slug": "warren-nj-somerset"
+    },
+    {
+      "city": "Andover",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07821"
+      ],
+      "slug": "andover-nj-sussex"
+    },
+    {
+      "city": "Augusta",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07822"
+      ],
+      "slug": "augusta-nj-sussex"
+    },
+    {
+      "city": "Branchville",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07826"
+      ],
+      "slug": "branchville-nj-sussex"
+    },
+    {
+      "city": "Franklin",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07416"
+      ],
+      "slug": "franklin-nj-sussex"
+    },
+    {
+      "city": "Fredon Township",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07860"
+      ],
+      "slug": "fredon-township-nj-sussex"
+    },
+    {
+      "city": "Glenwood",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07418"
+      ],
+      "slug": "glenwood-nj-sussex"
+    },
+    {
+      "city": "Hamburg",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07419"
+      ],
+      "slug": "hamburg-nj-sussex"
+    },
+    {
+      "city": "Highland Lakes",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07422"
+      ],
+      "slug": "highland-lakes-nj-sussex"
+    },
+    {
+      "city": "Hopatcong",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07843"
+      ],
+      "slug": "hopatcong-nj-sussex"
+    },
+    {
+      "city": "Lafayette",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07848"
+      ],
+      "slug": "lafayette-nj-sussex"
+    },
+    {
+      "city": "Layton",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07851"
+      ],
+      "slug": "layton-nj-sussex"
+    },
+    {
+      "city": "Mc Afee",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07428"
+      ],
+      "slug": "mc-afee-nj-sussex"
+    },
+    {
+      "city": "Montague",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07827"
+      ],
+      "slug": "montague-nj-sussex"
+    },
+    {
+      "city": "Ogdensburg",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07439"
+      ],
+      "slug": "ogdensburg-nj-sussex"
+    },
+    {
+      "city": "Sparta",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07871"
+      ],
+      "slug": "sparta-nj-sussex"
+    },
+    {
+      "city": "Stanhope",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07874"
+      ],
+      "slug": "stanhope-nj-sussex"
+    },
+    {
+      "city": "Stockholm",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07460"
+      ],
+      "slug": "stockholm-nj-sussex"
+    },
+    {
+      "city": "Sussex",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07461"
+      ],
+      "slug": "sussex-nj-sussex"
+    },
+    {
+      "city": "Vernon",
+      "state": "NJ",
+      "county": "Sussex",
+      "region": "Sussex",
+      "zipCodes": [
+        "07462"
+      ],
+      "slug": "vernon-nj-sussex"
+    },
+    {
+      "city": "Berkeley Heights",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07922"
+      ],
+      "slug": "berkeley-heights-nj-union"
+    },
+    {
+      "city": "Clark",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07066"
+      ],
+      "slug": "clark-nj-union"
+    },
+    {
+      "city": "Cranford",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07016"
+      ],
+      "slug": "cranford-nj-union"
+    },
+    {
+      "city": "Elizabeth",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07201",
+        "07202",
+        "07206",
+        "07208"
+      ],
+      "slug": "elizabeth-nj-union"
+    },
+    {
+      "city": "Fanwood",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07023"
+      ],
+      "slug": "fanwood-nj-union"
+    },
+    {
+      "city": "Garwood",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07027"
+      ],
+      "slug": "garwood-nj-union"
+    },
+    {
+      "city": "Hillside",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07205"
+      ],
+      "slug": "hillside-nj-union"
+    },
+    {
+      "city": "Kenilworth",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07033"
+      ],
+      "slug": "kenilworth-nj-union"
+    },
+    {
+      "city": "Linden",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07036"
+      ],
+      "slug": "linden-nj-union"
+    },
+    {
+      "city": "Mountainside",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07092"
+      ],
+      "slug": "mountainside-nj-union"
+    },
+    {
+      "city": "New Providence",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07974"
+      ],
+      "slug": "new-providence-nj-union"
+    },
+    {
+      "city": "North Plainfield",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07060",
+        "07062",
+        "07063"
+      ],
+      "slug": "north-plainfield-nj-union"
+    },
+    {
+      "city": "Rahway",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07065"
+      ],
+      "slug": "rahway-nj-union"
+    },
+    {
+      "city": "Roselle",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07203"
+      ],
+      "slug": "roselle-nj-union"
+    },
+    {
+      "city": "Roselle Park",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07204"
+      ],
+      "slug": "roselle-park-nj-union"
+    },
+    {
+      "city": "Scotch Plains",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07076"
+      ],
+      "slug": "scotch-plains-nj-union"
+    },
+    {
+      "city": "Springfield",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07081"
+      ],
+      "slug": "springfield-nj-union"
+    },
+    {
+      "city": "Summit",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07901"
+      ],
+      "slug": "summit-nj-union"
+    },
+    {
+      "city": "Union",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07083"
+      ],
+      "slug": "union-nj-union"
+    },
+    {
+      "city": "Vauxhall",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07088"
+      ],
+      "slug": "vauxhall-nj-union"
+    },
+    {
+      "city": "Westfield",
+      "state": "NJ",
+      "county": "Union",
+      "region": "Union",
+      "zipCodes": [
+        "07090"
+      ],
+      "slug": "westfield-nj-union"
+    },
+    {
+      "city": "Alpha",
+      "state": "NJ",
+      "county": "Warren",
+      "region": "Warren",
+      "zipCodes": [
+        "08865"
+      ],
+      "slug": "alpha-nj-warren"
+    },
+    {
+      "city": "Belvidere",
+      "state": "NJ",
+      "county": "Warren",
+      "region": "Warren",
+      "zipCodes": [
+        "07823"
+      ],
+      "slug": "belvidere-nj-warren"
+    },
+    {
+      "city": "Blairstown",
+      "state": "NJ",
+      "county": "Warren",
+      "region": "Warren",
+      "zipCodes": [
+        "07825"
+      ],
+      "slug": "blairstown-nj-warren"
+    },
+    {
+      "city": "Columbia",
+      "state": "NJ",
+      "county": "Warren",
+      "region": "Warren",
+      "zipCodes": [
+        "07832"
+      ],
+      "slug": "columbia-nj-warren"
+    },
+    {
+      "city": "Delaware",
+      "state": "NJ",
+      "county": "Warren",
+      "region": "Warren",
+      "zipCodes": [
+        "07833"
+      ],
+      "slug": "delaware-nj-warren"
+    },
+    {
+      "city": "Great Meadows",
+      "state": "NJ",
+      "county": "Warren",
+      "region": "Warren",
+      "zipCodes": [
+        "07838"
+      ],
+      "slug": "great-meadows-nj-warren"
+    },
+    {
+      "city": "Hackettstown",
+      "state": "NJ",
+      "county": "Warren",
+      "region": "Warren",
+      "zipCodes": [
+        "07840"
+      ],
+      "slug": "hackettstown-nj-warren"
+    },
+    {
+      "city": "Johnsonburg",
+      "state": "NJ",
+      "county": "Warren",
+      "region": "Warren",
+      "zipCodes": [
+        "07846"
+      ],
+      "slug": "johnsonburg-nj-warren"
+    },
+    {
+      "city": "Oxford",
+      "state": "NJ",
+      "county": "Warren",
+      "region": "Warren",
+      "zipCodes": [
+        "07863"
+      ],
+      "slug": "oxford-nj-warren"
+    },
+    {
+      "city": "Port Murray",
+      "state": "NJ",
+      "county": "Warren",
+      "region": "Warren",
+      "zipCodes": [
+        "07865"
+      ],
+      "slug": "port-murray-nj-warren"
+    },
+    {
+      "city": "Stewartsville",
+      "state": "NJ",
+      "county": "Warren",
+      "region": "Warren",
+      "zipCodes": [
+        "08886"
+      ],
+      "slug": "stewartsville-nj-warren"
+    },
+    {
+      "city": "Washington",
+      "state": "NJ",
+      "county": "Warren",
+      "region": "Warren",
+      "zipCodes": [
+        "07882"
+      ],
+      "slug": "washington-nj-warren"
+    }
+  ]
+}
