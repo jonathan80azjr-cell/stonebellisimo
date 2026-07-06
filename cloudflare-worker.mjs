@@ -77,7 +77,7 @@ export default {
     }
 
     if (url.pathname === '/favicon.ico') {
-      return Response.redirect(new URL('/assets/img/logo-280.png', url), 302);
+      return Response.redirect(new URL('/assets/img/stone-bellisimo-favicon.png', url), 302);
     }
 
     if (url.pathname === '/api/performance') {

@@ -60,7 +60,7 @@ app.use(express.json({ limit: '20kb' }));
 app.use(express.urlencoded({ extended: false, limit: '20kb' }));
 
 app.get('/favicon.ico', (req, res) => {
-  res.redirect(302, '/assets/img/logo-280.png');
+  res.redirect(302, '/assets/img/stone-bellisimo-favicon.png');
 });
 
 app.get('/api/google-map-config', (req, res) => {

@@ -225,7 +225,7 @@ function configFromRoot(root) {
     address,
     lat: Number(root.dataset.lat || DEFAULT_STORE.lat),
     lng: Number(root.dataset.lng || DEFAULT_STORE.lng),
-    logoSrc: root.dataset.logoSrc || '/assets/img/logo-280.png',
+    logoSrc: root.dataset.logoSrc || '/assets/img/stone-bellisimo-favicon.png',
     logoAlt: root.dataset.logoAlt || DEFAULT_STORE.logoAlt,
     placeId: root.dataset.placeId || DEFAULT_STORE.placeId,
   }
