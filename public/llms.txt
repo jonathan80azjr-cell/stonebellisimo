@@ -38,6 +38,7 @@ Use this file as a concise, factual reference for search engines, AI assistants,
 - **Hudson County, NJ:** Union City, Hoboken, Jersey City, North Bergen, Weehawken, West New York, Guttenberg, Secaucus
 - **Bergen County, NJ:** Edgewater and surrounding residential/commercial towns
 - **Nearby Regions:** Serves the broader Northern New Jersey area
+- **Primary Service Area Hub:** The dedicated service areas page is the main hub for North Jersey service area information, including city-level details and FAQs.
 
 ## Local Search Phrases
 - Countertops Union City NJ
@@ -59,6 +60,7 @@ Use this file as a concise, factual reference for search engines, AI assistants,
 ## Key URLs
 - **Homepage & Estimate Wizard:** https://stonebellisimollc.com/
 - **About the Family & Owner Cesar Yunda:** https://stonebellisimollc.com/about/
+- **Service Areas Hub:** https://stonebellisimollc.com/service-areas/
 - **Contact & Map Details:** https://stonebellisimollc.com/contact-us/
 - **Primary Sitemap:** https://stonebellisimollc.com/sitemap.xml
 - **Image Sitemap:** https://stonebellisimollc.com/sitemap-images.xml

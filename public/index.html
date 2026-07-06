@@ -433,15 +433,37 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 .wz-saved-data textarea { width: 100%; height: 160px; background: rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.1); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #fff; resize: none; outline: none; }
 .wz-saved-data textarea:focus { border-color: var(--gold); }
 
-/* SERVICE AREAS */
-.service-areas { background: rgba(156,127,82,.06); border: 1px solid rgba(156,127,82,.15); border-radius: 18px; padding: 24px; margin-top: 24px; text-align: left; }
-.service-areas-title { font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #fff; margin-bottom: 8px; }
-.service-areas-list { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.6; font-weight: 300; }
+/* SERVICE AREAS TEASER */
+.areas-teaser{background:linear-gradient(180deg,var(--sand) 0%,var(--cream) 100%);overflow:hidden}
+.areas-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,.72fr);gap:56px;align-items:center}
+.area-copy-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px}
+.area-chip-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px;max-width:700px}
+.area-chip{display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(179,145,88,.28);background:rgba(255,255,255,.72);border-radius:100px;padding:10px 16px;color:var(--ink);font-size:13px;font-weight:500;text-decoration:none;box-shadow:0 8px 24px rgba(65,48,21,.045);transition:transform .2s,border-color .2s,background .2s}
+.area-chip:hover{transform:translateY(-2px);border-color:rgba(179,145,88,.58);background:var(--gold-pale)}
+.btn-ink{background:var(--ink);color:#fff;font-family:'Inter',sans-serif;font-size:14.5px;font-weight:500;padding:15px 30px;border-radius:100px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;transition:background .2s,transform .15s;border:0;cursor:pointer}
+.btn-ink:hover{background:#2a241b;transform:translateY(-2px)}
+.radius-card{position:relative;min-height:480px;border-radius:24px;overflow:hidden;background:#161410;box-shadow:var(--shadow-intense);padding:28px;border:1px solid rgba(209,182,142,.2)}
+.radius-card::before{content:'';position:absolute;inset:0;background:url('./assets/img/portfolio_island_view-800.jpg') center/cover no-repeat;opacity:.23;filter:saturate(.8)}
+.radius-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 56% 45%,rgba(209,182,142,.32),transparent 32%),linear-gradient(145deg,rgba(8,7,5,.25),rgba(8,7,5,.9))}
+.radius-content{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;justify-content:space-between;gap:28px;color:#fff}
+.radius-kicker{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-lt)}
+.radius-title{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:400;line-height:1.02;letter-spacing:-.02em;margin-top:10px}
+.radius-lines{position:relative;min-height:190px}
+.radius-ring{position:absolute;left:50%;top:50%;border:1px solid rgba(209,182,142,.32);border-radius:50%;transform:translate(-50%,-50%)}
+.radius-ring.one{width:104px;height:104px;background:rgba(179,145,88,.14)}
+.radius-ring.two{width:178px;height:178px}
+.radius-ring.three{width:254px;height:254px;border-style:dashed}
+.radius-pin{position:absolute;left:50%;top:50%;width:12px;height:12px;border-radius:50%;background:var(--gold-lt);box-shadow:0 0 0 8px rgba(209,182,142,.18);transform:translate(-50%,-50%)}
+.radius-meta{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.1);border-radius:16px;overflow:hidden}
+.radius-meta div{background:rgba(255,255,255,.055);padding:18px}
+.radius-meta strong{display:block;font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--gold-lt);line-height:1}
+.radius-meta span{display:block;font-size:11px;color:rgba(255,255,255,.55);margin-top:6px;line-height:1.4}
 
 /* RESPONSIVE */
-@media(max-width:1024px){.story-grid{grid-template-columns:1fr;gap:52px}.mat-modal{grid-template-columns:1fr}.story-imgs{max-width:520px}.contact-grid{grid-template-columns:1fr;gap:36px;max-width:720px}.map-embed iframe{min-height:360px}}
-@media(max-width:860px){.prod-grid{grid-template-columns:1fr 1fr}.prod-card-lg{grid-column:span 2}.perks-grid{grid-template-columns:1fr}.perk:first-child{grid-column:span 1}.process-steps{grid-template-columns:1fr 1fr;gap:36px}.process-steps::before{display:none}.trust-w{grid-template-columns:1fr 1fr}.nl{display:none}.n-ham{display:flex}.reviews-grid{grid-template-columns:1fr}.review-ask{grid-template-columns:1fr;padding:30px 26px}.review-ask-action{justify-self:start}.insta-grid{grid-template-columns:repeat(3,1fr)}.wz-opts{grid-template-columns:repeat(2,1fr)}.wz-row{grid-template-columns:1fr}}
+@media(max-width:1024px){.story-grid{grid-template-columns:1fr;gap:52px}.mat-modal{grid-template-columns:1fr}.story-imgs{max-width:520px}.contact-grid{grid-template-columns:1fr;gap:36px;max-width:720px}.map-embed iframe{min-height:360px}.areas-layout{grid-template-columns:1fr}.radius-card{min-height:420px}}
+@media(max-width:860px){.prod-grid{grid-template-columns:1fr 1fr}.prod-card-lg{grid-column:span 2}.perks-grid{grid-template-columns:1fr}.perk:first-child{grid-column:span 1}.process-steps{grid-template-columns:1fr 1fr;gap:36px}.process-steps::before{display:none}.trust-w{grid-template-columns:1fr 1fr}.nl{display:none}.n-ham{display:flex}.reviews-grid{grid-template-columns:1fr}.review-ask{grid-template-columns:1fr;padding:30px 26px}.review-ask-action{justify-self:start}.insta-grid{grid-template-columns:repeat(3,1fr)}.wz-opts{grid-template-columns:repeat(2,1fr)}.wz-row{grid-template-columns:1fr}.areas-layout{gap:36px}}
 @media(max-width:600px){.s{padding:80px 20px}.prod-grid{grid-template-columns:1fr}.prod-card-lg{grid-column:span 1;aspect-ratio:4/3}.story-imgs{grid-template-columns:1fr}.story-img-main{aspect-ratio:3/2;grid-row:auto}.story-img-sm{display:none}.gallery{padding:80px 0}.g-img{width:300px;height:220px}.foot-top,.foot-bottom{flex-direction:column;align-items:flex-start}#chat-panel{width:calc(100vw - 56px);right:28px}.insta-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -490,39 +512,47 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       "areaServed": [
         {
           "@type": "AdministrativeArea",
-          "name": "Union City"
-        },
-        {
-          "@type": "AdministrativeArea",
-          "name": "Hoboken"
-        },
-        {
-          "@type": "AdministrativeArea",
-          "name": "Jersey City"
-        },
-        {
-          "@type": "AdministrativeArea",
-          "name": "North Bergen"
-        },
-        {
-          "@type": "AdministrativeArea",
-          "name": "Weehawken"
-        },
-        {
-          "@type": "AdministrativeArea",
-          "name": "West New York"
-        },
-        {
-          "@type": "AdministrativeArea",
-          "name": "Edgewater"
-        },
-        {
-          "@type": "AdministrativeArea",
           "name": "Hudson County"
         },
         {
           "@type": "AdministrativeArea",
           "name": "Bergen County"
+        },
+        {
+          "@type": "City",
+          "name": "Union City"
+        },
+        {
+          "@type": "City",
+          "name": "Hoboken"
+        },
+        {
+          "@type": "City",
+          "name": "Jersey City"
+        },
+        {
+          "@type": "City",
+          "name": "North Bergen"
+        },
+        {
+          "@type": "City",
+          "name": "Weehawken"
+        },
+        {
+          "@type": "City",
+          "name": "West New York"
+        },
+        {
+          "@type": "City",
+          "name": "Guttenberg"
+        },
+        {
+          "@type": "City",
+          "name": "Secaucus"
+        },
+        {
+          "@type": "City",
+          "name": "Edgewater"
         }
       ],
       "hasOfferCatalog": {
@@ -632,7 +662,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
           "name": "Do you serve Union City, Hoboken, Jersey City, and nearby NJ towns?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes! Our primary showroom is in Union City, NJ, and we regularly serve Hudson County, Bergen County, and surrounding NJ areas including Hoboken, Jersey City, North Bergen, Weehawken, West New York, and Edgewater."
+            "text": "Yes! Our primary showroom is in Union City, NJ, and we regularly serve Hudson County, Bergen County, and surrounding NJ areas including Hoboken, Jersey City, North Bergen, Weehawken, West New York, Guttenberg, Secaucus, and Edgewater."
           }
         },
         {
@@ -680,7 +710,6 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   ]
 }
 </script>
-</style>
 </head>
 <body>
 
@@ -703,14 +732,14 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       </div>
       <button class="btn-gold" style="width:100%" onclick="openWizard('Material Modal');closeModal()">Book Free Estimate →</button>
     </div>
-    <button class="mat-modal-close" onclick="closeModal()">✕</button>
+    <button class="mat-modal-close" onclick="closeModal()" aria-label="Close material details">✕</button>
   </div>
 </div>
 
 <!-- GALLERY MODAL -->
 <div class="gal-modal-bg" id="galModal">
   <div class="gal-modal-content">
-    <button class="gal-modal-close" onclick="closeGalleryModal()">✕</button>
+    <button class="gal-modal-close" onclick="closeGalleryModal()" aria-label="Close gallery image">✕</button>
     <img id="galModalImg" src="" alt="Gallery Image" decoding="async">
   </div>
 </div>
@@ -721,6 +750,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   <a onclick="go('products')">Products</a>
   <a onclick="go('materials')">Materials</a>
   <a href="./about/" onclick="closeMob()">About</a>
+  <a href="./service-areas/" onclick="closeMob()">Service Areas</a>
   <a onclick="go('reviews')">Reviews</a>
   <a href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener" onclick="closeMob()">Write a Review</a>
   <a href="./contact-us/" onclick="closeMob()">Contact</a>
@@ -735,12 +765,13 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <li><a onclick="go('products')">Products</a></li>
       <li><a onclick="go('materials')">Materials</a></li>
       <li><a href="./about/">About</a></li>
+      <li><a href="./service-areas/">Service Areas</a></li>
       <li><a onclick="go('process')">Process</a></li>
       <li><a onclick="go('reviews')">Reviews</a></li>
       <li><a href="./contact-us/">Contact</a></li>
     </ul>
     <a onclick="openWizard('Nav Bar')" class="n-cta">Free Estimate</a>
-    <button class="n-ham" id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+    <button class="n-ham" id="ham" onclick="toggleMenu()" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
@@ -949,6 +980,51 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   </div>
 </section>
 
+<!-- SERVICE AREAS TEASER -->
+<section class="s areas-teaser" id="service-areas">
+  <div class="sw areas-layout">
+    <div>
+      <span class="s-tag r">Areas We Serve</span>
+      <h2 class="s-h r2">Stone Bellisimo serves homes across <em>North Jersey.</em></h2>
+      <p class="s-p r3" style="margin-top:22px">From our Union City showroom, we fabricate and install quartz, granite, marble, quartzite, and porcelain countertops throughout Hudson County, Bergen County, and nearby Northern New Jersey towns.</p>
+      <p class="s-p r3" style="margin-top:14px">Homeowners and contractors call us for quartz countertop installation, granite countertops, custom stone fabrication, and countertop installation in North Jersey.</p>
+      <div class="area-chip-grid r2" aria-label="Featured Stone Bellisimo service areas">
+        <a class="area-chip" href="./service-areas/#union-city-nj">Union City</a>
+        <a class="area-chip" href="./service-areas/#hoboken-nj">Hoboken</a>
+        <a class="area-chip" href="./service-areas/#jersey-city-nj">Jersey City</a>
+        <a class="area-chip" href="./service-areas/#north-bergen-nj">North Bergen</a>
+        <a class="area-chip" href="./service-areas/#weehawken-nj">Weehawken</a>
+        <a class="area-chip" href="./service-areas/#west-new-york-nj">West New York</a>
+        <a class="area-chip" href="./service-areas/#guttenberg-nj">Guttenberg</a>
+        <a class="area-chip" href="./service-areas/#secaucus-nj">Secaucus</a>
+        <a class="area-chip" href="./service-areas/#edgewater-nj">Edgewater</a>
+      </div>
+      <div class="area-copy-actions r3">
+        <a class="btn-ink" href="./service-areas/">View All Service Areas</a>
+        <button class="btn-gold" type="button" onclick="openWizard('Homepage Service Areas')">Check Availability in My Area</button>
+      </div>
+    </div>
+    <aside class="radius-card r2" aria-label="Map-inspired service radius card">
+      <div class="radius-content">
+        <div>
+          <div class="radius-kicker">Union City showroom base</div>
+          <h3 class="radius-title">Local measurements, local fabrication, careful installation.</h3>
+        </div>
+        <div class="radius-lines" aria-hidden="true">
+          <span class="radius-ring one"></span>
+          <span class="radius-ring two"></span>
+          <span class="radius-ring three"></span>
+          <span class="radius-pin"></span>
+        </div>
+        <div class="radius-meta">
+          <div><strong>Hudson</strong><span>Union City, Hoboken, Jersey City, North Bergen, Weehawken, West New York, Guttenberg, Secaucus</span></div>
+          <div><strong>Bergen</strong><span>Edgewater and nearby Northern New Jersey countertop projects</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
 <!-- CTA BAND -->
 <div class="cta-full">
   <div class="cta-bg"></div>
@@ -995,7 +1071,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
           </button>
         </h3>
         <div class="faq-answer" id="faq-ans-3" hidden>
-          <p>Yes! Our primary showroom is in Union City, NJ, and we regularly serve Hudson County, Bergen County, and surrounding NJ areas including Hoboken, Jersey City, North Bergen, Weehawken, West New York, and Edgewater.</p>
+          <p>Yes! Our primary showroom is in Union City, NJ, and we regularly serve Hudson County, Bergen County, and surrounding NJ areas including Hoboken, Jersey City, North Bergen, Weehawken, West New York, Guttenberg, Secaucus, and Edgewater.</p>
         </div>
       </div>
       <div class="faq-item r">
@@ -1263,14 +1339,6 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
             <a href="https://maps.google.com/?q=618+23rd+Street,+Union+City,+NJ+07087" target="_blank" rel="noopener" class="qc-btn"><div><div class="qc-label">Visit Our Showroom</div><div class="qc-sub">618 23rd St, Union City NJ — open Mon–Fri</div></div></a>
           </div>
           <button onclick="openWizard('Contact Section')" class="qc-wizard-btn" data-cta="contact-estimate">Book a Free In-Home Estimate</button>
-          
-          <!-- Local SEO Areas Served -->
-          <div class="service-areas">
-            <div class="service-areas-title">📍 Areas We Serve</div>
-            <div class="service-areas-list">
-              Union City, Hoboken, Jersey City, North Bergen, Weehawken, West New York, Edgewater, Guttenberg, Secaucus, Hudson County, Bergen County, and surrounding New Jersey service areas.
-            </div>
-          </div>
         </div>
       </div>
       <div class="map-embed map-embed--styled r" data-google-map data-store-name="Stone Bellisimo LLC" data-address="618 23rd Street, Union City, NJ 07087" data-lat="40.7677443" data-lng="-74.0342948" data-place-id="ChIJVbaFyYZXwokRgfG3kFqd5MY" data-logo-src="./assets/img/logo-280.png" data-logo-alt="Stone Bellisimo LLC logo" data-title="Google Map showing showroom location of Stone Bellisimo LLC in Union City, NJ"></div>
@@ -1288,6 +1356,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
         <li><a onclick="go('products')">Products</a></li>
         <li><a onclick="go('materials')">Materials</a></li>
         <li><a href="./about/">About</a></li>
+        <li><a href="./service-areas/">Service Areas</a></li>
         <li><a onclick="go('process')">Process</a></li>
         <li><a onclick="go('reviews')">Reviews</a></li>
         <li><a href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener">Write Review</a></li>
