@@ -1,0 +1,2292 @@
+{
+  "generatedAt": "2026-07-06T07:39:53.842Z",
+  "source": {
+    "name": "scpike/us-state-county-zip geo-data.csv",
+    "url": "https://raw.githubusercontent.com/scpike/us-state-county-zip/master/geo-data.csv",
+    "note": "Records are ZIP/ZCTA-style city, state, and county associations. ZIP Codes are postal delivery identifiers and do not perfectly match municipal boundaries."
+  },
+  "serviceArea": "Connecticut",
+  "state": "CT",
+  "records": [
+    {
+      "city": "Bethel",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06801"
+      ],
+      "slug": "bethel-ct-fairfield"
+    },
+    {
+      "city": "Bridgeport",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06604",
+        "06605",
+        "06606",
+        "06607",
+        "06608",
+        "06610"
+      ],
+      "slug": "bridgeport-ct-fairfield"
+    },
+    {
+      "city": "Brookfield",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06804"
+      ],
+      "slug": "brookfield-ct-fairfield"
+    },
+    {
+      "city": "Byram",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06830"
+      ],
+      "slug": "byram-ct-fairfield"
+    },
+    {
+      "city": "Cos Cob",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06807"
+      ],
+      "slug": "cos-cob-ct-fairfield"
+    },
+    {
+      "city": "Danbury",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06810",
+        "06811"
+      ],
+      "slug": "danbury-ct-fairfield"
+    },
+    {
+      "city": "Darien",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06820"
+      ],
+      "slug": "darien-ct-fairfield"
+    },
+    {
+      "city": "Easton",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06612"
+      ],
+      "slug": "easton-ct-fairfield"
+    },
+    {
+      "city": "Fairfield",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06430",
+        "06432"
+      ],
+      "slug": "fairfield-ct-fairfield"
+    },
+    {
+      "city": "Greenwich",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06831"
+      ],
+      "slug": "greenwich-ct-fairfield"
+    },
+    {
+      "city": "Monroe",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06468"
+      ],
+      "slug": "monroe-ct-fairfield"
+    },
+    {
+      "city": "New Canaan",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06840"
+      ],
+      "slug": "new-canaan-ct-fairfield"
+    },
+    {
+      "city": "New Fairfield",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06812"
+      ],
+      "slug": "new-fairfield-ct-fairfield"
+    },
+    {
+      "city": "Newtown",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06470"
+      ],
+      "slug": "newtown-ct-fairfield"
+    },
+    {
+      "city": "Norwalk",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06850",
+        "06851",
+        "06853",
+        "06854",
+        "06855"
+      ],
+      "slug": "norwalk-ct-fairfield"
+    },
+    {
+      "city": "Old Greenwich",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06870"
+      ],
+      "slug": "old-greenwich-ct-fairfield"
+    },
+    {
+      "city": "Ridgefield",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06877"
+      ],
+      "slug": "ridgefield-ct-fairfield"
+    },
+    {
+      "city": "Ridgeway",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06905"
+      ],
+      "slug": "ridgeway-ct-fairfield"
+    },
+    {
+      "city": "Riverside",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06878"
+      ],
+      "slug": "riverside-ct-fairfield"
+    },
+    {
+      "city": "Sandy Hook",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06482"
+      ],
+      "slug": "sandy-hook-ct-fairfield"
+    },
+    {
+      "city": "Shelton",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06484"
+      ],
+      "slug": "shelton-ct-fairfield"
+    },
+    {
+      "city": "Sherman",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06784"
+      ],
+      "slug": "sherman-ct-fairfield"
+    },
+    {
+      "city": "Southport",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06490"
+      ],
+      "slug": "southport-ct-fairfield"
+    },
+    {
+      "city": "Stamford",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06901",
+        "06902",
+        "06903",
+        "06906",
+        "06907"
+      ],
+      "slug": "stamford-ct-fairfield"
+    },
+    {
+      "city": "Trumbull",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06611"
+      ],
+      "slug": "trumbull-ct-fairfield"
+    },
+    {
+      "city": "West Redding",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06896"
+      ],
+      "slug": "west-redding-ct-fairfield"
+    },
+    {
+      "city": "Weston",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06883"
+      ],
+      "slug": "weston-ct-fairfield"
+    },
+    {
+      "city": "Westport",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06880"
+      ],
+      "slug": "westport-ct-fairfield"
+    },
+    {
+      "city": "Wilton",
+      "state": "CT",
+      "county": "Fairfield",
+      "region": "Fairfield",
+      "zipCodes": [
+        "06897"
+      ],
+      "slug": "wilton-ct-fairfield"
+    },
+    {
+      "city": "Avon",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06001"
+      ],
+      "slug": "avon-ct-hartford"
+    },
+    {
+      "city": "Berlin",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06037"
+      ],
+      "slug": "berlin-ct-hartford"
+    },
+    {
+      "city": "Bloomfield",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06002"
+      ],
+      "slug": "bloomfield-ct-hartford"
+    },
+    {
+      "city": "Bristol",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06010"
+      ],
+      "slug": "bristol-ct-hartford"
+    },
+    {
+      "city": "Burlington",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06013"
+      ],
+      "slug": "burlington-ct-hartford"
+    },
+    {
+      "city": "Canton",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06019"
+      ],
+      "slug": "canton-ct-hartford"
+    },
+    {
+      "city": "Canton Center",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06020"
+      ],
+      "slug": "canton-center-ct-hartford"
+    },
+    {
+      "city": "Collinsville",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06022"
+      ],
+      "slug": "collinsville-ct-hartford"
+    },
+    {
+      "city": "East Berlin",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06023"
+      ],
+      "slug": "east-berlin-ct-hartford"
+    },
+    {
+      "city": "East Granby",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06026"
+      ],
+      "slug": "east-granby-ct-hartford"
+    },
+    {
+      "city": "East Hartford",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06108",
+        "06118"
+      ],
+      "slug": "east-hartford-ct-hartford"
+    },
+    {
+      "city": "East Hartland",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06027"
+      ],
+      "slug": "east-hartland-ct-hartford"
+    },
+    {
+      "city": "East Windsor",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06088"
+      ],
+      "slug": "east-windsor-ct-hartford"
+    },
+    {
+      "city": "Enfield",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06082"
+      ],
+      "slug": "enfield-ct-hartford"
+    },
+    {
+      "city": "Farmington",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06032"
+      ],
+      "slug": "farmington-ct-hartford"
+    },
+    {
+      "city": "Glastonbury",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06033"
+      ],
+      "slug": "glastonbury-ct-hartford"
+    },
+    {
+      "city": "Granby",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06035"
+      ],
+      "slug": "granby-ct-hartford"
+    },
+    {
+      "city": "Hartford",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06103",
+        "06105",
+        "06106",
+        "06112",
+        "06114",
+        "06120"
+      ],
+      "slug": "hartford-ct-hartford"
+    },
+    {
+      "city": "Manchester",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06040"
+      ],
+      "slug": "manchester-ct-hartford"
+    },
+    {
+      "city": "Maple Hill",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06111"
+      ],
+      "slug": "maple-hill-ct-hartford"
+    },
+    {
+      "city": "Marlborough",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06447"
+      ],
+      "slug": "marlborough-ct-hartford"
+    },
+    {
+      "city": "New Britain",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06051",
+        "06052",
+        "06053"
+      ],
+      "slug": "new-britain-ct-hartford"
+    },
+    {
+      "city": "North Granby",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06060"
+      ],
+      "slug": "north-granby-ct-hartford"
+    },
+    {
+      "city": "Plainville",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06062"
+      ],
+      "slug": "plainville-ct-hartford"
+    },
+    {
+      "city": "Plantsville",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06479"
+      ],
+      "slug": "plantsville-ct-hartford"
+    },
+    {
+      "city": "Rocky Hill",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06067"
+      ],
+      "slug": "rocky-hill-ct-hartford"
+    },
+    {
+      "city": "Simsbury",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06070"
+      ],
+      "slug": "simsbury-ct-hartford"
+    },
+    {
+      "city": "South Glastonbur",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06073"
+      ],
+      "slug": "south-glastonbur-ct-hartford"
+    },
+    {
+      "city": "South Windsor",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06074"
+      ],
+      "slug": "south-windsor-ct-hartford"
+    },
+    {
+      "city": "Southington",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06489"
+      ],
+      "slug": "southington-ct-hartford"
+    },
+    {
+      "city": "Suffield",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06078"
+      ],
+      "slug": "suffield-ct-hartford"
+    },
+    {
+      "city": "Tariffville",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06081"
+      ],
+      "slug": "tariffville-ct-hartford"
+    },
+    {
+      "city": "Unionville",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06085"
+      ],
+      "slug": "unionville-ct-hartford"
+    },
+    {
+      "city": "W Hartford",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06107",
+        "06110",
+        "06117",
+        "06119"
+      ],
+      "slug": "w-hartford-ct-hartford"
+    },
+    {
+      "city": "Weatogue",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06089"
+      ],
+      "slug": "weatogue-ct-hartford"
+    },
+    {
+      "city": "West Granby",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06090"
+      ],
+      "slug": "west-granby-ct-hartford"
+    },
+    {
+      "city": "West Hartland",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06091"
+      ],
+      "slug": "west-hartland-ct-hartford"
+    },
+    {
+      "city": "West Simsbury",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06092"
+      ],
+      "slug": "west-simsbury-ct-hartford"
+    },
+    {
+      "city": "West Suffield",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06093"
+      ],
+      "slug": "west-suffield-ct-hartford"
+    },
+    {
+      "city": "Wethersfield",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06109"
+      ],
+      "slug": "wethersfield-ct-hartford"
+    },
+    {
+      "city": "Windsor",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06095"
+      ],
+      "slug": "windsor-ct-hartford"
+    },
+    {
+      "city": "Windsor Locks",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06096"
+      ],
+      "slug": "windsor-locks-ct-hartford"
+    },
+    {
+      "city": "Windsorville",
+      "state": "CT",
+      "county": "Hartford",
+      "region": "Hartford",
+      "zipCodes": [
+        "06016"
+      ],
+      "slug": "windsorville-ct-hartford"
+    },
+    {
+      "city": "Bantam",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06750"
+      ],
+      "slug": "bantam-ct-litchfield"
+    },
+    {
+      "city": "Bethlehem",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06751"
+      ],
+      "slug": "bethlehem-ct-litchfield"
+    },
+    {
+      "city": "Bridgewater",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06752"
+      ],
+      "slug": "bridgewater-ct-litchfield"
+    },
+    {
+      "city": "Canaan",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06018"
+      ],
+      "slug": "canaan-ct-litchfield"
+    },
+    {
+      "city": "Colebrook",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06021"
+      ],
+      "slug": "colebrook-ct-litchfield"
+    },
+    {
+      "city": "East Canaan",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06024"
+      ],
+      "slug": "east-canaan-ct-litchfield"
+    },
+    {
+      "city": "Falls Village",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06031"
+      ],
+      "slug": "falls-village-ct-litchfield"
+    },
+    {
+      "city": "Gaylordsville",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06755"
+      ],
+      "slug": "gaylordsville-ct-litchfield"
+    },
+    {
+      "city": "Goshen",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06756"
+      ],
+      "slug": "goshen-ct-litchfield"
+    },
+    {
+      "city": "Harwinton",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06791"
+      ],
+      "slug": "harwinton-ct-litchfield"
+    },
+    {
+      "city": "Kent",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06757"
+      ],
+      "slug": "kent-ct-litchfield"
+    },
+    {
+      "city": "Lakeville",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06039"
+      ],
+      "slug": "lakeville-ct-litchfield"
+    },
+    {
+      "city": "Litchfield",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06759"
+      ],
+      "slug": "litchfield-ct-litchfield"
+    },
+    {
+      "city": "Morris",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06763"
+      ],
+      "slug": "morris-ct-litchfield"
+    },
+    {
+      "city": "New Hartford",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06057"
+      ],
+      "slug": "new-hartford-ct-litchfield"
+    },
+    {
+      "city": "New Milford",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06776"
+      ],
+      "slug": "new-milford-ct-litchfield"
+    },
+    {
+      "city": "New Preston Marb",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06777"
+      ],
+      "slug": "new-preston-marb-ct-litchfield"
+    },
+    {
+      "city": "Norfolk",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06058"
+      ],
+      "slug": "norfolk-ct-litchfield"
+    },
+    {
+      "city": "North Canton",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06059"
+      ],
+      "slug": "north-canton-ct-litchfield"
+    },
+    {
+      "city": "Northfield",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06778"
+      ],
+      "slug": "northfield-ct-litchfield"
+    },
+    {
+      "city": "Oakville",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06779"
+      ],
+      "slug": "oakville-ct-litchfield"
+    },
+    {
+      "city": "Pleasant Valley",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06063"
+      ],
+      "slug": "pleasant-valley-ct-litchfield"
+    },
+    {
+      "city": "Plymouth",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06782"
+      ],
+      "slug": "plymouth-ct-litchfield"
+    },
+    {
+      "city": "Riverton",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06065"
+      ],
+      "slug": "riverton-ct-litchfield"
+    },
+    {
+      "city": "Roxbury",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06783"
+      ],
+      "slug": "roxbury-ct-litchfield"
+    },
+    {
+      "city": "Salisbury",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06068"
+      ],
+      "slug": "salisbury-ct-litchfield"
+    },
+    {
+      "city": "Sharon",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06069"
+      ],
+      "slug": "sharon-ct-litchfield"
+    },
+    {
+      "city": "South Kent",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06785"
+      ],
+      "slug": "south-kent-ct-litchfield"
+    },
+    {
+      "city": "Terryville",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06786"
+      ],
+      "slug": "terryville-ct-litchfield"
+    },
+    {
+      "city": "Thomaston",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06787"
+      ],
+      "slug": "thomaston-ct-litchfield"
+    },
+    {
+      "city": "Torrington",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06790"
+      ],
+      "slug": "torrington-ct-litchfield"
+    },
+    {
+      "city": "Warren",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06754"
+      ],
+      "slug": "warren-ct-litchfield"
+    },
+    {
+      "city": "Washington Depot",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06793",
+        "06794"
+      ],
+      "slug": "washington-depot-ct-litchfield"
+    },
+    {
+      "city": "Watertown",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06795"
+      ],
+      "slug": "watertown-ct-litchfield"
+    },
+    {
+      "city": "West Cornwall",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06796"
+      ],
+      "slug": "west-cornwall-ct-litchfield"
+    },
+    {
+      "city": "Winsted",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06098"
+      ],
+      "slug": "winsted-ct-litchfield"
+    },
+    {
+      "city": "Woodbury",
+      "state": "CT",
+      "county": "Litchfield",
+      "region": "Litchfield",
+      "zipCodes": [
+        "06798"
+      ],
+      "slug": "woodbury-ct-litchfield"
+    },
+    {
+      "city": "Centerbrook",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06409"
+      ],
+      "slug": "centerbrook-ct-middlesex"
+    },
+    {
+      "city": "Chester",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06412"
+      ],
+      "slug": "chester-ct-middlesex"
+    },
+    {
+      "city": "Clinton",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06413"
+      ],
+      "slug": "clinton-ct-middlesex"
+    },
+    {
+      "city": "Cromwell",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06416"
+      ],
+      "slug": "cromwell-ct-middlesex"
+    },
+    {
+      "city": "Deep River",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06417"
+      ],
+      "slug": "deep-river-ct-middlesex"
+    },
+    {
+      "city": "Durham",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06422"
+      ],
+      "slug": "durham-ct-middlesex"
+    },
+    {
+      "city": "East Haddam",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06423"
+      ],
+      "slug": "east-haddam-ct-middlesex"
+    },
+    {
+      "city": "East Hampton",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06424"
+      ],
+      "slug": "east-hampton-ct-middlesex"
+    },
+    {
+      "city": "Essex",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06426"
+      ],
+      "slug": "essex-ct-middlesex"
+    },
+    {
+      "city": "Haddam",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06438"
+      ],
+      "slug": "haddam-ct-middlesex"
+    },
+    {
+      "city": "Higganum",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06441"
+      ],
+      "slug": "higganum-ct-middlesex"
+    },
+    {
+      "city": "Ivoryton",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06442"
+      ],
+      "slug": "ivoryton-ct-middlesex"
+    },
+    {
+      "city": "Killingworth",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06419"
+      ],
+      "slug": "killingworth-ct-middlesex"
+    },
+    {
+      "city": "Middlefield",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06455"
+      ],
+      "slug": "middlefield-ct-middlesex"
+    },
+    {
+      "city": "Middletown",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06457"
+      ],
+      "slug": "middletown-ct-middlesex"
+    },
+    {
+      "city": "Moodus",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06469"
+      ],
+      "slug": "moodus-ct-middlesex"
+    },
+    {
+      "city": "Old Saybrook",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06475"
+      ],
+      "slug": "old-saybrook-ct-middlesex"
+    },
+    {
+      "city": "Portland",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06480"
+      ],
+      "slug": "portland-ct-middlesex"
+    },
+    {
+      "city": "Rockfall",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06481"
+      ],
+      "slug": "rockfall-ct-middlesex"
+    },
+    {
+      "city": "Westbrook",
+      "state": "CT",
+      "county": "Middlesex",
+      "region": "Middlesex",
+      "zipCodes": [
+        "06498"
+      ],
+      "slug": "westbrook-ct-middlesex"
+    },
+    {
+      "city": "Ansonia",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06401"
+      ],
+      "slug": "ansonia-ct-new-haven"
+    },
+    {
+      "city": "Beacon Falls",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06403"
+      ],
+      "slug": "beacon-falls-ct-new-haven"
+    },
+    {
+      "city": "Bethany",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06524"
+      ],
+      "slug": "bethany-ct-new-haven"
+    },
+    {
+      "city": "Branford",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06405"
+      ],
+      "slug": "branford-ct-new-haven"
+    },
+    {
+      "city": "Cheshire",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06410"
+      ],
+      "slug": "cheshire-ct-new-haven"
+    },
+    {
+      "city": "Derby",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06418"
+      ],
+      "slug": "derby-ct-new-haven"
+    },
+    {
+      "city": "East Haven",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06512",
+        "06513"
+      ],
+      "slug": "east-haven-ct-new-haven"
+    },
+    {
+      "city": "Guilford",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06437"
+      ],
+      "slug": "guilford-ct-new-haven"
+    },
+    {
+      "city": "Hamden",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06514",
+        "06517",
+        "06518"
+      ],
+      "slug": "hamden-ct-new-haven"
+    },
+    {
+      "city": "Madison",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06443"
+      ],
+      "slug": "madison-ct-new-haven"
+    },
+    {
+      "city": "Meriden",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06450",
+        "06451"
+      ],
+      "slug": "meriden-ct-new-haven"
+    },
+    {
+      "city": "Middlebury",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06762"
+      ],
+      "slug": "middlebury-ct-new-haven"
+    },
+    {
+      "city": "Milford",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06460"
+      ],
+      "slug": "milford-ct-new-haven"
+    },
+    {
+      "city": "Naugatuck",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06770"
+      ],
+      "slug": "naugatuck-ct-new-haven"
+    },
+    {
+      "city": "New Haven",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06504",
+        "06510",
+        "06511",
+        "06515",
+        "06519"
+      ],
+      "slug": "new-haven-ct-new-haven"
+    },
+    {
+      "city": "North Branford",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06471"
+      ],
+      "slug": "north-branford-ct-new-haven"
+    },
+    {
+      "city": "North Haven",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06473"
+      ],
+      "slug": "north-haven-ct-new-haven"
+    },
+    {
+      "city": "Northford",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06472"
+      ],
+      "slug": "northford-ct-new-haven"
+    },
+    {
+      "city": "Orange",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06477"
+      ],
+      "slug": "orange-ct-new-haven"
+    },
+    {
+      "city": "Oxford",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06478"
+      ],
+      "slug": "oxford-ct-new-haven"
+    },
+    {
+      "city": "Prospect",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06712"
+      ],
+      "slug": "prospect-ct-new-haven"
+    },
+    {
+      "city": "Seymour",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06483"
+      ],
+      "slug": "seymour-ct-new-haven"
+    },
+    {
+      "city": "Southbury",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06488"
+      ],
+      "slug": "southbury-ct-new-haven"
+    },
+    {
+      "city": "Wallingford",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06492"
+      ],
+      "slug": "wallingford-ct-new-haven"
+    },
+    {
+      "city": "Waterbury",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06702",
+        "06704",
+        "06705",
+        "06706",
+        "06708",
+        "06710"
+      ],
+      "slug": "waterbury-ct-new-haven"
+    },
+    {
+      "city": "West Haven",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06516"
+      ],
+      "slug": "west-haven-ct-new-haven"
+    },
+    {
+      "city": "Wolcott",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06716"
+      ],
+      "slug": "wolcott-ct-new-haven"
+    },
+    {
+      "city": "Woodbridge",
+      "state": "CT",
+      "county": "New Haven",
+      "region": "New Haven",
+      "zipCodes": [
+        "06525"
+      ],
+      "slug": "woodbridge-ct-new-haven"
+    },
+    {
+      "city": "Baltic",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06330"
+      ],
+      "slug": "baltic-ct-new-london"
+    },
+    {
+      "city": "Bozrah",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06334"
+      ],
+      "slug": "bozrah-ct-new-london"
+    },
+    {
+      "city": "Colchester",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06415"
+      ],
+      "slug": "colchester-ct-new-london"
+    },
+    {
+      "city": "East Lyme",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06333"
+      ],
+      "slug": "east-lyme-ct-new-london"
+    },
+    {
+      "city": "Gales Ferry",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06335"
+      ],
+      "slug": "gales-ferry-ct-new-london"
+    },
+    {
+      "city": "Gilman",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06336"
+      ],
+      "slug": "gilman-ct-new-london"
+    },
+    {
+      "city": "Groton",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06340"
+      ],
+      "slug": "groton-ct-new-london"
+    },
+    {
+      "city": "Jewett City",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06351"
+      ],
+      "slug": "jewett-city-ct-new-london"
+    },
+    {
+      "city": "Lebanon",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06249"
+      ],
+      "slug": "lebanon-ct-new-london"
+    },
+    {
+      "city": "Ledyard",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06339"
+      ],
+      "slug": "ledyard-ct-new-london"
+    },
+    {
+      "city": "Mystic",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06355"
+      ],
+      "slug": "mystic-ct-new-london"
+    },
+    {
+      "city": "New London",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06320"
+      ],
+      "slug": "new-london-ct-new-london"
+    },
+    {
+      "city": "Niantic",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06357"
+      ],
+      "slug": "niantic-ct-new-london"
+    },
+    {
+      "city": "North Franklin",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06254"
+      ],
+      "slug": "north-franklin-ct-new-london"
+    },
+    {
+      "city": "North Stonington",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06359"
+      ],
+      "slug": "north-stonington-ct-new-london"
+    },
+    {
+      "city": "Norwich",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06360"
+      ],
+      "slug": "norwich-ct-new-london"
+    },
+    {
+      "city": "Oakdale",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06370"
+      ],
+      "slug": "oakdale-ct-new-london"
+    },
+    {
+      "city": "Old Lyme",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06371"
+      ],
+      "slug": "old-lyme-ct-new-london"
+    },
+    {
+      "city": "Pawcatuck",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06379"
+      ],
+      "slug": "pawcatuck-ct-new-london"
+    },
+    {
+      "city": "Preston",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06365"
+      ],
+      "slug": "preston-ct-new-london"
+    },
+    {
+      "city": "Quaker Hill",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06375"
+      ],
+      "slug": "quaker-hill-ct-new-london"
+    },
+    {
+      "city": "Salem",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06420"
+      ],
+      "slug": "salem-ct-new-london"
+    },
+    {
+      "city": "South Lyme",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06376"
+      ],
+      "slug": "south-lyme-ct-new-london"
+    },
+    {
+      "city": "Stonington",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06378"
+      ],
+      "slug": "stonington-ct-new-london"
+    },
+    {
+      "city": "Taftville",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06380"
+      ],
+      "slug": "taftville-ct-new-london"
+    },
+    {
+      "city": "Uncasville",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06382"
+      ],
+      "slug": "uncasville-ct-new-london"
+    },
+    {
+      "city": "Voluntown",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06384"
+      ],
+      "slug": "voluntown-ct-new-london"
+    },
+    {
+      "city": "Waterford",
+      "state": "CT",
+      "county": "New London",
+      "region": "New London",
+      "zipCodes": [
+        "06385"
+      ],
+      "slug": "waterford-ct-new-london"
+    },
+    {
+      "city": "Amston",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06231"
+      ],
+      "slug": "amston-ct-tolland"
+    },
+    {
+      "city": "Andover",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06232"
+      ],
+      "slug": "andover-ct-tolland"
+    },
+    {
+      "city": "Bolton",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06043"
+      ],
+      "slug": "bolton-ct-tolland"
+    },
+    {
+      "city": "Columbia",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06237"
+      ],
+      "slug": "columbia-ct-tolland"
+    },
+    {
+      "city": "Coventry",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06238"
+      ],
+      "slug": "coventry-ct-tolland"
+    },
+    {
+      "city": "Ellington",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06029"
+      ],
+      "slug": "ellington-ct-tolland"
+    },
+    {
+      "city": "Hebron",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06248"
+      ],
+      "slug": "hebron-ct-tolland"
+    },
+    {
+      "city": "Mansfield Center",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06250"
+      ],
+      "slug": "mansfield-center-ct-tolland"
+    },
+    {
+      "city": "Somers",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06071"
+      ],
+      "slug": "somers-ct-tolland"
+    },
+    {
+      "city": "Stafford Springs",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06076"
+      ],
+      "slug": "stafford-springs-ct-tolland"
+    },
+    {
+      "city": "Storrs Mansfield",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06268"
+      ],
+      "slug": "storrs-mansfield-ct-tolland"
+    },
+    {
+      "city": "Tolland",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06084"
+      ],
+      "slug": "tolland-ct-tolland"
+    },
+    {
+      "city": "University Of Ct",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06269"
+      ],
+      "slug": "university-of-ct-ct-tolland"
+    },
+    {
+      "city": "Vernon Rockville",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06066"
+      ],
+      "slug": "vernon-rockville-ct-tolland"
+    },
+    {
+      "city": "West Willington",
+      "state": "CT",
+      "county": "Tolland",
+      "region": "Tolland",
+      "zipCodes": [
+        "06279"
+      ],
+      "slug": "west-willington-ct-tolland"
+    },
+    {
+      "city": "Brooklyn",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06234"
+      ],
+      "slug": "brooklyn-ct-windham"
+    },
+    {
+      "city": "Canterbury",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06331"
+      ],
+      "slug": "canterbury-ct-windham"
+    },
+    {
+      "city": "Chaplin",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06235"
+      ],
+      "slug": "chaplin-ct-windham"
+    },
+    {
+      "city": "Danielson",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06239"
+      ],
+      "slug": "danielson-ct-windham"
+    },
+    {
+      "city": "Dayville",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06241"
+      ],
+      "slug": "dayville-ct-windham"
+    },
+    {
+      "city": "Eastford",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06242"
+      ],
+      "slug": "eastford-ct-windham"
+    },
+    {
+      "city": "Hampton",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06247"
+      ],
+      "slug": "hampton-ct-windham"
+    },
+    {
+      "city": "Moosup",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06354"
+      ],
+      "slug": "moosup-ct-windham"
+    },
+    {
+      "city": "North Grosvenord",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06255"
+      ],
+      "slug": "north-grosvenord-ct-windham"
+    },
+    {
+      "city": "North Windham",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06256"
+      ],
+      "slug": "north-windham-ct-windham"
+    },
+    {
+      "city": "Oneco",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06373"
+      ],
+      "slug": "oneco-ct-windham"
+    },
+    {
+      "city": "Plainfield",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06374"
+      ],
+      "slug": "plainfield-ct-windham"
+    },
+    {
+      "city": "Pomfret Center",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06259"
+      ],
+      "slug": "pomfret-center-ct-windham"
+    },
+    {
+      "city": "Putnam",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06260"
+      ],
+      "slug": "putnam-ct-windham"
+    },
+    {
+      "city": "Quinebaug",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06262"
+      ],
+      "slug": "quinebaug-ct-windham"
+    },
+    {
+      "city": "Scotland",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06264"
+      ],
+      "slug": "scotland-ct-windham"
+    },
+    {
+      "city": "South Windham",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06266"
+      ],
+      "slug": "south-windham-ct-windham"
+    },
+    {
+      "city": "Sterling",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06377"
+      ],
+      "slug": "sterling-ct-windham"
+    },
+    {
+      "city": "Thompson",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06277"
+      ],
+      "slug": "thompson-ct-windham"
+    },
+    {
+      "city": "Warrenville",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06278"
+      ],
+      "slug": "warrenville-ct-windham"
+    },
+    {
+      "city": "Willimantic",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06226"
+      ],
+      "slug": "willimantic-ct-windham"
+    },
+    {
+      "city": "Windham",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06280"
+      ],
+      "slug": "windham-ct-windham"
+    },
+    {
+      "city": "Woodstock",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06281"
+      ],
+      "slug": "woodstock-ct-windham"
+    },
+    {
+      "city": "Woodstock Valley",
+      "state": "CT",
+      "county": "Windham",
+      "region": "Windham",
+      "zipCodes": [
+        "06282"
+      ],
+      "slug": "woodstock-valley-ct-windham"
+    }
+  ]
+}

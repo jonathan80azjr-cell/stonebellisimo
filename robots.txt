@@ -1,0 +1,53 @@
+# Stone Bellisimo LLC crawler policy
+#
+# Goal: maximize search and AI-answer visibility while reserving rights
+# against unrestricted model-training crawls.
+
+User-agent: *
+Content-Signal: search=yes,ai-input=yes,ai-train=no,use=reference
+Allow: /
+
+# AI search and answer engines
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+# AI training or bulk data collection opt-outs
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+Sitemap: https://stonebellisimollc.com/sitemap.xml
+Sitemap: https://stonebellisimollc.com/sitemap-images.xml
+Sitemap: https://stonebellisimollc.com/sitemap-video.xml

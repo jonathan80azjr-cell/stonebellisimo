@@ -1,0 +1,222 @@
+.google-maps-iframe {
+  --map-accent: #b39158;
+  --map-accent-strong: #8f6b35;
+  --map-banner-background: rgba(255, 255, 255, .94);
+  --map-banner-border: rgba(179, 145, 88, .28);
+  --map-banner-text: #17130d;
+  --map-banner-muted: #655f55;
+  --map-marker-background: #fff;
+  --map-marker-halo: rgba(179, 145, 88, .2);
+  --map-marker-shadow: rgba(70, 48, 20, .22);
+  --map-marker-shadow-hover: rgba(70, 48, 20, .34);
+  --map-filter: grayscale(.65) sepia(.16) saturate(.92) brightness(1.02) contrast(.96);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #f4f1eb;
+  isolation: isolate;
+}
+
+.map-embed.map-embed--styled,
+.map-embed--styled {
+  position: relative;
+  min-height: 520px;
+  background: #f4f1eb;
+}
+
+.map-embed--styled .google-maps-iframe {
+  border-radius: inherit;
+}
+
+.google-map--loading::after {
+  content: "Loading map...";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  color: var(--map-banner-muted);
+  font: 600 13px/1.2 Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f4f1eb;
+}
+
+.google-map__canvas {
+  position: absolute;
+  inset: 0;
+  min-height: 100%;
+}
+
+.google-maps-iframe iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  border: 0;
+  filter: var(--map-filter);
+  pointer-events: none;
+}
+
+.google-maps-iframe__marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 74px;
+  height: 74px;
+  color: var(--map-accent);
+  font: 700 18px/1 Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: .04em;
+  text-decoration: none;
+  background: var(--map-marker-background);
+  border: 3px solid var(--map-accent);
+  border-radius: 50%;
+  box-shadow: 0 18px 48px var(--map-marker-shadow);
+  transform: translate(-50%, -68%);
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.google-maps-iframe__marker--js {
+  top: auto;
+  left: auto;
+}
+
+.google-maps-iframe__marker::before,
+.google-maps-iframe__marker::after {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.google-maps-iframe__marker::before {
+  background: var(--map-marker-halo);
+  animation: google-map-marker-pulse 2.6s ease-out infinite;
+}
+
+.google-maps-iframe__marker::after {
+  top: auto;
+  right: auto;
+  bottom: -16px;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  margin: auto;
+  background: var(--map-marker-background);
+  border-right: 3px solid var(--map-accent);
+  border-bottom: 3px solid var(--map-accent);
+  border-radius: 0 0 6px 0;
+  transform: translateX(-50%) rotate(45deg);
+  transition: border-color .2s ease;
+}
+
+.google-maps-iframe__marker:hover,
+.google-maps-iframe__marker:focus-visible {
+  border-color: var(--map-accent-strong);
+  box-shadow: 0 24px 62px var(--map-marker-shadow-hover);
+  transform: translate(-50%, -72%);
+}
+
+.google-maps-iframe__marker:hover::after,
+.google-maps-iframe__marker:focus-visible::after {
+  border-color: var(--map-accent-strong);
+}
+
+.google-maps-iframe__marker:focus-visible,
+.google-maps-iframe__banner:focus-visible {
+  outline: 3px solid var(--map-accent);
+  outline-offset: 4px;
+}
+
+.google-maps-iframe__marker img {
+  display: block;
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.google-maps-iframe__banner {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 3;
+  display: grid;
+  gap: 4px;
+  max-width: min(calc(100% - 36px), 520px);
+  padding: 16px 18px;
+  color: var(--map-banner-text);
+  text-decoration: none;
+  background: var(--map-banner-background);
+  border: 1px solid var(--map-banner-border);
+  border-radius: 4px;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, .12);
+  backdrop-filter: blur(12px);
+  pointer-events: none;
+}
+
+.google-maps-iframe__banner strong {
+  font: 700 16px/1.2 Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.google-maps-iframe__banner span {
+  color: var(--map-banner-muted);
+  font: 500 13px/1.45 Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+@media (max-width: 560px) {
+  .map-embed.map-embed--styled,
+  .map-embed--styled {
+    min-height: 380px;
+  }
+
+  .google-maps-iframe__marker {
+    width: 62px;
+    height: 62px;
+  }
+
+  .google-maps-iframe__marker::after {
+    bottom: -14px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .google-maps-iframe__marker img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .google-maps-iframe__banner {
+    top: 12px;
+    left: 12px;
+    max-width: calc(100% - 24px);
+    padding: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .google-maps-iframe__marker,
+  .google-maps-iframe__marker::after {
+    transition: none;
+  }
+
+  .google-maps-iframe__marker::before {
+    animation: none;
+  }
+}
+
+@keyframes google-map-marker-pulse {
+  0% {
+    opacity: .85;
+    transform: scale(.74);
+  }
+
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.4);
+  }
+}

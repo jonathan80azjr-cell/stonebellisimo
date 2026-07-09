@@ -1,0 +1,553 @@
+{
+  "generatedAt": "2026-07-06T07:39:53.838Z",
+  "source": {
+    "name": "scpike/us-state-county-zip geo-data.csv",
+    "url": "https://raw.githubusercontent.com/scpike/us-state-county-zip/master/geo-data.csv",
+    "note": "Records are ZIP/ZCTA-style city, state, and county associations. ZIP Codes are postal delivery identifiers and do not perfectly match municipal boundaries."
+  },
+  "serviceArea": "New York City",
+  "state": "NY",
+  "records": [
+    {
+      "city": "Bronx",
+      "state": "NY",
+      "county": "Bronx",
+      "region": "Bronx",
+      "zipCodes": [
+        "10451",
+        "10452",
+        "10453",
+        "10454",
+        "10455",
+        "10456",
+        "10457",
+        "10458",
+        "10459",
+        "10460",
+        "10461",
+        "10462",
+        "10463",
+        "10464",
+        "10465",
+        "10466",
+        "10467",
+        "10468",
+        "10469",
+        "10470",
+        "10471",
+        "10472",
+        "10473",
+        "10474",
+        "10475"
+      ],
+      "slug": "bronx-ny-bronx"
+    },
+    {
+      "city": "Brooklyn",
+      "state": "NY",
+      "county": "Kings",
+      "region": "Brooklyn",
+      "zipCodes": [
+        "11201",
+        "11203",
+        "11204",
+        "11205",
+        "11206",
+        "11207",
+        "11208",
+        "11209",
+        "11210",
+        "11211",
+        "11212",
+        "11213",
+        "11214",
+        "11215",
+        "11216",
+        "11217",
+        "11218",
+        "11219",
+        "11220",
+        "11221",
+        "11222",
+        "11223",
+        "11224",
+        "11225",
+        "11226",
+        "11228",
+        "11229",
+        "11230",
+        "11231",
+        "11232",
+        "11233",
+        "11234",
+        "11235",
+        "11236",
+        "11237",
+        "11238",
+        "11239"
+      ],
+      "slug": "brooklyn-ny-brooklyn"
+    },
+    {
+      "city": "Governors Island",
+      "state": "NY",
+      "county": "New York",
+      "region": "Manhattan",
+      "zipCodes": [
+        "10004"
+      ],
+      "slug": "governors-island-ny-manhattan"
+    },
+    {
+      "city": "New York",
+      "state": "NY",
+      "county": "New York",
+      "region": "Manhattan",
+      "zipCodes": [
+        "10001",
+        "10002",
+        "10003",
+        "10005",
+        "10006",
+        "10007",
+        "10009",
+        "10010",
+        "10011",
+        "10012",
+        "10013",
+        "10014",
+        "10016",
+        "10017",
+        "10018",
+        "10019",
+        "10020",
+        "10021",
+        "10022",
+        "10023",
+        "10024",
+        "10025",
+        "10026",
+        "10027",
+        "10028",
+        "10029",
+        "10030",
+        "10031",
+        "10032",
+        "10033",
+        "10034",
+        "10035",
+        "10036",
+        "10037",
+        "10038",
+        "10039",
+        "10040",
+        "10041",
+        "10044",
+        "10048",
+        "10103",
+        "10111",
+        "10112",
+        "10115",
+        "10119",
+        "10128",
+        "10152",
+        "10153",
+        "10154",
+        "10162",
+        "10165",
+        "10167",
+        "10169",
+        "10170",
+        "10171",
+        "10172",
+        "10173",
+        "10177",
+        "10271",
+        "10278",
+        "10279",
+        "10280",
+        "10282"
+      ],
+      "slug": "new-york-ny-manhattan"
+    },
+    {
+      "city": "Astoria",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11101",
+        "11102",
+        "11103",
+        "11105",
+        "11106"
+      ],
+      "slug": "astoria-ny-queens"
+    },
+    {
+      "city": "Bayside",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11360",
+        "11361"
+      ],
+      "slug": "bayside-ny-queens"
+    },
+    {
+      "city": "Bellerose",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11426"
+      ],
+      "slug": "bellerose-ny-queens"
+    },
+    {
+      "city": "Cambria Heights",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11411"
+      ],
+      "slug": "cambria-heights-ny-queens"
+    },
+    {
+      "city": "College Point",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11356"
+      ],
+      "slug": "college-point-ny-queens"
+    },
+    {
+      "city": "Corona",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11368"
+      ],
+      "slug": "corona-ny-queens"
+    },
+    {
+      "city": "East Elmhurst",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11369",
+        "11370"
+      ],
+      "slug": "east-elmhurst-ny-queens"
+    },
+    {
+      "city": "Far Rockaway",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11691",
+        "11692",
+        "11693",
+        "11694",
+        "11697"
+      ],
+      "slug": "far-rockaway-ny-queens"
+    },
+    {
+      "city": "Floral Park",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11005"
+      ],
+      "slug": "floral-park-ny-queens"
+    },
+    {
+      "city": "Flushing",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11354",
+        "11355",
+        "11358",
+        "11364",
+        "11367",
+        "11371"
+      ],
+      "slug": "flushing-ny-queens"
+    },
+    {
+      "city": "Forest Hills",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11375"
+      ],
+      "slug": "forest-hills-ny-queens"
+    },
+    {
+      "city": "Fresh Meadows",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11365",
+        "11366"
+      ],
+      "slug": "fresh-meadows-ny-queens"
+    },
+    {
+      "city": "Glen Oaks",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11004"
+      ],
+      "slug": "glen-oaks-ny-queens"
+    },
+    {
+      "city": "Hollis",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11423"
+      ],
+      "slug": "hollis-ny-queens"
+    },
+    {
+      "city": "Jackson Heights",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11372",
+        "11373"
+      ],
+      "slug": "jackson-heights-ny-queens"
+    },
+    {
+      "city": "Jamaica",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11430",
+        "11432",
+        "11433",
+        "11434",
+        "11435",
+        "11436"
+      ],
+      "slug": "jamaica-ny-queens"
+    },
+    {
+      "city": "Kew Gardens",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11412",
+        "11414",
+        "11415"
+      ],
+      "slug": "kew-gardens-ny-queens"
+    },
+    {
+      "city": "Little Neck",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11362",
+        "11363"
+      ],
+      "slug": "little-neck-ny-queens"
+    },
+    {
+      "city": "Maspeth",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11378"
+      ],
+      "slug": "maspeth-ny-queens"
+    },
+    {
+      "city": "Middle Village",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11379"
+      ],
+      "slug": "middle-village-ny-queens"
+    },
+    {
+      "city": "Ozone Park",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11416",
+        "11417"
+      ],
+      "slug": "ozone-park-ny-queens"
+    },
+    {
+      "city": "Queens Village",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11427",
+        "11428",
+        "11429"
+      ],
+      "slug": "queens-village-ny-queens"
+    },
+    {
+      "city": "Rego Park",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11374"
+      ],
+      "slug": "rego-park-ny-queens"
+    },
+    {
+      "city": "Richmond Hill",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11418"
+      ],
+      "slug": "richmond-hill-ny-queens"
+    },
+    {
+      "city": "Ridgewood",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11385"
+      ],
+      "slug": "ridgewood-ny-queens"
+    },
+    {
+      "city": "Rosedale",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11422"
+      ],
+      "slug": "rosedale-ny-queens"
+    },
+    {
+      "city": "S Ozone Park",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11420"
+      ],
+      "slug": "s-ozone-park-ny-queens"
+    },
+    {
+      "city": "S Richmond Hill",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11419"
+      ],
+      "slug": "s-richmond-hill-ny-queens"
+    },
+    {
+      "city": "Springfield Gard",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11413"
+      ],
+      "slug": "springfield-gard-ny-queens"
+    },
+    {
+      "city": "Sunnyside",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11104"
+      ],
+      "slug": "sunnyside-ny-queens"
+    },
+    {
+      "city": "Whitestone",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11357"
+      ],
+      "slug": "whitestone-ny-queens"
+    },
+    {
+      "city": "Woodhaven",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11421"
+      ],
+      "slug": "woodhaven-ny-queens"
+    },
+    {
+      "city": "Woodside",
+      "state": "NY",
+      "county": "Queens",
+      "region": "Queens",
+      "zipCodes": [
+        "11377"
+      ],
+      "slug": "woodside-ny-queens"
+    },
+    {
+      "city": "Staten Island",
+      "state": "NY",
+      "county": "Richmond",
+      "region": "Staten Island",
+      "zipCodes": [
+        "10301",
+        "10302",
+        "10303",
+        "10304",
+        "10305",
+        "10306",
+        "10307",
+        "10308",
+        "10309",
+        "10310",
+        "10312",
+        "10314"
+      ],
+      "slug": "staten-island-ny-staten-island"
+    }
+  ]
+}
