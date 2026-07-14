@@ -790,8 +790,8 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
     <h1>Stone crafted for<br><em>timeless homes.</em></h1>
     <p class="hero-sub">Family-owned stone fabricators serving NJ since 2013. Granite, quartz, marble and more — precision-cut and installed.</p>
     <div class="hero-btns">
-      <a href="#gallery" onclick="event.preventDefault();go('gallery')" class="btn-gold">Explore Our Work</a>
-      <a onclick="openWizard('Hero')" class="btn-ghost">Get a Free Estimate →</a>
+      <a onclick="openWizard('Hero')" class="btn-gold">Get a Free Estimate →</a>
+      <a href="#gallery" onclick="event.preventDefault();go('gallery')" class="btn-ghost">Explore Our Work</a>
     </div>
   </div>
   <div class="hero-scroll" onclick="go('trust')"><span>Scroll</span><div class="scroll-line"></div></div>
@@ -804,6 +804,173 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
     <span>20% Off Selected Quartz</span><span>Free Stainless Steel Sink on 40+ sq ft</span><span>3 Edge Profiles at No Extra Charge</span><span>Free Templates &amp; Estimates</span><span>25+ Years of Experience</span><span>Family Owned &amp; Operated</span><span>Call 201.553.1919</span>
   </div>
 </div>
+
+<!-- ESTIMATE WIZARD -->
+<section class="wizard-section" id="wizard-section">
+  <div class="wizard-wrap">
+    <span class="s-tag r" style="color:var(--gold-lt)">Free Estimate</span>
+    <h2 class="s-h wh r2" style="margin-bottom:48px">Let's start your<br><em>project.</em></h2>
+
+    <!-- Progress bar -->
+    <div class="wz-progress" id="wzProgress">
+      <div class="wz-dot active" data-step="1">1</div>
+      <div class="wz-line" id="wl1"></div>
+      <div class="wz-dot" data-step="2">2</div>
+      <div class="wz-line" id="wl2"></div>
+      <div class="wz-dot" data-step="3">3</div>
+      <div class="wz-line" id="wl3"></div>
+      <div class="wz-dot" data-step="4">4</div>
+      <div class="wz-line" id="wl4"></div>
+      <div class="wz-dot" data-step="5">5</div>
+    </div>
+
+    <!-- STEP 1: Project type -->
+    <div class="wz-step active" id="wz1">
+      <div class="wz-step-tag">Step 1 of 5: Project Type *</div>
+      <div class="wz-q">What are you<br><em>renovating?</em></div>
+      <div class="wz-hint">Select your project type — we do custom fabrication &amp; installation.</div>
+      <div class="wz-opts" role="radiogroup" aria-label="Select what you are renovating">
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Kitchen Countertops')" onkeydown="handleWzKey(event, this, 'project', 'Kitchen Countertops')"><div class="wz-opt-label">Kitchen</div><div class="wz-opt-sub">Most popular</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Bathroom Vanity')" onkeydown="handleWzKey(event, this, 'project', 'Bathroom Vanity')"><div class="wz-opt-label">Bathroom Vanity</div><div class="wz-opt-sub">Single or double</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Fireplace Surround')" onkeydown="handleWzKey(event, this, 'project', 'Fireplace Surround')"><div class="wz-opt-label">Fireplace</div><div class="wz-opt-sub">Surround &amp; hearth</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Multiple Areas')" onkeydown="handleWzKey(event, this, 'project', 'Multiple Areas')"><div class="wz-opt-label">Multiple Areas</div><div class="wz-opt-sub">Full home</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Commercial')" onkeydown="handleWzKey(event, this, 'project', 'Commercial')"><div class="wz-opt-label">Commercial</div><div class="wz-opt-sub">Office / retail</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Other')" onkeydown="handleWzKey(event, this, 'project', 'Other')"><div class="wz-opt-label">Other</div><div class="wz-opt-sub">Tell us more</div></div>
+      </div>
+      <div class="wz-other wz-fg" id="projectOtherWrap">
+        <label for="projectOther">Tell us what you are renovating * (Required)</label>
+        <input type="text" id="projectOther" placeholder="e.g. Outdoor kitchen, laundry room, custom table" autocomplete="off" aria-required="true">
+        <div class="wz-error-msg" id="wz1-error">Please fill in this field to proceed.</div>
+      </div>
+      <div class="wz-nav"><div></div><button class="wz-next-btn" onclick="nextStep(2)" id="wz1next" disabled>Continue <span>→</span></button></div>
+    </div>
+
+    <!-- STEP 2: Material -->
+    <div class="wz-step" id="wz2">
+      <div class="wz-step-tag">Step 2 of 5: Material Selection *</div>
+      <div class="wz-q">Which material<br><em>interests you?</em></div>
+      <div class="wz-hint">Select a stone material. Not sure? Choose "Help me choose" and our experts will guide you.</div>
+      <div class="wz-opts wz-material-opts" role="radiogroup" aria-label="Select material of interest">
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Granite')" onkeydown="handleWzKey(event, this, 'material', 'Granite')"><div class="wz-opt-img"><img src="./assets/img/material1-800.jpg" data-avif="./assets/img/material1-800.avif" alt="Premium polished Granite countertop slab showing natural mineral patterns" width="800" height="533" loading="lazy" decoding="async"></div><div class="wz-opt-label">Granite</div><div class="wz-opt-sub">Most durable</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Quartz')" onkeydown="handleWzKey(event, this, 'material', 'Quartz')"><div class="wz-opt-img"><img src="./assets/img/material2-800.jpg" data-avif="./assets/img/material2-800.avif" alt="High-quality engineered Quartz countertop slab in white and grey veining" width="800" height="533" loading="lazy" decoding="async"></div><div class="wz-opt-label">Quartz</div><div class="wz-opt-sub">20% off now</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Marble')" onkeydown="handleWzKey(event, this, 'material', 'Marble')"><div class="wz-opt-img"><img src="./assets/img/material3-800.jpg" data-avif="./assets/img/material3-800.avif" alt="Classic Carrara Marble countertop slab with elegant natural grey veining" width="533" height="800" loading="lazy" decoding="async"></div><div class="wz-opt-label">Marble</div><div class="wz-opt-sub">Timeless look</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Quartzite')" onkeydown="handleWzKey(event, this, 'material', 'Quartzite')"><div class="wz-opt-img"><img src="./assets/img/material4-800.jpg" data-avif="./assets/img/material4-800.avif" alt="Durable Quartzite countertop slab showcasing natural quartzite texture" width="800" height="534" loading="lazy" decoding="async"></div><div class="wz-opt-label">Quartzite</div><div class="wz-opt-sub">Natural stone</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Porcelain')" onkeydown="handleWzKey(event, this, 'material', 'Porcelain')"><div class="wz-opt-img"><img src="./assets/img/material5-800.jpg" data-avif="./assets/img/material5-800.avif" alt="Sleek large-format Porcelain countertop slab in modern matte finish" width="800" height="407" loading="lazy" decoding="async"></div><div class="wz-opt-label">Porcelain</div><div class="wz-opt-sub">Ultra modern</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Help me choose')" onkeydown="handleWzKey(event, this, 'material', 'Help me choose')"><div class="wz-opt-label">Help me choose</div><div class="wz-opt-sub">We'll advise</div></div>
+      </div>
+      <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(1)">← Back</button><button class="wz-next-btn" onclick="nextStep(3)" id="wz2next" disabled>Continue →</button></div>
+    </div>
+
+    <!-- STEP 3: Rough size -->
+    <div class="wz-step" id="wz3">
+      <div class="wz-step-tag">Step 3 of 5: Project Size *</div>
+      <div class="wz-q">Roughly how big<br><em>is the space?</em></div>
+      <div class="wz-hint">Provide an estimate — Cesar or Cristian will take exact measurements during our free visit.</div>
+      <div class="wz-opts" role="radiogroup" aria-label="Select estimated project size">
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','Under 30 sqft')" onkeydown="handleWzKey(event, this, 'size', 'Under 30 sqft')"><div class="wz-opt-label">Under 30 sqft</div><div class="wz-opt-sub">Small vanity / bar</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','30–60 sqft')" onkeydown="handleWzKey(event, this, 'size', '30–60 sqft')"><div class="wz-opt-label">30–60 sqft</div><div class="wz-opt-sub">Average kitchen</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','60–100 sqft')" onkeydown="handleWzKey(event, this, 'size', '60–100 sqft')"><div class="wz-opt-label">60–100 sqft</div><div class="wz-opt-sub">Large kitchen</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','100+ sqft')" onkeydown="handleWzKey(event, this, 'size', '100+ sqft')"><div class="wz-opt-label">100+ sqft</div><div class="wz-opt-sub">Full home / commercial</div></div>
+      </div>
+      <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(2)">← Back</button><button class="wz-next-btn" onclick="nextStep(4)" id="wz3next" disabled>Continue →</button></div>
+    </div>
+
+    <!-- STEP 4: Timeline -->
+    <div class="wz-step" id="wz4">
+      <div class="wz-step-tag">Step 4 of 5: Project Timeline *</div>
+      <div class="wz-q">When are you<br><em>looking to start?</em></div>
+      <div class="wz-hint">Choose a timeframe. We accommodate any timeline.</div>
+      <div class="wz-opts" role="radiogroup" aria-label="Select project timeline">
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','As soon as possible')" onkeydown="handleWzKey(event, this, 'timeline', 'As soon as possible')"><div class="wz-opt-label">ASAP</div><div class="wz-opt-sub">Ready to go</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','1–3 months')" onkeydown="handleWzKey(event, this, 'timeline', '1–3 months')"><div class="wz-opt-label">1–3 months</div><div class="wz-opt-sub">Planning ahead</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','3–6 months')" onkeydown="handleWzKey(event, this, 'timeline', '3–6 months')"><div class="wz-opt-label">3–6 months</div><div class="wz-opt-sub">Early stages</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','Just exploring')" onkeydown="handleWzKey(event, this, 'timeline', 'Just exploring')"><div class="wz-opt-label">Just exploring</div><div class="wz-opt-sub">No rush</div></div>
+      </div>
+      <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(3)">← Back</button><button class="wz-next-btn" onclick="nextStep(5)" id="wz4next" disabled>Continue →</button></div>
+    </div>
+
+    <!-- STEP 5: Contact info -->
+    <div class="wz-step" id="wz5">
+      <div class="wz-step-tag">Step 5 of 5: Contact Information *</div>
+      <div class="wz-q">Almost there —<br><em>let's confirm your details.</em></div>
+      <div class="wz-hint">Enter your details below. Cesar or Cristian will call or text to schedule your free visit.</div>
+      <!-- Summary -->
+      <div class="wz-summary">
+        <h4>Your project summary</h4>
+        <div class="wz-sum-row"><span>Project</span><span id="sumProject">—</span></div>
+        <div class="wz-sum-row"><span>Material</span><span id="sumMaterial">—</span></div>
+        <div class="wz-sum-row"><span>Size</span><span id="sumSize">—</span></div>
+        <div class="wz-sum-row"><span>Timeline</span><span id="sumTimeline">—</span></div>
+      </div>
+      <!-- Fields -->
+      <div class="wz-fields">
+        <div class="wz-row">
+          <div class="wz-fg">
+            <label for="wzFirst">First Name *</label>
+            <input type="text" id="wzFirst" placeholder="e.g. Jane" autocomplete="given-name" aria-required="true">
+            <div class="wz-error-msg" id="wzFirst-error">First name is required.</div>
+          </div>
+          <div class="wz-fg">
+            <label for="wzLast">Last Name *</label>
+            <input type="text" id="wzLast" placeholder="e.g. Smith" autocomplete="family-name" aria-required="true">
+            <div class="wz-error-msg" id="wzLast-error">Last name is required.</div>
+          </div>
+        </div>
+        <div class="wz-row">
+          <div class="wz-fg">
+            <label for="wzPhone">Phone *</label>
+            <input type="tel" id="wzPhone" placeholder="e.g. (201) 555-0199" autocomplete="tel" aria-required="true">
+            <div class="wz-error-msg" id="wzPhone-error">A valid phone number is required.</div>
+          </div>
+          <div class="wz-fg">
+            <label for="wzEmail">Email *</label>
+            <input type="email" id="wzEmail" placeholder="e.g. jane.smith@gmail.com" autocomplete="email" aria-required="true">
+            <div class="wz-error-msg" id="wzEmail-error">A valid email address is required.</div>
+          </div>
+        </div>
+        <div class="wz-fg">
+          <label for="wzAddr">Your Address / City (optional - for scheduling)</label>
+          <input type="text" id="wzAddr" placeholder="e.g. Union City, NJ" autocomplete="street-address">
+        </div>
+        <div class="wz-fg">
+          <label for="wzNote">Anything else we should know? (optional)</label>
+          <textarea id="wzNote" placeholder="e.g. Preferred days for a visit, existing countertop material, custom dimensions..."></textarea>
+        </div>
+      </div>
+      <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(4)">← Back</button><button class="wz-next-btn" onclick="submitWizard()" id="wz5submit">Send Request</button></div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div id="wz-success">
+      <div class="wz-success-icon" style="margin-bottom:20px"><svg viewBox="0 0 24 24" width="48" height="48" stroke="var(--gold)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+      <h3>Request sent!</h3>
+      <p>Thank you! Cesar or Cristian will call or text you within one business day to schedule your free in-home estimate.</p>
+      <div class="wz-what-next">
+        <p>📞 <strong>Need to reach us right now?</strong></p>
+        <p>Call the Office: <strong><a href="tel:+12015531919" style="color:var(--gold-lt)">201.553.1919</a></strong> or text Cesar: <strong><a href="sms:+12012816423" style="color:var(--gold-lt)">201.281.6423</a></strong></p>
+        <p style="margin-top: 8px">🤖 Or call <strong><a href="tel:+15512928353" style="color:var(--gold-lt)">551.292.8353</a></strong> to talk with Bella, our 24/7 AI Voice Agent.</p>
+      </div>
+      <button class="btn-gold" onclick="resetWizard()">Submit Another Request</button>
+    </div>
+
+    <!-- SUBMISSION FAILURE FALLBACK -->
+    <div id="wz-failure">
+      <div class="wz-failure-icon">⚠️</div>
+      <h3>Submission Error</h3>
+      <p>We are having trouble submitting your request online. To ensure Cristian or Cesar gets your request immediately, please call or text us directly with your project summary below.</p>
+      <div class="wz-saved-data">
+        <label for="wzSavedText">Your Saved Project Details (Copy &amp; Share)</label>
+        <textarea id="wzSavedText" readonly onclick="this.select()"></textarea>
+      </div>
+      <div class="wz-what-next" style="background: rgba(224,90,90,.1); border-color: rgba(224,90,90,.25)">
+        <p>📞 <strong>Call the Office:</strong> <a href="tel:+12015531919" style="color:var(--gold-lt)">201.553.1919</a></p>
+        <p>💬 <strong>Text Cesar (Owner):</strong> <a href="sms:+12012816423" style="color:var(--gold-lt)">201.281.6423</a></p>
+        <p>🤖 <strong>Or Call Bella (24/7 AI Agent):</strong> <a href="tel:+15512928353" style="color:var(--gold-lt)">551.292.8353</a></p>
+      </div>
+      <button class="btn-gold" style="margin-top: 20px" onclick="retryWizard()">Edit &amp; Try Again</button>
+    </div>
+  </div>
+</section>
 
 <!-- TRUST -->
 <div class="trust" id="trust">
@@ -1135,172 +1302,6 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   </div>
 </section>
 
-<!-- ESTIMATE WIZARD -->
-<section class="wizard-section" id="wizard-section">
-  <div class="wizard-wrap">
-    <span class="s-tag r" style="color:var(--gold-lt)">Free Estimate</span>
-    <h2 class="s-h wh r2" style="margin-bottom:48px">Let's start your<br><em>project.</em></h2>
-
-    <!-- Progress bar -->
-    <div class="wz-progress" id="wzProgress">
-      <div class="wz-dot active" data-step="1">1</div>
-      <div class="wz-line" id="wl1"></div>
-      <div class="wz-dot" data-step="2">2</div>
-      <div class="wz-line" id="wl2"></div>
-      <div class="wz-dot" data-step="3">3</div>
-      <div class="wz-line" id="wl3"></div>
-      <div class="wz-dot" data-step="4">4</div>
-      <div class="wz-line" id="wl4"></div>
-      <div class="wz-dot" data-step="5">5</div>
-    </div>
-
-    <!-- STEP 1: Project type -->
-    <div class="wz-step active" id="wz1">
-      <div class="wz-step-tag">Step 1 of 5: Project Type *</div>
-      <div class="wz-q">What are you<br><em>renovating?</em></div>
-      <div class="wz-hint">Select your project type — we do custom fabrication &amp; installation.</div>
-      <div class="wz-opts" role="radiogroup" aria-label="Select what you are renovating">
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Kitchen Countertops')" onkeydown="handleWzKey(event, this, 'project', 'Kitchen Countertops')"><div class="wz-opt-label">Kitchen</div><div class="wz-opt-sub">Most popular</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Bathroom Vanity')" onkeydown="handleWzKey(event, this, 'project', 'Bathroom Vanity')"><div class="wz-opt-label">Bathroom Vanity</div><div class="wz-opt-sub">Single or double</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Fireplace Surround')" onkeydown="handleWzKey(event, this, 'project', 'Fireplace Surround')"><div class="wz-opt-label">Fireplace</div><div class="wz-opt-sub">Surround &amp; hearth</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Multiple Areas')" onkeydown="handleWzKey(event, this, 'project', 'Multiple Areas')"><div class="wz-opt-label">Multiple Areas</div><div class="wz-opt-sub">Full home</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Commercial')" onkeydown="handleWzKey(event, this, 'project', 'Commercial')"><div class="wz-opt-label">Commercial</div><div class="wz-opt-sub">Office / retail</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Other')" onkeydown="handleWzKey(event, this, 'project', 'Other')"><div class="wz-opt-label">Other</div><div class="wz-opt-sub">Tell us more</div></div>
-      </div>
-      <div class="wz-other wz-fg" id="projectOtherWrap">
-        <label for="projectOther">Tell us what you are renovating * (Required)</label>
-        <input type="text" id="projectOther" placeholder="e.g. Outdoor kitchen, laundry room, custom table" autocomplete="off" aria-required="true">
-        <div class="wz-error-msg" id="wz1-error">Please fill in this field to proceed.</div>
-      </div>
-      <div class="wz-nav"><div></div><button class="wz-next-btn" onclick="nextStep(2)" id="wz1next" disabled>Continue <span>→</span></button></div>
-    </div>
-
-    <!-- STEP 2: Material -->
-    <div class="wz-step" id="wz2">
-      <div class="wz-step-tag">Step 2 of 5: Material Selection *</div>
-      <div class="wz-q">Which material<br><em>interests you?</em></div>
-      <div class="wz-hint">Select a stone material. Not sure? Choose "Help me choose" and our experts will guide you.</div>
-      <div class="wz-opts wz-material-opts" role="radiogroup" aria-label="Select material of interest">
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Granite')" onkeydown="handleWzKey(event, this, 'material', 'Granite')"><div class="wz-opt-img"><img src="./assets/img/material1-800.jpg" data-avif="./assets/img/material1-800.avif" alt="Premium polished Granite countertop slab showing natural mineral patterns" width="800" height="533" loading="lazy" decoding="async"></div><div class="wz-opt-label">Granite</div><div class="wz-opt-sub">Most durable</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Quartz')" onkeydown="handleWzKey(event, this, 'material', 'Quartz')"><div class="wz-opt-img"><img src="./assets/img/material2-800.jpg" data-avif="./assets/img/material2-800.avif" alt="High-quality engineered Quartz countertop slab in white and grey veining" width="800" height="533" loading="lazy" decoding="async"></div><div class="wz-opt-label">Quartz</div><div class="wz-opt-sub">20% off now</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Marble')" onkeydown="handleWzKey(event, this, 'material', 'Marble')"><div class="wz-opt-img"><img src="./assets/img/material3-800.jpg" data-avif="./assets/img/material3-800.avif" alt="Classic Carrara Marble countertop slab with elegant natural grey veining" width="533" height="800" loading="lazy" decoding="async"></div><div class="wz-opt-label">Marble</div><div class="wz-opt-sub">Timeless look</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Quartzite')" onkeydown="handleWzKey(event, this, 'material', 'Quartzite')"><div class="wz-opt-img"><img src="./assets/img/material4-800.jpg" data-avif="./assets/img/material4-800.avif" alt="Durable Quartzite countertop slab showcasing natural quartzite texture" width="800" height="534" loading="lazy" decoding="async"></div><div class="wz-opt-label">Quartzite</div><div class="wz-opt-sub">Natural stone</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Porcelain')" onkeydown="handleWzKey(event, this, 'material', 'Porcelain')"><div class="wz-opt-img"><img src="./assets/img/material5-800.jpg" data-avif="./assets/img/material5-800.avif" alt="Sleek large-format Porcelain countertop slab in modern matte finish" width="800" height="407" loading="lazy" decoding="async"></div><div class="wz-opt-label">Porcelain</div><div class="wz-opt-sub">Ultra modern</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Help me choose')" onkeydown="handleWzKey(event, this, 'material', 'Help me choose')"><div class="wz-opt-label">Help me choose</div><div class="wz-opt-sub">We'll advise</div></div>
-      </div>
-      <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(1)">← Back</button><button class="wz-next-btn" onclick="nextStep(3)" id="wz2next" disabled>Continue →</button></div>
-    </div>
-
-    <!-- STEP 3: Rough size -->
-    <div class="wz-step" id="wz3">
-      <div class="wz-step-tag">Step 3 of 5: Project Size *</div>
-      <div class="wz-q">Roughly how big<br><em>is the space?</em></div>
-      <div class="wz-hint">Provide an estimate — Cesar or Cristian will take exact measurements during our free visit.</div>
-      <div class="wz-opts" role="radiogroup" aria-label="Select estimated project size">
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','Under 30 sqft')" onkeydown="handleWzKey(event, this, 'size', 'Under 30 sqft')"><div class="wz-opt-label">Under 30 sqft</div><div class="wz-opt-sub">Small vanity / bar</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','30–60 sqft')" onkeydown="handleWzKey(event, this, 'size', '30–60 sqft')"><div class="wz-opt-label">30–60 sqft</div><div class="wz-opt-sub">Average kitchen</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','60–100 sqft')" onkeydown="handleWzKey(event, this, 'size', '60–100 sqft')"><div class="wz-opt-label">60–100 sqft</div><div class="wz-opt-sub">Large kitchen</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','100+ sqft')" onkeydown="handleWzKey(event, this, 'size', '100+ sqft')"><div class="wz-opt-label">100+ sqft</div><div class="wz-opt-sub">Full home / commercial</div></div>
-      </div>
-      <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(2)">← Back</button><button class="wz-next-btn" onclick="nextStep(4)" id="wz3next" disabled>Continue →</button></div>
-    </div>
-
-    <!-- STEP 4: Timeline -->
-    <div class="wz-step" id="wz4">
-      <div class="wz-step-tag">Step 4 of 5: Project Timeline *</div>
-      <div class="wz-q">When are you<br><em>looking to start?</em></div>
-      <div class="wz-hint">Choose a timeframe. We accommodate any timeline.</div>
-      <div class="wz-opts" role="radiogroup" aria-label="Select project timeline">
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','As soon as possible')" onkeydown="handleWzKey(event, this, 'timeline', 'As soon as possible')"><div class="wz-opt-label">ASAP</div><div class="wz-opt-sub">Ready to go</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','1–3 months')" onkeydown="handleWzKey(event, this, 'timeline', '1–3 months')"><div class="wz-opt-label">1–3 months</div><div class="wz-opt-sub">Planning ahead</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','3–6 months')" onkeydown="handleWzKey(event, this, 'timeline', '3–6 months')"><div class="wz-opt-label">3–6 months</div><div class="wz-opt-sub">Early stages</div></div>
-        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','Just exploring')" onkeydown="handleWzKey(event, this, 'timeline', 'Just exploring')"><div class="wz-opt-label">Just exploring</div><div class="wz-opt-sub">No rush</div></div>
-      </div>
-      <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(3)">← Back</button><button class="wz-next-btn" onclick="nextStep(5)" id="wz4next" disabled>Continue →</button></div>
-    </div>
-
-    <!-- STEP 5: Contact info -->
-    <div class="wz-step" id="wz5">
-      <div class="wz-step-tag">Step 5 of 5: Contact Information *</div>
-      <div class="wz-q">Almost there —<br><em>let's confirm your details.</em></div>
-      <div class="wz-hint">Enter your details below. Cesar or Cristian will call or text to schedule your free visit.</div>
-      <!-- Summary -->
-      <div class="wz-summary">
-        <h4>Your project summary</h4>
-        <div class="wz-sum-row"><span>Project</span><span id="sumProject">—</span></div>
-        <div class="wz-sum-row"><span>Material</span><span id="sumMaterial">—</span></div>
-        <div class="wz-sum-row"><span>Size</span><span id="sumSize">—</span></div>
-        <div class="wz-sum-row"><span>Timeline</span><span id="sumTimeline">—</span></div>
-      </div>
-      <!-- Fields -->
-      <div class="wz-fields">
-        <div class="wz-row">
-          <div class="wz-fg">
-            <label for="wzFirst">First Name *</label>
-            <input type="text" id="wzFirst" placeholder="e.g. Jane" autocomplete="given-name" aria-required="true">
-            <div class="wz-error-msg" id="wzFirst-error">First name is required.</div>
-          </div>
-          <div class="wz-fg">
-            <label for="wzLast">Last Name *</label>
-            <input type="text" id="wzLast" placeholder="e.g. Smith" autocomplete="family-name" aria-required="true">
-            <div class="wz-error-msg" id="wzLast-error">Last name is required.</div>
-          </div>
-        </div>
-        <div class="wz-row">
-          <div class="wz-fg">
-            <label for="wzPhone">Phone *</label>
-            <input type="tel" id="wzPhone" placeholder="e.g. (201) 555-0199" autocomplete="tel" aria-required="true">
-            <div class="wz-error-msg" id="wzPhone-error">A valid phone number is required.</div>
-          </div>
-          <div class="wz-fg">
-            <label for="wzEmail">Email *</label>
-            <input type="email" id="wzEmail" placeholder="e.g. jane.smith@gmail.com" autocomplete="email" aria-required="true">
-            <div class="wz-error-msg" id="wzEmail-error">A valid email address is required.</div>
-          </div>
-        </div>
-        <div class="wz-fg">
-          <label for="wzAddr">Your Address / City (optional - for scheduling)</label>
-          <input type="text" id="wzAddr" placeholder="e.g. Union City, NJ" autocomplete="street-address">
-        </div>
-        <div class="wz-fg">
-          <label for="wzNote">Anything else we should know? (optional)</label>
-          <textarea id="wzNote" placeholder="e.g. Preferred days for a visit, existing countertop material, custom dimensions..."></textarea>
-        </div>
-      </div>
-      <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(4)">← Back</button><button class="wz-next-btn" onclick="submitWizard()" id="wz5submit">Send Request</button></div>
-    </div>
-
-    <!-- SUCCESS -->
-    <div id="wz-success">
-      <div class="wz-success-icon" style="margin-bottom:20px"><svg viewBox="0 0 24 24" width="48" height="48" stroke="var(--gold)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-      <h3>Request sent!</h3>
-      <p>Thank you! Cesar or Cristian will call or text you within one business day to schedule your free in-home estimate.</p>
-      <div class="wz-what-next">
-        <p>📞 <strong>Need to reach us right now?</strong></p>
-        <p>Call the Office: <strong><a href="tel:+12015531919" style="color:var(--gold-lt)">201.553.1919</a></strong> or text Cesar: <strong><a href="sms:+12012816423" style="color:var(--gold-lt)">201.281.6423</a></strong></p>
-        <p style="margin-top: 8px">🤖 Or call <strong><a href="tel:+15512928353" style="color:var(--gold-lt)">551.292.8353</a></strong> to talk with Bella, our 24/7 AI Voice Agent.</p>
-      </div>
-      <button class="btn-gold" onclick="resetWizard()">Submit Another Request</button>
-    </div>
-
-    <!-- SUBMISSION FAILURE FALLBACK -->
-    <div id="wz-failure">
-      <div class="wz-failure-icon">⚠️</div>
-      <h3>Submission Error</h3>
-      <p>We are having trouble submitting your request online. To ensure Cristian or Cesar gets your request immediately, please call or text us directly with your project summary below.</p>
-      <div class="wz-saved-data">
-        <label for="wzSavedText">Your Saved Project Details (Copy &amp; Share)</label>
-        <textarea id="wzSavedText" readonly onclick="this.select()"></textarea>
-      </div>
-      <div class="wz-what-next" style="background: rgba(224,90,90,.1); border-color: rgba(224,90,90,.25)">
-        <p>📞 <strong>Call the Office:</strong> <a href="tel:+12015531919" style="color:var(--gold-lt)">201.553.1919</a></p>
-        <p>💬 <strong>Text Cesar (Owner):</strong> <a href="sms:+12012816423" style="color:var(--gold-lt)">201.281.6423</a></p>
-        <p>🤖 <strong>Or Call Bella (24/7 AI Agent):</strong> <a href="tel:+15512928353" style="color:var(--gold-lt)">551.292.8353</a></p>
-      </div>
-      <button class="btn-gold" style="margin-top: 20px" onclick="retryWizard()">Edit &amp; Try Again</button>
-    </div>
-  </div>
-</section>
 
 <!-- INSTAGRAM -->
 <section class="instagram" id="instagram">
@@ -1334,11 +1335,8 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
             <a href="tel:+15512928353" class="qc-btn"><div><div class="qc-label">Call Bella - 24/7 AI Voice Agent</div><div class="qc-sub">551.292.8353 · Free quotes &amp; project questions anytime</div></div></a>
             <a href="tel:+12015531919" class="qc-btn"><div><div class="qc-label">Call the Office</div><div class="qc-sub">201.553.1919 · Mon–Fri 8am–5pm</div></div></a>
             <a href="tel:+12012816423" class="qc-btn"><div><div class="qc-label">Call Cesar (Owner)</div><div class="qc-sub">201.281.6423 · Direct line</div></div></a>
-            <a href="tel:+12014437405" class="qc-btn"><div><div class="qc-label">Call Cristian (Sales)</div><div class="qc-sub">201.443.7405 · Quotes &amp; materials</div></div></a>
-            <a href="sms:+12015531919" class="qc-btn"><div><div class="qc-label">Send a Text</div><div class="qc-sub">Quick questions? Text us anytime</div></div></a>
             <a href="mailto:cesaryunda@hotmail.com" class="qc-btn"><div><div class="qc-label">Send an Email</div><div class="qc-sub">cesaryunda@hotmail.com</div></div></a>
             <a href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener" class="qc-btn"><div><div class="qc-label">Write a Google Review</div><div class="qc-sub">Share your experience in a minute</div></div></a>
-            <a href="https://maps.google.com/?q=618+23rd+Street,+Union+City,+NJ+07087" target="_blank" rel="noopener" class="qc-btn"><div><div class="qc-label">Visit Our Showroom</div><div class="qc-sub">618 23rd St, Union City NJ — open Mon–Fri</div></div></a>
           </div>
           <button onclick="openWizard('Contact Section')" class="qc-wizard-btn" data-cta="contact-estimate">Book a Free In-Home Estimate</button>
         </div>
