@@ -1,7 +1,7 @@
 (function () {
-  const measurementId = window.STONE_BELLISIMO_GA_ID || 'G-LPN56HRWFR';
+  const measurementId = window.STONE_BELLISIMO_GA_ID || 'G-XXXXXXXXXX';
 
-  if (!measurementId) {
+  if (!measurementId || measurementId === 'G-XXXXXXXXXX') {
     return;
   }
 
