@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' http://127.0.0.1:9099 https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com; frame-src 'self'; form-action 'self'">
+  <title>Dashboard | Stone Bellisimo</title>
+  <link rel="icon" href="/assets/img/stone-bellisimo-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/admin.css?v=1">
+</head>
+<body>
+  <div id="authLoading" class="auth-loading" role="status">
+    <img src="/assets/img/logo-280.png" alt="Stone Bellisimo">
+    <span class="spinner"></span>
+    <p>Opening your dashboard…</p>
+  </div>
+
+  <main id="loginView" class="login-view" hidden>
+    <section class="login-visual" aria-hidden="true">
+      <div class="login-stone"></div>
+      <div class="login-quote">
+        <span>Stone Bellisimo</span>
+        <blockquote>Crafted surfaces.<br>Measurable momentum.</blockquote>
+        <p>A private view of every inquiry, interaction, and signal of customer intent.</p>
+      </div>
+    </section>
+    <section class="login-form-wrap">
+      <form id="loginForm" class="login-card">
+        <img src="/assets/img/logo-280.png" alt="Stone Bellisimo LLC" class="login-logo">
+        <span class="eyebrow">Secure dashboard</span>
+        <h1>Welcome back.</h1>
+        <p class="login-intro">Sign in with your administrator account to view leads and website engagement.</p>
+        <label for="loginEmail">Email address</label>
+        <input id="loginEmail" type="email" autocomplete="username" required>
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" type="password" autocomplete="current-password" required>
+        <p id="loginError" class="form-error" role="alert"></p>
+        <button id="signIn" class="button primary full" type="submit">Sign in securely</button>
+        <p class="secure-note"><span aria-hidden="true">◆</span> Access is restricted to approved Stone Bellisimo administrators.</p>
+      </form>
+    </section>
+  </main>
+
+  <div id="dashboard" class="dashboard" hidden>
+    <aside class="sidebar">
+      <a href="/" class="brand" aria-label="Stone Bellisimo website">
+        <img src="/assets/img/logo-280.png" alt="Stone Bellisimo LLC">
+      </a>
+      <p class="sidebar-label">Private dashboard</p>
+      <nav class="side-nav" aria-label="Dashboard sections" role="tablist">
+        <button class="side-tab active" data-tab="leads" role="tab" aria-selected="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Leads</span>
+        </button>
+        <button class="side-tab" data-tab="analytics" role="tab" aria-selected="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18M7 16l4-5 4 3 5-7"/></svg>
+          <span>Analytics</span>
+        </button>
+      </nav>
+      <div class="sidebar-note">
+        <span class="live-dot"></span>
+        <div><strong>First-party data</strong><small>Private, durable, and owned by Stone Bellisimo.</small></div>
+      </div>
+      <div class="admin-profile">
+        <span class="profile-mark">SB</span>
+        <div><strong id="adminEmail">Administrator</strong><small>Admin access</small></div>
+        <button id="signOut" class="sign-out" type="button" aria-label="Sign out" title="Sign out">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 19V5a2 2 0 0 0-2-2h-6"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div><span id="pageEyebrow" class="eyebrow">Client pipeline</span><h1 id="pageHeading">Leads &amp; follow-up</h1></div>
+        <div class="topbar-right"><span class="security-chip"><i></i> Firebase protected</span><a class="site-link" href="/" target="_blank" rel="noopener">View website ↗</a></div>
+      </header>
+
+      <div class="mobile-tabs" role="tablist" aria-label="Dashboard sections">
+        <button class="active" data-tab="leads" role="tab" aria-selected="true">Leads</button>
+        <button data-tab="analytics" role="tab" aria-selected="false">Analytics</button>
+      </div>
+
+      <section data-view="leads" class="view leads-view">
+        <div id="leadStats" class="metric-grid"></div>
+        <div class="leads-layout">
+          <section class="panel lead-browser">
+            <div class="panel-head">
+              <div><span class="eyebrow">Inbox</span><h2>Client inquiries</h2><p id="leadCount">Loading leads…</p></div>
+              <div class="lead-filters">
+                <label class="search-box"><span class="sr-only">Search leads</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="leadSearch" type="search" placeholder="Search name, phone, project…"></label>
+                <label><span class="sr-only">Filter by status</span><select id="leadStatus"><option value="all">All leads</option><option value="needs_feedback">Needs feedback</option><option value="feedback_sent">Feedback sent</option><option value="feedback_received">Feedback received</option><option value="email_failed">Email issue</option></select></label>
+              </div>
+            </div>
+            <div id="leadList" class="lead-list" aria-live="polite"></div>
+            <button id="loadMoreLeads" class="button text-button" type="button" hidden>Load more leads</button>
+          </section>
+          <section id="leadDetail" class="panel lead-detail" aria-live="polite"></section>
+        </div>
+      </section>
+
+      <section data-view="analytics" class="view analytics-view" hidden>
+        <div class="analytics-toolbar">
+          <div><p>Use these numbers as engagement and lead-intent indicators. A phone click is not a completed call, and directions intent is not a confirmed showroom visit.</p></div>
+          <div class="range-control" aria-label="Analytics date range">
+            <button data-range="7" type="button">7 days</button><button data-range="30" class="active" type="button">30 days</button><button data-range="90" type="button">90 days</button><button id="customRangeButton" type="button">Custom</button>
+          </div>
+          <div id="customRange" class="custom-range" hidden><label>Start<input id="rangeStart" type="date"></label><label>End<input id="rangeEnd" type="date"></label><button id="applyRange" class="button secondary" type="button">Apply</button></div>
+        </div>
+        <div id="analyticsContent" aria-live="polite"></div>
+      </section>
+    </section>
+  </div>
+
+  <aside id="emailPanel" class="email-drawer" hidden aria-label="Email composer">
+    <div class="drawer-head"><div><span class="eyebrow">Branded email</span><h2>Follow up with this lead</h2><p id="emailRecipient"></p></div><button id="closeEmail" class="close-button" type="button" aria-label="Close email composer">×</button></div>
+    <div class="drawer-body">
+      <label for="emailTemplate">Template</label><select id="emailTemplate"><option value="custom">Custom branded message</option><option value="feedback_request">Feedback request</option><option value="immediate_confirmation">Confirmation</option></select>
+      <label for="emailSubject">Subject</label><input id="emailSubject" value="A note from Stone Bellisimo">
+      <label for="emailMessage">Message</label><textarea id="emailMessage">Thank you for reaching out to Stone Bellisimo. We wanted to follow up and see if there is anything else our team can help with.</textarea>
+      <div class="field-row"><label for="emailCtaLabel">Button label<input id="emailCtaLabel" placeholder="Optional"></label><label for="emailCtaUrl">Button URL<input id="emailCtaUrl" placeholder="https://stonebellisimollc.com/contact-us/"></label></div>
+      <div class="drawer-actions"><button id="previewEmail" class="button secondary" type="button">Refresh preview</button><button id="sendEmail" class="button primary" type="button">Send email</button><span id="emailStatus"></span></div>
+      <iframe id="emailPreview" title="Email preview" sandbox="allow-popups"></iframe>
+    </div>
+  </aside>
+
+  <template id="analyticsTemplate">
+    <div id="analyticsMetrics" class="metric-grid analytics-metrics"></div>
+    <section class="panel chart-panel">
+      <div class="section-heading"><div><span class="eyebrow">Engagement trend</span><h2>CTA impressions, clicks &amp; CTR</h2><p id="ctaSummary"></p></div></div>
+      <div id="ctaChart"></div>
+    </section>
+    <section class="panel">
+      <div class="section-heading"><div><span class="eyebrow">Performance by placement</span><h2>Calls to action across the site</h2><p>Raw and unique-session CTR distinguish repeat clicking from reach.</p></div></div>
+      <div id="ctaTable"></div>
+    </section>
+    <section class="analytics-section">
+      <div class="section-heading"><div><span class="eyebrow">Contact intent</span><h2>How visitors try to reach you</h2><p>These are link clicks and intent signals—not verified calls, messages, or visits.</p></div></div>
+      <div id="intentGrid" class="intent-grid"></div>
+    </section>
+    <div class="two-column">
+      <section class="panel gallery-panel"><div class="section-heading"><div><span class="eyebrow">Homepage gallery</span><h2>Gallery-to-contact funnel</h2><p>Sessions that engaged with work samples, then took a high-intent action.</p></div></div><div id="galleryFunnel"></div></section>
+      <section class="panel roi-note"><span class="eyebrow">Interpreting value</span><h2>From attention to opportunity</h2><p>Pair estimate submissions and contact-intent clicks with booked appointments and won projects in your sales process. That final connection is what turns engagement into true development ROI.</p><ul><li>Estimate submissions are confirmed leads.</li><li>Phone, email, text, and map clicks show intent.</li><li>Closed-deal revenue requires a CRM outcome.</li></ul></section>
+    </div>
+    <section class="analytics-section"><div class="section-heading"><div><span class="eyebrow">Acquisition</span><h2>Where engaged visitors come from</h2></div></div><div id="breakdownGrid" class="breakdown-grid"></div></section>
+    <section class="search-console-section">
+      <div class="section-heading"><div><span class="eyebrow">Organic search visibility</span><h2>Google Search Console</h2><p id="searchNotice"></p></div><span class="google-chip">G · Search Console</span></div>
+      <div id="searchMetrics" class="metric-grid search-metrics"></div>
+      <div id="searchTables" class="two-column search-tables"></div>
+    </section>
+  </template>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/assets/js/admin.js?v=1" defer></script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://maps.googleapis.com https://maps.gstatic.com https://www.googletagmanager.com; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com https://maps.googleapis.com https://maps.gstatic.com https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; frame-src https://www.google.com https://maps.google.com; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://maps.googleapis.com https://maps.gstatic.com https://www.googletagmanager.com https://www.google.com https://www.gstatic.com; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com https://maps.googleapis.com https://maps.gstatic.com https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://www.google.com https://firebaseappcheck.googleapis.com; frame-src https://www.google.com https://maps.google.com; form-action 'self'">
 <meta name="google-maps-api-key-endpoint" content="/api/google-map-config">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <script>
@@ -775,7 +775,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <li><a onclick="go('reviews')">Reviews</a></li>
       <li><a href="./contact-us/">Contact</a></li>
     </ul>
-    <a onclick="openWizard('Nav Bar')" class="n-cta">Free Estimate</a>
+    <a onclick="openWizard('Nav Bar')" class="n-cta" data-analytics-id="estimate-nav" data-analytics-type="estimate" data-analytics-placement="navigation">Free Estimate</a>
     <button class="n-ham" id="ham" onclick="toggleMenu()" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -790,8 +790,8 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
     <h1>Stone crafted for<br><em>timeless homes.</em></h1>
     <p class="hero-sub">Family-owned stone fabricators serving NJ since 2013. Granite, quartz, marble and more — precision-cut and installed.</p>
     <div class="hero-btns">
-      <a onclick="openWizard('Hero')" class="btn-gold">Get a Free Estimate →</a>
-      <a href="#gallery" onclick="event.preventDefault();go('gallery')" class="btn-ghost">Explore Our Work</a>
+      <a onclick="openWizard('Hero')" class="btn-gold" data-analytics-id="estimate-hero" data-analytics-type="estimate">Get a Free Estimate →</a>
+      <a href="#gallery" onclick="event.preventDefault();go('gallery')" class="btn-ghost" data-analytics-id="gallery-hero-explore" data-analytics-type="gallery">Explore Our Work</a>
     </div>
   </div>
   <div class="hero-scroll" onclick="go('trust')"><span>Scroll</span><div class="scroll-line"></div></div>
@@ -1071,7 +1071,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 </section>
 
 <!-- GALLERY -->
-<section class="gallery" id="gallery">
+<section class="gallery" id="gallery" data-analytics-gallery data-analytics-placement="homepage-gallery">
   <div class="gallery-hd"><span class="s-tag r">Portfolio</span><h2 class="s-h r2">Our work speaks<br><em>for itself.</em></h2></div>
   <div class="gallery-scroll" id="galScroll">
     <div class="g-img" tabindex="0" role="button" aria-label="View large kitchen portfolio image" onclick="openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();openGalleryModal(this.querySelector('img').currentSrc || this.querySelector('img').src)}"><img src="./assets/img/portfolio1-1000.jpg" data-avif="./assets/img/portfolio1-1000.avif" alt="Clean white quartz countertop installation in a modern Hoboken kitchen" width="1000" height="764" loading="lazy" decoding="async"></div>
@@ -1102,7 +1102,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <div class="review-card r">
         <div class="review-top">
           <div class="review-stars" aria-label="5 out of 5 stars"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></div>
-          <a class="review-source" href="https://www.google.com/maps/search/?api=1&amp;query=Stone%20Bellisimo%20LLC&amp;query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener">Google</a>
+          <a class="review-source" href="https://www.google.com/maps/search/?api=1&amp;query=Stone%20Bellisimo%20LLC&amp;query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener" data-analytics-type="review">Google</a>
         </div>
         <p class="review-text">"Cesar and his team did an incredible job on our kitchen. From the moment they came to measure to the final installation, everything was professional and seamless. The granite looks absolutely stunning — better than I imagined."</p>
         <div class="review-author"><div class="review-avatar">M</div><div><div class="review-name">Maria G.</div><div class="review-loc">Union City, NJ</div></div></div>
@@ -1110,7 +1110,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <div class="review-card r2">
         <div class="review-top">
           <div class="review-stars" aria-label="5 out of 5 stars"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></div>
-          <a class="review-source" href="https://www.google.com/maps/search/?api=1&amp;query=Stone%20Bellisimo%20LLC&amp;query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener">Google</a>
+          <a class="review-source" href="https://www.google.com/maps/search/?api=1&amp;query=Stone%20Bellisimo%20LLC&amp;query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener" data-analytics-type="review">Google</a>
         </div>
         <p class="review-text">"We used Stone Bellisimo for our bathroom vanity and couldn't be happier. Fair pricing, no surprises, and the quality is top-notch. Cristian was very helpful walking us through the material options. Highly recommend!"</p>
         <div class="review-author"><div class="review-avatar">R</div><div><div class="review-name">Roberto S.</div><div class="review-loc">Hoboken, NJ</div></div></div>
@@ -1118,13 +1118,13 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <div class="review-card r3">
         <div class="review-top">
           <div class="review-stars" aria-label="5 out of 5 stars"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></div>
-          <a class="review-source" href="https://www.google.com/maps/search/?api=1&amp;query=Stone%20Bellisimo%20LLC&amp;query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener">Google</a>
+          <a class="review-source" href="https://www.google.com/maps/search/?api=1&amp;query=Stone%20Bellisimo%20LLC&amp;query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener" data-analytics-type="review">Google</a>
         </div>
         <p class="review-text">"Family-owned and it really shows — they treat every project like it's their own home. We had quartz installed in the kitchen and got the free sink too. Can't beat the value. We'll be using them again for the master bath."</p>
         <div class="review-author"><div class="review-avatar">J</div><div><div class="review-name">Jennifer L.</div><div class="review-loc">Jersey City, NJ</div></div></div>
       </div>
     </div>
-    <div class="reviews-footer r" id="reviewsFooter">4.9 average across Google, Houzz &amp; Facebook · <a href="https://www.google.com/maps/search/?api=1&amp;query=Stone%20Bellisimo%20LLC&amp;query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener">See all reviews →</a></div>
+    <div class="reviews-footer r" id="reviewsFooter">4.9 average across Google, Houzz &amp; Facebook · <a href="https://www.google.com/maps/search/?api=1&amp;query=Stone%20Bellisimo%20LLC&amp;query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener" data-analytics-id="reviews-google-all" data-analytics-type="review" data-analytics-placement="homepage-reviews">See all reviews →</a></div>
     <div class="review-ask r2">
       <div class="review-ask-copy">
         <div class="review-ask-kicker">Loved your new stone?</div>
@@ -1332,10 +1332,10 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
         <h2 class="s-h wh r2">Let's talk about<br><em>your project.</em></h2>
         <div class="contact-actions r2">
           <div class="qc-btns">
-            <a href="tel:+15512928353" class="qc-btn"><div><div class="qc-label">Call Bella - 24/7 AI Voice Agent</div><div class="qc-sub">551.292.8353 · Free quotes &amp; project questions anytime</div></div></a>
-            <a href="tel:+12015531919" class="qc-btn"><div><div class="qc-label">Call the Office</div><div class="qc-sub">201.553.1919 · Mon–Fri 8am–5pm</div></div></a>
-            <a href="tel:+12012816423" class="qc-btn"><div><div class="qc-label">Call Cesar (Owner)</div><div class="qc-sub">201.281.6423 · Direct line</div></div></a>
-            <a href="mailto:cesaryunda@hotmail.com" class="qc-btn"><div><div class="qc-label">Send an Email</div><div class="qc-sub">cesaryunda@hotmail.com</div></div></a>
+            <a href="tel:+15512928353" class="qc-btn" data-analytics-id="phone-bella-contact" data-analytics-placement="homepage-contact"><div><div class="qc-label">Call Bella - 24/7 AI Voice Agent</div><div class="qc-sub">551.292.8353 · Free quotes &amp; project questions anytime</div></div></a>
+            <a href="tel:+12015531919" class="qc-btn" data-analytics-id="phone-office-contact" data-analytics-placement="homepage-contact"><div><div class="qc-label">Call the Office</div><div class="qc-sub">201.553.1919 · Mon–Fri 8am–5pm</div></div></a>
+            <a href="tel:+12012816423" class="qc-btn" data-analytics-id="phone-owner-contact" data-analytics-placement="homepage-contact"><div><div class="qc-label">Call Cesar (Owner)</div><div class="qc-sub">201.281.6423 · Direct line</div></div></a>
+            <a href="mailto:cesaryunda@hotmail.com" class="qc-btn" data-analytics-id="email-owner-contact" data-analytics-placement="homepage-contact"><div><div class="qc-label">Send an Email</div><div class="qc-sub">cesaryunda@hotmail.com</div></div></a>
             <a href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener" class="qc-btn"><div><div class="qc-label">Write a Google Review</div><div class="qc-sub">Share your experience in a minute</div></div></a>
           </div>
           <button onclick="openWizard('Contact Section')" class="qc-wizard-btn" data-cta="contact-estimate">Book a Free In-Home Estimate</button>
@@ -1453,6 +1453,7 @@ function makeReviewCard(review,index,googleMapsUrl){
   top.appendChild(makeStarRating(5));
   const source=document.createElement('a');
   source.className='review-source';
+  source.dataset.analyticsType='review';
   source.href=googleMapsUrl || 'https://www.google.com/maps/search/?api=1&query=Stone%20Bellisimo%20LLC&query_place_id=ChIJVbaFyYZXwokRgfG3kFqd5MY';
   source.target='_blank';
   source.rel='noopener';
@@ -1607,6 +1608,7 @@ function updateProjectOther(){
 }
 function openWizard(sourceCta, preselect){
   wzData.sourceCta = sourceCta || 'Direct';
+  window.StoneBellisimoAnalytics?.track('form_start', { ctaLabel: wzData.sourceCta, placement: wzData.sourceCta });
   if(preselect){
     wzData.project=preselect;
     document.querySelectorAll('#wz1 .wz-opt').forEach(o=>{
@@ -1649,6 +1651,7 @@ function nextStep(n){
   document.querySelectorAll('.wz-step').forEach(s=>s.classList.remove('active'));
   document.getElementById('wz'+n).classList.add('active');
   wzStep=n;
+  window.StoneBellisimoAnalytics?.track('form_step', { formStep: n, ctaLabel: wzData.sourceCta, placement: wzData.sourceCta });
   // Update progress dots
   document.querySelectorAll('.wz-dot').forEach(d=>{
     const s=parseInt(d.dataset.step);
@@ -1692,7 +1695,7 @@ async function submitWizard(){
   if(!l.value.trim()){l.classList.add('err');lErr.classList.add('show');valid=false}
   if(!p.value.trim()){p.classList.add('err');pErr.classList.add('show');valid=false}
   if(!e.value.trim()||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.value)){e.classList.add('err');eErr.classList.add('show');valid=false}
-  if(!valid){go('wizard-section');return}
+  if(!valid){window.StoneBellisimoAnalytics?.track('form_error',{result:'validation',formStep:5,placement:wzData.sourceCta});go('wizard-section');return}
 
   const submitBtn = document.getElementById('wz5submit');
   if (submitBtn.disabled) return; // Prevent duplicate submissions
@@ -1710,13 +1713,15 @@ async function submitWizard(){
     material: wzData.material || 'Not specified',
     message: projectSummaryStr,
     source: `Website Wizard - ${wzData.sourceCta || 'Direct'}`,
-    dateCreated: new Date().toISOString().split('T')[0]
+    dateCreated: new Date().toISOString().split('T')[0],
+    attribution: window.StoneBellisimoAnalytics?.attribution() || undefined
   };
 
   try {
+    const appCheckHeaders = await (window.StoneBellisimoAnalytics?.appCheckHeader?.() || Promise.resolve({}));
     const response = await fetch(getContactEndpoint(), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...appCheckHeaders },
       body: JSON.stringify(payload)
     });
 
@@ -1728,6 +1733,7 @@ async function submitWizard(){
       throw new Error("Server responded with error status");
     }
   } catch (err) {
+    window.StoneBellisimoAnalytics?.track('form_error', { result: 'submission_failed', formStep: 5, placement: wzData.sourceCta });
     // Fallback failure state
     document.querySelectorAll('.wz-step').forEach(s=>s.classList.remove('active'));
     document.getElementById('wzProgress').style.display='none';

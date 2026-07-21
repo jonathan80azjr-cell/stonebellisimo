@@ -3,12 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "engines": {
+    "node": "22"
+  },
   "homepage": "https://jonathan80azjr-cell.github.io/stonebellisimo",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "npm run build && npm run build:functions && firebase emulators:start --project demo-stonebellisimo",
+    "dev:legacy": "node server.js",
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "check": "npm run secrets:check && node scripts/check-location-coordinates.mjs && node --check server.js && node --check cloudflare-worker.mjs && node --check src/admin-dashboard.mjs && node --check src/lead-automation.mjs && node --check src/google-reviews.mjs && node --check src/email/render.mjs && node --check public/components/google-map.js && node --check scripts/send-test-email.mjs && node --check scripts/email-preview.mjs && node --check scripts/check-no-secrets.mjs && node --check scripts/check-location-coordinates.mjs && node --check scripts/generate-csv-lead-import-sql.mjs",
+    "build": "node scripts/build-client.mjs",
+    "build:functions": "node scripts/prepare-functions.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:emulators": "npm run build:functions && firebase emulators:exec --only firestore --project demo-stonebellisimo \"node tests/emulator-integration.mjs\"",
+    "test:browser": "npm run build && npm run build:functions && firebase emulators:exec --only auth,firestore,functions,hosting --project demo-stonebellisimo \"node tests/browser-smoke.mjs\"",
+    "check": "npm run secrets:check && node scripts/check-location-coordinates.mjs && npm run build && npm run build:functions && node --check server.js && node --check cloudflare-worker.mjs && node --check firebase-functions.mjs && node --check src/admin-dashboard.mjs && node --check src/analytics.mjs && node --check src/analytics-classification.mjs && node --check src/firebase-security.mjs && node --check src/firebase-store.mjs && node --check src/search-console.mjs && node --check src/lead-automation.mjs && node --check src/google-reviews.mjs && node --check src/email/render.mjs && node --check public/components/google-map.js && node --check scripts/send-test-email.mjs && node --check scripts/email-preview.mjs && node --check scripts/check-no-secrets.mjs && node --check scripts/check-location-coordinates.mjs && node --check scripts/generate-csv-lead-import-sql.mjs && node --check scripts/prepare-functions.mjs && node --check scripts/migrate-d1-to-firestore.mjs && node --check scripts/provision-firebase-admin.mjs && node --check scripts/configure-firebase-auth.mjs && node --check scripts/backfill-search-console.mjs",
     "email:test": "node scripts/send-test-email.mjs",
     "email:preview": "node scripts/email-preview.mjs",
     "email:test:feedback": "node scripts/email-preview.mjs --send --type=feedback",
@@ -20,6 +28,14 @@
     "predeploy": "gh-pages-clean",
     "deploy": "gh-pages -d public --message \"Deploy latest site\"",
     "deploy:worker": "wrangler deploy",
+    "firebase:emulators": "npm run build:functions && firebase emulators:start --project demo-stonebellisimo",
+    "firebase:deploy": "npm run check && firebase deploy --only functions,firestore,auth",
+    "firebase:deploy:functions": "npm run check && firebase deploy --only functions",
+    "firebase:deploy:auth": "firebase deploy --only auth",
+    "firebase:admin": "node scripts/provision-firebase-admin.mjs",
+    "firebase:auth:configure": "node scripts/configure-firebase-auth.mjs",
+    "firebase:migrate:d1": "node scripts/migrate-d1-to-firestore.mjs",
+    "firebase:search:backfill": "node scripts/backfill-search-console.mjs",
     "ship": "read -r -p \"Commit message [Ship latest changes]: \" message; message=${message:-Ship latest changes}; git add . && npm run secrets:check && git commit -m \"$message\" && git push && npm run deploy:worker",
     "secrets:check": "node scripts/check-no-secrets.mjs",
     "worker:secret": "wrangler secret put N8N_WEBHOOK_URL",
@@ -29,7 +45,8 @@
     "worker:secret:inbound": "wrangler secret put POSTMARK_INBOUND_SECRET",
     "worker:secret:webhook": "wrangler secret put POSTMARK_WEBHOOK_SECRET",
     "worker:secret:admin-password": "wrangler secret put ADMIN_PASSWORD",
-    "worker:secret:admin-session": "wrangler secret put ADMIN_SESSION_SECRET"
+    "worker:secret:admin-session": "wrangler secret put ADMIN_SESSION_SECRET",
+    "worker:secret:firebase-proxy": "wrangler secret put SB_PROXY_SECRET"
   },
   "keywords": [],
   "author": "",
@@ -40,9 +57,16 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.2",
+    "firebase": "^12.16.0",
+    "firebase-admin": "^14.2.0",
+    "firebase-functions": "^7.3.0",
+    "google-auth-library": "^10.9.0",
     "helmet": "^8.2.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "esbuild": "^0.28.1",
+    "firebase-tools": "^15.24.0",
     "gh-pages": "^6.3.0",
     "wrangler": "^4.50.0"
   }

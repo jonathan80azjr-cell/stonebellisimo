@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://maps.googleapis.com https://maps.gstatic.com https://www.googletagmanager.com; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com https://maps.googleapis.com https://maps.gstatic.com https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; frame-src https://www.google.com https://maps.google.com; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://maps.googleapis.com https://maps.gstatic.com https://www.googletagmanager.com https://www.google.com https://www.gstatic.com; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com https://maps.googleapis.com https://maps.gstatic.com https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://www.google.com https://firebaseappcheck.googleapis.com; frame-src https://www.google.com https://maps.google.com; form-action 'self'">
 <meta name="google-maps-api-key-endpoint" content="/api/google-map-config">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <script>
@@ -152,10 +152,10 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
       <h2 class="s-h r2">All the ways to<br><em>reach our team.</em></h2>
       <p class="s-p r3" style="margin-top:18px">Use the quickest option for your project, or stop by the Union City showroom to see materials in person.</p>
       <div class="info-grid">
-        <a href="tel:+15512928353" class="info-card r"><div class="info-icon">AI</div><div><div class="info-label">Call Bella - 24/7 AI Voice Agent</div><div class="info-sub">551.292.8353 - Free quotes and project questions anytime</div></div></a>
-        <a href="tel:+12015531919" class="info-card r2"><div class="info-icon">OF</div><div><div class="info-label">Call the Office</div><div class="info-sub">201.553.1919 - Monday through Friday, 8am to 5pm</div></div></a>
-        <a href="tel:+12012816423" class="info-card r3"><div class="info-icon">CY</div><div><div class="info-label">Call Cesar Yunda, Owner</div><div class="info-sub">201.281.6423 - Direct owner line</div></div></a>
-        <a href="mailto:cesaryunda@hotmail.com" class="info-card r3"><div class="info-icon">@</div><div><div class="info-label">Send an Email</div><div class="info-sub">cesaryunda@hotmail.com</div></div></a>
+        <a href="tel:+15512928353" class="info-card r" data-analytics-id="phone-bella-contact-page" data-analytics-placement="contact-options"><div class="info-icon">AI</div><div><div class="info-label">Call Bella - 24/7 AI Voice Agent</div><div class="info-sub">551.292.8353 - Free quotes and project questions anytime</div></div></a>
+        <a href="tel:+12015531919" class="info-card r2" data-analytics-id="phone-office-contact-page" data-analytics-placement="contact-options"><div class="info-icon">OF</div><div><div class="info-label">Call the Office</div><div class="info-sub">201.553.1919 - Monday through Friday, 8am to 5pm</div></div></a>
+        <a href="tel:+12012816423" class="info-card r3" data-analytics-id="phone-owner-contact-page" data-analytics-placement="contact-options"><div class="info-icon">CY</div><div><div class="info-label">Call Cesar Yunda, Owner</div><div class="info-sub">201.281.6423 - Direct owner line</div></div></a>
+        <a href="mailto:cesaryunda@hotmail.com" class="info-card r3" data-analytics-id="email-owner-contact-page" data-analytics-placement="contact-options"><div class="info-icon">@</div><div><div class="info-label">Send an Email</div><div class="info-sub">cesaryunda@hotmail.com</div></div></a>
         <a href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener" class="info-card r2"><div class="info-icon">G</div><div><div class="info-label">Write a Google Review</div><div class="info-sub">Share your experience with Stone Bellisimo</div></div></a>
       </div>
     </div>
@@ -165,7 +165,7 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
         <h2>618 23rd Street<br>Union City, NJ 07087</h2>
         <p>Visit the showroom to compare granite, quartz, marble, quartzite, porcelain, and edge profiles in person.</p>
         <div class="map-actions">
-          <a class="map-btn" href="https://maps.google.com/?q=618+23rd+Street,+Union+City,+NJ+07087" target="_blank" rel="noopener">Open in Maps</a>
+          <a class="map-btn" href="https://maps.google.com/?q=618+23rd+Street,+Union+City,+NJ+07087" target="_blank" rel="noopener" data-analytics-id="map-open-contact-page" data-analytics-type="map" data-analytics-placement="showroom-map">Open in Maps</a>
           <a class="map-btn" href="tel:+12015531919">Call Office</a>
         </div>
       </div>

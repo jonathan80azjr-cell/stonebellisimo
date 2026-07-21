@@ -1,5 +1,7 @@
 # Stone Bellisimo Postmark Lead Automation
 
+> Firebase Functions and Firestore are now the target production backend. See [FIREBASE_ANALYTICS.md](./FIREBASE_ANALYTICS.md) for deployment, migration, and cutover. The Cloudflare Cron/D1 flow below remains the rollback path during the 30-day stabilization period.
+
 This repo implements the lead email automation in the Cloudflare Worker because production already routes the website and `/api/contact` through Workers. Postmark sends the emails, but the delay is handled by Cloudflare Worker Cron plus D1.
 
 ## What Happens

@@ -859,12 +859,19 @@ export async function handleContactRequest(request, env, options = {}) {
     return json({ success: false, message: validationError }, 400);
   }
 
+  const attribution = options.sanitizeAttribution
+    ? options.sanitizeAttribution(body?.attribution || {})
+    : null;
   const store = getStore(env, options);
   const rateLimitResponse = await enforceContactRateLimit(store, request, env);
   if (rateLimitResponse) return rateLimitResponse;
 
   const { lead } = await prepareLead(contact, request, env);
-  await store.createLead(lead);
+  if (attribution) lead.attribution = attribution;
+  const createWithAnalytics = options.createLeadWithAnalytics && attribution
+    ? options.createLeadWithAnalytics
+    : null;
+  if (!createWithAnalytics) await store.createLead(lead);
 
   const webhookPayload = {
     ...contact,
@@ -887,6 +894,18 @@ export async function handleContactRequest(request, env, options = {}) {
     }
   }
 
+  if (createWithAnalytics) {
+    await createWithAnalytics(lead, {
+      id: `conversion_${lead.id}`,
+      ...attribution,
+      pagePath: attribution.landingPage || '/',
+      ctaId: normalizeText(contact.source || 'website-form', 160),
+      ctaType: 'estimate',
+      ctaLabel: 'Estimate form submission',
+      placement: normalizeText(contact.source || 'website', 120)
+    });
+  }
+
   const confirmationEmail = renderImmediateConfirmationEmail({ lead });
   try {
     const result = await sendAndRecordEmail({
@@ -907,6 +926,22 @@ export async function handleContactRequest(request, env, options = {}) {
     await store.markImmediateEmailSent(lead.id, nowIso(), result.messageId);
   } catch (error) {
     console.error('Immediate Postmark email failed:', error?.message || error);
+  }
+
+  if (!createWithAnalytics && options.recordAnalytics && attribution) {
+    try {
+      await options.recordAnalytics({
+        id: `conversion_${lead.id}`,
+        ...attribution,
+        pagePath: attribution.landingPage || '/',
+        ctaId: normalizeText(contact.source || 'website-form', 160),
+        ctaType: 'estimate',
+        ctaLabel: 'Estimate form submission',
+        placement: normalizeText(contact.source || 'website', 120)
+      });
+    } catch (analyticsError) {
+      console.error('Failed to record contact conversion:', analyticsError?.message || analyticsError);
+    }
   }
 
   return json({ success: true, message: 'Thank you for your request! We will be in touch shortly.' });

@@ -3,7 +3,8 @@
 	"name": "stonebellisimo-forms",
 	"account_id": "b2306064c814ef6abf930b0d6afa1e2e",
 	"main": "cloudflare-worker.mjs",
-	"compatibility_date": "2026-05-26",
+	"compatibility_date": "2026-07-19",
+	"compatibility_flags": ["nodejs_compat"],
 	"vars": {
 		"ENVIRONMENT": "production",
 		"PUBLIC_SITE_URL": "https://stonebellisimollc.com",
@@ -16,7 +17,8 @@
 		"FEEDBACK_DELAY_DAYS": "7",
 		"GOOGLE_PLACE_ID": "ChIJVbaFyYZXwokRgfG3kFqd5MY",
 		"GOOGLE_REVIEWS_LIMIT": "5",
-		"GOOGLE_REVIEWS_CACHE_SECONDS": "900"
+		"GOOGLE_REVIEWS_CACHE_SECONDS": "900",
+		"FIREBASE_API_ORIGIN": "https://us-east1-stone-bellisimo-dashboard.cloudfunctions.net/siteApi"
 	},
 	"d1_databases": [
 		{

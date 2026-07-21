@@ -87,6 +87,9 @@ function renderIframeFallback(root, config) {
   marker.target = '_blank'
   marker.rel = 'noopener'
   marker.setAttribute('aria-label', `Open ${config.storeName} in Google Maps`)
+  marker.dataset.analyticsId = 'map-marker-showroom'
+  marker.dataset.analyticsType = 'map'
+  marker.dataset.analyticsPlacement = 'embedded-map'
   marker.append(createMarkerContent(config, ''))
 
   const wrapper = document.createElement('div')
@@ -177,23 +180,16 @@ function renderApiMap(root, config) {
     }
 
     onAdd() {
-      const marker = document.createElement('div')
+      const marker = document.createElement('a')
       marker.className = 'google-maps-iframe__marker google-maps-iframe__marker--js'
-      marker.tabIndex = 0
-      marker.setAttribute('role', 'link')
+      marker.href = config.placeUrl
+      marker.target = '_blank'
+      marker.rel = 'noopener'
       marker.setAttribute('aria-label', `Open ${config.storeName} in Google Maps`)
+      marker.dataset.analyticsId = 'map-marker-showroom'
+      marker.dataset.analyticsType = 'map'
+      marker.dataset.analyticsPlacement = 'embedded-map'
       marker.append(createMarkerContent(config, ''))
-
-      const openMap = (event) => {
-        event.preventDefault()
-        event.stopPropagation()
-        window.open(config.placeUrl, '_blank', 'noopener,noreferrer')
-      }
-
-      marker.addEventListener('click', openMap)
-      marker.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') openMap(event)
-      })
 
       this.div = marker
       this.getPanes().overlayMouseTarget.appendChild(marker)

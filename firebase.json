@@ -1,0 +1,48 @@
+{
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs22",
+    "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run build"],
+    "ignore": [
+      ".git/**",
+      ".github/**",
+      ".data/**",
+      ".env*",
+      ".wrangler/**",
+      "node_modules/**",
+      "lib/src/client/**",
+      "tests/**",
+      "migrations/**",
+      "*.jpg",
+      "*.mp4",
+      "*.md",
+      "*.csv"
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "auth": {
+    "providers": {
+      "emailPassword": true
+    }
+  },
+  "hosting": {
+    "public": "public",
+    "cleanUrls": true,
+    "trailingSlash": true,
+    "rewrites": [
+      { "source": "/api/**", "function": { "functionId": "siteApi", "region": "us-east1" } },
+      { "source": "/feedback", "function": { "functionId": "siteApi", "region": "us-east1" } }
+    ]
+  },
+  "emulators": {
+    "auth": { "port": 9099 },
+    "functions": { "port": 5001 },
+    "firestore": { "port": 8080 },
+    "hosting": { "port": 5002 },
+    "ui": { "enabled": true, "port": 4001 },
+    "singleProjectMode": true
+  }
+}

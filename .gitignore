@@ -18,6 +18,17 @@ build/
 .cache/
 .parcel-cache/
 coverage/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+.firebase/
+functions/lib/
+functions/.env
+functions/.env.*
+!functions/.env.example
+functions/.secret.local
+service-account*.json
+migration-checkpoint*.json
 
 # Customer exports/import sources.
 STONE BELLISIMO WEBSITE EMAILS*.csv

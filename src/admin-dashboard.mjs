@@ -198,15 +198,21 @@ function readLeadListParams(request) {
   const search = normalizeText(url.searchParams.get('search') || '', ADMIN_SEARCH_LIMIT);
   const status = normalizeText(url.searchParams.get('status') || 'all', 40);
   const limit = toPositiveInteger(url.searchParams.get('limit'), 25, 1, 75);
+  const cursor = normalizeText(url.searchParams.get('cursor') || '', 300);
   const offset = toPositiveInteger(url.searchParams.get('offset'), 0, 0, 10000);
-  return { search, status, limit, offset };
+  return { search, status, limit, cursor, offset };
 }
 
 async function listLeads(request, env, options = {}) {
   const params = readLeadListParams(request);
   if (options.adminStore?.listLeads) {
     const result = await options.adminStore.listLeads(params);
-    return json({ success: true, count: result.count, leads: result.leads });
+    return json({
+      success: true,
+      count: result.count,
+      leads: result.leads,
+      nextCursor: result.nextCursor || null
+    });
   }
 
   const db = env?.LEADS_DB;
@@ -787,7 +793,7 @@ export async function handleAdminRequest(request, env, options = {}) {
     return json({ success: true, username: adminUsername(env) });
   }
 
-  const unauthorized = await requireAdmin(request, env);
+  const unauthorized = options.firebaseAuthorized ? null : await requireAdmin(request, env);
   if (unauthorized) return unauthorized;
 
   if (url.pathname === '/api/admin/leads' && request.method === 'GET') {

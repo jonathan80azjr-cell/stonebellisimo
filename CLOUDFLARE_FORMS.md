@@ -1,5 +1,7 @@
 # Fixing the Contact Form 405 on Static Hosting
 
+> The Firebase migration is implemented and documented in [FIREBASE_ANALYTICS.md](./FIREBASE_ANALYTICS.md). The D1 instructions below describe the stabilization fallback and should remain available for 30 days after production cutover.
+
 The site posts the estimate wizard to `/api/contact`. That route exists in `server.js` for local development and in `cloudflare-worker.mjs` for production. GitHub Pages cannot run `server.js` or read `.env`, so production should be deployed with Wrangler instead of relying on the GitHub Pages-only deploy.
 
 ## Current Production Setup

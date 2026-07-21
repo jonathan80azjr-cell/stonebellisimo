@@ -17,6 +17,48 @@ Canonical: https://stonebellisimollc.com/.well-known/security.txt
 Expires: 2027-06-26T23:59:59Z
 `;
 
+const FIREBASE_PATHS = [
+  '/api/contact',
+  '/api/analytics/',
+  '/api/admin/',
+  '/api/firebase-config',
+  '/api/google-reviews',
+  '/api/google-map-config',
+  '/api/postmark/',
+  '/feedback'
+];
+
+function firebaseOrigin(env) {
+  return String(env.FIREBASE_API_ORIGIN || '').trim().replace(/\/+$/, '');
+}
+
+function shouldProxyToFirebase(pathname, env) {
+  return Boolean(firebaseOrigin(env)) && FIREBASE_PATHS.some(path => (
+    path.endsWith('/') ? pathname.startsWith(path) : pathname === path
+  ));
+}
+
+async function proxyToFirebase(request, env) {
+  const sourceUrl = new URL(request.url);
+  const targetUrl = new URL(`${firebaseOrigin(env)}${sourceUrl.pathname}${sourceUrl.search}`);
+  const headers = new Headers(request.headers);
+  headers.delete('host');
+  headers.delete('content-length');
+  headers.set('x-sb-proxy-secret', String(env.SB_PROXY_SECRET || ''));
+  headers.set('x-forwarded-host', sourceUrl.host);
+  headers.set('x-forwarded-proto', sourceUrl.protocol.slice(0, -1));
+
+  // Preserve the request stream. Analytics, contact forms, and Postmark
+  // webhooks can flow through without buffering their request bodies.
+  const upstream = await fetch(targetUrl, {
+    method: request.method,
+    headers,
+    body: ['GET', 'HEAD'].includes(request.method) ? undefined : request.body,
+    redirect: 'manual'
+  });
+  return withSecurityHeaders(upstream);
+}
+
 function handleGoogleMapConfigRequest(env) {
   const apiKey = String(env.GOOGLE_MAPS_BROWSER_API_KEY || '').trim();
 
@@ -38,11 +80,15 @@ export default {
       return Response.redirect(url, 301);
     }
 
+    if (shouldProxyToFirebase(url.pathname, env)) {
+      return proxyToFirebase(request, env);
+    }
+
     if (url.pathname === '/api/contact') {
       return handleContactRequest(request, env, { requireWebhook: true });
     }
 
-    if (url.pathname === '/admin' || url.pathname === '/admin/' || url.pathname.startsWith('/api/admin/')) {
+    if (url.pathname.startsWith('/api/admin/')) {
       return handleAdminRequest(request, env);
     }
 
@@ -90,6 +136,13 @@ export default {
   },
 
   async scheduled(controller, env) {
+    if (firebaseOrigin(env)) {
+      console.info('Cloudflare feedback cron skipped after Firebase cutover.', {
+        cron: controller.cron,
+        scheduledTime: controller.scheduledTime
+      });
+      return;
+    }
     const result = await processDueFeedbackEmails(env);
     console.info('Stone Bellisimo feedback cron processed:', {
       cron: controller.cron,
