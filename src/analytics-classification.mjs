@@ -6,23 +6,50 @@ export function slugAnalyticsValue(value) {
   return clean(value, 90).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'cta';
 }
 
+// Every social destination the site links out to, so each platform is counted
+// as its own category rather than collapsed into a single "social" bucket.
+// x.com/twitter are boundary-anchored so hosts that merely end in "x.com"
+// (netflix.com, phoenix.com) never read as Twitter.
+export const SOCIAL_PLATFORMS = Object.freeze([
+  { platform: 'instagram', label: 'Instagram', pattern: /instagram\.com/i },
+  { platform: 'facebook', label: 'Facebook', pattern: /facebook\.com|fb\.com|fb\.me/i },
+  { platform: 'x', label: 'X (Twitter)', pattern: /(?:^|\/\/|\.)(?:x|twitter)\.com/i },
+  { platform: 'pinterest', label: 'Pinterest', pattern: /pinterest\.com/i },
+  { platform: 'houzz', label: 'Houzz', pattern: /houzz\.com/i },
+  { platform: 'tiktok', label: 'TikTok', pattern: /tiktok\.com/i },
+  { platform: 'youtube', label: 'YouTube', pattern: /youtube\.com|youtu\.be/i },
+  { platform: 'linkedin', label: 'LinkedIn', pattern: /linkedin\.com/i },
+  { platform: 'yelp', label: 'Yelp', pattern: /yelp\.com/i }
+]);
+
+export function socialPlatform(href = '') {
+  const value = String(href || '');
+  return SOCIAL_PLATFORMS.find(entry => entry.pattern.test(value))?.platform || '';
+}
+
+export function socialPlatformLabel(platform = '') {
+  return SOCIAL_PLATFORMS.find(entry => entry.platform === platform)?.label || '';
+}
+
 export function classifyCta({ href = '', onclick = '', explicitType = '', label = '', dataCta = '' } = {}) {
   let type = clean(explicitType, 40).toLowerCase() || 'other';
   let targetLabel = '';
+  const platform = socialPlatform(href);
   if (!explicitType && href.startsWith('tel:')) type = 'phone';
   else if (!explicitType && href.startsWith('sms:')) type = 'sms';
   else if (!explicitType && href.startsWith('mailto:')) type = 'email';
   else if (!explicitType && /review/i.test(`${href} ${label}`)) type = 'review';
   else if (!explicitType && /maps\.google|google\.com\/maps|directions/i.test(href)) type = 'map';
   else if (!explicitType && /openWizard|estimate/i.test(`${onclick} ${dataCta} ${label}`)) type = 'estimate';
-  else if (!explicitType && /(instagram|facebook|houzz|youtube|tiktok|pinterest)\.com/i.test(href)) type = 'social';
+  else if (!explicitType && platform) type = 'social';
   else if (!explicitType && /contact-us/i.test(href)) type = 'contact';
   else if (!explicitType && /areas-we-serve|service-area/i.test(href)) type = 'service_area';
 
   if (['phone', 'sms'].includes(type)) targetLabel = href.split(':')[1]?.replace(/[^+\d]/g, '') || '';
   else if (type === 'email') targetLabel = href.split(':')[1]?.split('?')[0] || '';
   else if (type === 'map') targetLabel = 'Stone Bellisimo showroom';
-  return { type, targetLabel: clean(targetLabel, 120) };
+  else if (type === 'social' && platform) targetLabel = socialPlatformLabel(platform);
+  return { type, platform: type === 'social' ? platform : '', targetLabel: clean(targetLabel, 120) };
 }
 
 // A desktop visitor who dials from a handset never touches the tel: link, so

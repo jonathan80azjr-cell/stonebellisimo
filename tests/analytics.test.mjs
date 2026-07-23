@@ -11,6 +11,11 @@ test('analytics validates supported events and rejects stale or malformed metric
   });
   assert.equal(valid.event.eventName, 'cta_click');
   assert.equal(valid.event.pagePath, '/gallery/');
+  const social = validateAnalyticsEvent({
+    id: 'click_2', eventName: 'cta_click', occurredAt: Date.now(), pagePath: '/',
+    visitorId: 'visitor_1', sessionId: 'session_1', ctaType: 'social', platform: 'Instagram'
+  });
+  assert.equal(social.event.platform, 'instagram', 'the platform tag survives validation and is normalised');
   assert.equal(validateAnalyticsEvent({ eventName: 'made_up' }).error, 'Unsupported analytics event.');
   const identity = { id: 'event_test', visitorId: 'visitor_test', sessionId: 'session_test' };
   assert.match(validateAnalyticsEvent({ ...identity, eventName: 'performance', metricName: 'NOPE', metricValue: 2 }).error, /Invalid/);
@@ -56,7 +61,7 @@ test('attribution retains coarse first-party fields and strips dangerous detail'
 });
 
 test('CTA classification covers phone, map, email, estimate, social, and future fallbacks', () => {
-  assert.deepEqual(classifyCta({ href: 'tel:+12015531919' }), { type: 'phone', targetLabel: '+12015531919' });
+  assert.deepEqual(classifyCta({ href: 'tel:+12015531919' }), { type: 'phone', platform: '', targetLabel: '+12015531919' });
   assert.equal(classifyCta({ href: 'https://maps.google.com/?q=showroom' }).type, 'map');
   assert.equal(
     classifyCta({ href: 'https://www.google.com/maps/example', label: 'See all reviews' }).type,
@@ -64,9 +69,25 @@ test('CTA classification covers phone, map, email, estimate, social, and future 
   );
   assert.equal(classifyCta({ href: 'mailto:hello@example.com?subject=Quote' }).targetLabel, 'hello@example.com');
   assert.equal(classifyCta({ onclick: "openWizard('Hero')" }).type, 'estimate');
-  assert.equal(classifyCta({ href: 'https://instagram.com/stonebellisimo' }).type, 'social');
   assert.equal(classifyCta({ href: '/future-page/' }).type, 'other');
   assert.equal(classifyCta({ explicitType: 'gallery' }).type, 'gallery');
+});
+
+test('social CTAs are classified per platform, including X/Twitter', () => {
+  const instagram = classifyCta({ href: 'https://instagram.com/stonebellisimo' });
+  assert.equal(instagram.type, 'social');
+  assert.equal(instagram.platform, 'instagram');
+  assert.equal(classifyCta({ href: 'https://www.facebook.com/StoneBellisimoLLC' }).platform, 'facebook');
+  assert.equal(classifyCta({ href: 'https://www.houzz.com/pro/stone-bellisimo' }).platform, 'houzz');
+  // x.com was previously dropped to "other" because it was absent from the regex.
+  const twitter = classifyCta({ href: 'https://x.com/Stonebellisimo' });
+  assert.equal(twitter.type, 'social');
+  assert.equal(twitter.platform, 'x');
+  assert.equal(classifyCta({ href: 'https://twitter.com/Stonebellisimo' }).platform, 'x');
+  // A host that merely ends in "x.com" must not read as Twitter.
+  assert.equal(classifyCta({ href: 'https://netflix.com/browse' }).type, 'other');
+  // Non-social CTAs carry no platform tag.
+  assert.equal(classifyCta({ href: 'tel:+12015531919' }).platform, '');
 });
 
 test('impressions are deduplicated per stable session/page/CTA key', () => {

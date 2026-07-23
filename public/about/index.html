@@ -379,6 +379,6 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menuOpen)toggleMenu
 const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}}),{threshold:.1});
 document.querySelectorAll('.r,.r2,.r3').forEach(el=>ro.observe(el));
 </script>
-<script src="../performance.js?v=3" defer></script>
+<script src="../performance.js?v=4" defer></script>
 </body>
 </html>

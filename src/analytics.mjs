@@ -122,6 +122,7 @@ export function validateAnalyticsEvent(input = {}) {
     ...attribution,
     ctaId: clean(input.ctaId, 160),
     ctaType: clean(input.ctaType, 40).toLowerCase(),
+    platform: clean(input.platform, 40).toLowerCase(),
     ctaLabel: clean(input.ctaLabel, 160),
     placement: clean(input.placement, 120),
     targetLabel: clean(input.targetLabel, 120),
@@ -342,6 +343,7 @@ export async function aggregateAnalyticsEvent(db, eventId, eventInput) {
         trafficClass,
         ctaId: event.ctaId || ctaHash,
         ctaType: event.ctaType || 'other',
+        platform: event.platform || '',
         ctaLabel: event.ctaLabel || 'Untitled CTA',
         targetLabel: event.targetLabel || '',
         placement: event.placement || 'page',
@@ -506,6 +508,7 @@ export async function handleAdminAnalytics(request, db) {
       comparison: { range: comparisonRange, totals: comparisonTotals },
       daily,
       ctas: ctaRows,
+      social: socialPlatformBreakdown(ctaRows),
       breakdowns
     });
   } catch (error) {
@@ -520,6 +523,7 @@ function aggregateCtas(rows) {
     const item = grouped.get(key) || {
       ctaId: row.ctaId,
       ctaType: row.ctaType,
+      platform: row.platform || '',
       ctaLabel: row.ctaLabel,
       targetLabel: row.targetLabel,
       pagePath: row.pagePath,
@@ -543,6 +547,26 @@ function aggregateCtas(rows) {
       uniqueCtr: calculateCtr(item.uniqueClicks, item.uniqueImpressions),
       averageDwellMs: item.dwellSignals ? item.dwellMsTotal / item.dwellSignals : 0
     }))
+    .sort((left, right) => right.clicks - left.clicks);
+}
+
+// Rolls the per-CTA rows up into one line per social platform so the dashboard
+// can report Instagram, Facebook, X, etc. separately. Anything classified as
+// social without a recognised platform falls into an explicit "other" bucket
+// rather than disappearing.
+function socialPlatformBreakdown(ctaRows) {
+  const grouped = new Map();
+  for (const row of ctaRows) {
+    if (row.ctaType !== 'social') continue;
+    const platform = row.platform || 'other';
+    const item = grouped.get(platform) || { platform, clicks: 0, impressions: 0, uniqueClicks: 0 };
+    item.clicks += Number(row.clicks || 0);
+    item.impressions += Number(row.impressions || 0);
+    item.uniqueClicks += Number(row.uniqueClicks || 0);
+    grouped.set(platform, item);
+  }
+  return [...grouped.values()]
+    .map(item => ({ ...item, ctr: calculateCtr(item.clicks, item.impressions) }))
     .sort((left, right) => right.clicks - left.clicks);
 }
 

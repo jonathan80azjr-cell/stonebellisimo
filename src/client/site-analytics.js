@@ -202,10 +202,10 @@ function classify(element) {
     label,
     dataCta: element.dataset.cta
   });
-  const { type, targetLabel } = classified;
+  const { type, platform, targetLabel } = classified;
   const ctaId = clean(element.dataset.analyticsId || element.dataset.cta, 160) ||
     `${slug(type)}-${slug(placement(element))}-${slug(targetLabel || label)}`;
-  return { ctaId, ctaType: type, ctaLabel: label, placement: placement(element), targetLabel: clean(targetLabel, 120) };
+  return { ctaId, ctaType: type, ctaLabel: label, placement: placement(element), targetLabel: clean(targetLabel, 120), platform };
 }
 
 function ctaElements() {

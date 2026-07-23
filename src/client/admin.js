@@ -248,6 +248,18 @@ function intentBreakdown(ctas) {
   return types.map(type => ({ type, clicks: ctas.filter(row => row.ctaType === type).reduce((sum, row) => sum + Number(row.clicks || 0), 0) }));
 }
 
+const SOCIAL_LABELS = { instagram: 'Instagram', facebook: 'Facebook', x: 'X (Twitter)', pinterest: 'Pinterest', houzz: 'Houzz', tiktok: 'TikTok', youtube: 'YouTube', linkedin: 'LinkedIn', yelp: 'Yelp', other: 'Other social' };
+const SOCIAL_ICONS = { instagram: 'IG', facebook: 'f', x: '𝕏', pinterest: 'P', houzz: 'Hz', tiktok: 'TT', youtube: '▶', linkedin: 'in', yelp: 'Y', other: '•' };
+
+function renderSocialBreakdown(rows) {
+  if (!rows.length) return '<p class="quiet">No social profile clicks in this range yet.</p>';
+  return rows.map(row => {
+    const label = SOCIAL_LABELS[row.platform] || (row.platform ? row.platform.replace(/\b\w/g, character => character.toUpperCase()) : 'Other social');
+    const icon = SOCIAL_ICONS[row.platform] || '•';
+    return `<article class="intent-card"><span class="intent-icon">${escapeHtml(icon)}</span><div><strong>${number(row.clicks)}</strong><span>${escapeHtml(label)} · ${number(row.impressions)} impressions</span></div></article>`;
+  }).join('');
+}
+
 function renderTrafficNotice(analytics) {
   const notice = $('trafficNotice');
   if (!notice) return;
@@ -302,6 +314,7 @@ function renderAnalytics(analytics, search) {
     ? `${number(t.phoneDwellSessions)} desktop ${t.phoneDwellSessions === 1 ? 'session' : 'sessions'} held a phone number on screen for ${seconds(t.averagePhoneDwellMs)} on average and then went quiet or left the browser, across ${number(t.phoneDwellSignals)} ${t.phoneDwellSignals === 1 ? 'number' : 'numbers'}. Desktop visitors dial from a handset, so these calls leave no click behind — treat this as a floor on interest, not a call count.`
     : 'No desktop visitor lingered on a phone number long enough to suggest they dialled it from another device in this range.';
   $('intentGrid').innerHTML = intents.map(item =>`<article class="intent-card"><span class="intent-icon">${({ phone:'☎',map:'↗',sms:'•••',email:'@',estimate:'◇' })[item.type]}</span><div><strong>${number(item.clicks)}</strong><span>${({ phone:'Phone link clicks',map:'Directions intent',sms:'Text link clicks',email:'Email link clicks',estimate:'Estimate CTA clicks' })[item.type]}</span></div></article>`).join('');
+  $('socialGrid').innerHTML = renderSocialBreakdown(analytics.social || []);
   $('galleryFunnel').innerHTML = `<div class="funnel"><div style="--size:100%"><strong>${number(t.gallerySessions)}</strong><span>Gallery-engaged sessions</span></div><div style="--size:${t.gallerySessions ? Math.max(28, t.galleryToIntentRate * 100) : 28}%"><strong>${number(t.galleryToIntentSessions)}</strong><span>Later high-intent actions</span></div></div><p class="funnel-note">${percent(t.galleryToIntentRate)} of gallery-engaged sessions later clicked a phone, map, text, email, or estimate action during the same visit.</p>`;
   $('breakdownGrid').innerHTML = [breakdown('Top landing pages', analytics.breakdowns.page || []), breakdown('Referrers', analytics.breakdowns.referrer || []), breakdown('Campaigns', analytics.breakdowns.campaign || []), breakdown('Devices', analytics.breakdowns.device || [])].join('');
 
