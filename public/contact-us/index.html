@@ -103,6 +103,78 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 4px;
 }
+
+/* ── ESTIMATE WIZARD ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.wizard-section{background:var(--ink);padding:120px 28px}
+.wizard-wrap{max-width:800px;margin:0 auto}
+.wizard-section .s-h{color:#fff}
+.wz-progress{display:flex;align-items:center;margin-bottom:52px}
+.wz-dot{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:rgba(255,255,255,.3);transition:all .3s;flex-shrink:0}
+.wz-dot.active{border-color:var(--gold);color:var(--gold);background:rgba(156,127,82,.15)}
+.wz-dot.done{border-color:var(--gold);background:var(--gold);color:#fff}
+.wz-line{flex:1;height:1px;background:rgba(255,255,255,.1);transition:background .4s}
+.wz-line.done{background:var(--gold)}
+.wz-step{display:none}
+.wz-step.active{display:block;animation:fadeUp .4s ease}
+.wz-q{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,4vw,40px);font-weight:300;color:#fff;letter-spacing:-.02em;margin-bottom:6px}
+.wz-q em{font-style:italic;color:var(--gold-lt)}
+.wz-hint{font-size:14px;color:rgba(255,255,255,.38);font-weight:300;margin-bottom:36px}
+.wz-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:36px}
+.wz-opt{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:16px;padding:22px 16px;cursor:pointer;transition:all .25s;text-align:center}
+.wz-opt:hover{border-color:var(--gold-lt);background:rgba(156,127,82,.1)}
+.wz-opt.sel{border-color:var(--gold);background:rgba(156,127,82,.2)}
+.wz-opt-icon{font-size:28px;margin-bottom:10px}
+.wz-opt-img{width:100%;aspect-ratio:4/3;border-radius:10px;overflow:hidden;margin-bottom:12px;background:rgba(255,255,255,.07)}
+.wz-opt-img img{width:100%;height:100%;object-fit:cover;display:block}
+.wz-opt-label{font-size:13px;font-weight:500;color:rgba(255,255,255,.85)}
+.wz-opt-sub{font-size:11px;color:rgba(255,255,255,.3);margin-top:4px}
+.wz-other{display:none;margin:-16px 0 32px}
+.wz-other.show{display:block;animation:fadeUp .25s ease}
+.wz-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.wz-back-btn{background:none;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.45);font-family:'Inter',sans-serif;font-size:13px;padding:11px 24px;border-radius:100px;cursor:pointer;transition:all .2s}
+.wz-back-btn:hover{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.8)}
+.wz-next-btn{background:var(--gold);color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;padding:12px 32px;border-radius:100px;border:none;cursor:pointer;transition:background .2s,transform .15s;display:flex;align-items:center;gap:8px}
+.wz-next-btn:hover{background:#b8945f;transform:scale(1.02)}
+.wz-next-btn:disabled{background:rgba(156,127,82,.3);cursor:not-allowed;transform:none}
+.wz-fields{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
+.wz-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.wz-fg label{display:block;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px}
+.wz-fg input,.wz-fg select,.wz-fg textarea{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:13px 18px;font-family:'Inter',sans-serif;font-size:14px;color:#fff;outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none;appearance:none}
+.wz-fg input::placeholder,.wz-fg textarea::placeholder{color:rgba(255,255,255,.22)}
+.wz-fg input:focus,.wz-fg select:focus,.wz-fg textarea:focus{border-color:var(--gold);background:rgba(255,255,255,.09)}
+.wz-fg input.err,.wz-fg select.err{border-color:#e05a5a!important}
+.wz-fg select option{background:#1c1810;color:#fff}
+.wz-fg textarea{resize:vertical;min-height:90px}
+.wz-summary{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px 24px;margin-bottom:24px}
+.wz-summary h4{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:rgba(255,255,255,.7);margin-bottom:14px}
+.wz-sum-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+.wz-sum-row:last-child{border-bottom:none}
+.wz-sum-row span:first-child{color:rgba(255,255,255,.32)}
+.wz-sum-row span:last-child{color:rgba(255,255,255,.8);font-weight:500}
+#wz-success{display:none;text-align:center;padding:40px 0}
+#wz-success.show{display:block;animation:fadeUp .5s ease}
+.wz-success-icon{font-size:52px;margin-bottom:20px}
+#wz-success h3{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:#fff;margin-bottom:12px}
+#wz-success p{font-size:15px;color:rgba(255,255,255,.5);font-weight:300;line-height:1.7;max-width:440px;margin:0 auto 28px}
+.wz-what-next{background:rgba(156,127,82,.12);border:1px solid rgba(156,127,82,.25);border-radius:14px;padding:22px 26px;text-align:left;margin-bottom:28px}
+.wz-what-next p{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:6px}
+.wz-what-next p:last-child{margin-bottom:0}
+.wz-what-next strong{color:var(--gold-lt)}
+.wz-step-tag{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:12px}
+.wz-opt:focus-visible{border-color:var(--gold);outline:2px solid var(--gold);background:rgba(156,127,82,.15)}
+.wz-error-msg{color:#e05a5a;font-size:12px;margin-top:6px;display:none}
+.wz-error-msg.show{display:block}
+#wz-failure{display:none;text-align:center;padding:40px 0}
+#wz-failure.show{display:block;animation:fadeUp .5s ease}
+.wz-failure-icon{font-size:52px;margin-bottom:20px;color:#e05a5a}
+#wz-failure h3{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:#fff;margin-bottom:12px}
+#wz-failure p{font-size:15px;color:rgba(255,255,255,.5);font-weight:300;line-height:1.7;max-width:480px;margin:0 auto 28px}
+.wz-saved-data{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px;text-align:left;margin-bottom:28px}
+.wz-saved-data label{display:block;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px}
+.wz-saved-data textarea{width:100%;height:160px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px;font-family:monospace;font-size:12px;color:#fff;resize:none;outline:none}
+.wz-saved-data textarea:focus{border-color:var(--gold)}
+@media(max-width:860px){.wz-opts{grid-template-columns:repeat(2,1fr)}.wz-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -114,7 +186,7 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
   <a href="../areas-we-serve.html">Areas We Serve</a>
   <a href="../#reviews">Reviews</a>
   <a href="../contact-us/">Contact</a>
-  <div class="mob-cta-wrap"><a href="../#wizard-section">Get Free Estimate</a></div>
+  <div class="mob-cta-wrap"><a href="#wizard-section">Get Free Estimate</a></div>
 </div>
 <nav id="nav">
   <div class="nav-w">
@@ -128,7 +200,7 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
       <li><a href="../#reviews">Reviews</a></li>
       <li><a href="../contact-us/" class="active">Contact</a></li>
     </ul>
-    <a href="../#wizard-section" class="n-cta">Free Estimate</a>
+    <a href="#wizard-section" class="n-cta">Free Estimate</a>
     <button class="n-ham" id="ham" onclick="toggleMenu()" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -182,11 +254,169 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
   </div>
 </section>
 
-<section class="cta-full">
-  <div class="cta-content">
-    <h2 class="r">Need a free<br><em>estimate?</em></h2>
-    <p class="r2">Tell us about your space and we will help schedule your measurement.</p>
-    <a class="btn-gold r3" href="../#wizard-section">Book a Free In-Home Estimate</a>
+<section class="wizard-section" id="wizard-section">
+  <div class="wizard-wrap">
+    <span class="s-tag r" style="color:var(--gold-lt)">Free Estimate</span>
+    <h2 class="s-h r2" style="margin-bottom:48px">Let's start your<br><em>project.</em></h2>
+
+    <!-- Progress bar -->
+    <div class="wz-progress" id="wzProgress">
+      <div class="wz-dot active" data-step="1">1</div>
+      <div class="wz-line" id="wl1"></div>
+      <div class="wz-dot" data-step="2">2</div>
+      <div class="wz-line" id="wl2"></div>
+      <div class="wz-dot" data-step="3">3</div>
+      <div class="wz-line" id="wl3"></div>
+      <div class="wz-dot" data-step="4">4</div>
+      <div class="wz-line" id="wl4"></div>
+      <div class="wz-dot" data-step="5">5</div>
+    </div>
+
+    <!-- STEP 1: Project type -->
+    <div class="wz-step active" id="wz1">
+      <div class="wz-step-tag">Step 1 of 5: Project Type *</div>
+      <div class="wz-q">What are you<br><em>renovating?</em></div>
+      <div class="wz-hint">Select your project type — we do custom fabrication &amp; installation.</div>
+      <div class="wz-opts" role="radiogroup" aria-label="Select what you are renovating">
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Kitchen Countertops')" onkeydown="handleWzKey(event, this, 'project', 'Kitchen Countertops')"><div class="wz-opt-label">Kitchen</div><div class="wz-opt-sub">Most popular</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Bathroom Vanity')" onkeydown="handleWzKey(event, this, 'project', 'Bathroom Vanity')"><div class="wz-opt-label">Bathroom Vanity</div><div class="wz-opt-sub">Single or double</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Fireplace Surround')" onkeydown="handleWzKey(event, this, 'project', 'Fireplace Surround')"><div class="wz-opt-label">Fireplace</div><div class="wz-opt-sub">Surround &amp; hearth</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Multiple Areas')" onkeydown="handleWzKey(event, this, 'project', 'Multiple Areas')"><div class="wz-opt-label">Multiple Areas</div><div class="wz-opt-sub">Full home</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Commercial')" onkeydown="handleWzKey(event, this, 'project', 'Commercial')"><div class="wz-opt-label">Commercial</div><div class="wz-opt-sub">Office / retail</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'project','Other')" onkeydown="handleWzKey(event, this, 'project', 'Other')"><div class="wz-opt-label">Other</div><div class="wz-opt-sub">Tell us more</div></div>
+      </div>
+      <div class="wz-other wz-fg" id="projectOtherWrap">
+        <label for="projectOther">Tell us what you are renovating * (Required)</label>
+        <input type="text" id="projectOther" placeholder="e.g. Outdoor kitchen, laundry room, custom table" autocomplete="off" aria-required="true">
+        <div class="wz-error-msg" id="wz1-error">Please fill in this field to proceed.</div>
+      </div>
+      <div class="wz-nav"><div></div><button class="wz-next-btn" onclick="nextStep(2)" id="wz1next" disabled>Continue <span>→</span></button></div>
+    </div>
+
+    <!-- STEP 2: Material -->
+    <div class="wz-step" id="wz2">
+      <div class="wz-step-tag">Step 2 of 5: Material Selection *</div>
+      <div class="wz-q">Which material<br><em>interests you?</em></div>
+      <div class="wz-hint">Select a stone material. Not sure? Choose "Help me choose" and our experts will guide you.</div>
+      <div class="wz-opts wz-material-opts" role="radiogroup" aria-label="Select material of interest">
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Granite')" onkeydown="handleWzKey(event, this, 'material', 'Granite')"><div class="wz-opt-img"><img src="../assets/img/material1-800.jpg" data-avif="../assets/img/material1-800.avif" alt="Premium polished Granite countertop slab showing natural mineral patterns" width="800" height="533" loading="lazy" decoding="async"></div><div class="wz-opt-label">Granite</div><div class="wz-opt-sub">Most durable</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Quartz')" onkeydown="handleWzKey(event, this, 'material', 'Quartz')"><div class="wz-opt-img"><img src="../assets/img/material2-800.jpg" data-avif="../assets/img/material2-800.avif" alt="High-quality engineered Quartz countertop slab in white and grey veining" width="800" height="533" loading="lazy" decoding="async"></div><div class="wz-opt-label">Quartz</div><div class="wz-opt-sub">20% off now</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Marble')" onkeydown="handleWzKey(event, this, 'material', 'Marble')"><div class="wz-opt-img"><img src="../assets/img/material3-800.jpg" data-avif="../assets/img/material3-800.avif" alt="Classic Carrara Marble countertop slab with elegant natural grey veining" width="533" height="800" loading="lazy" decoding="async"></div><div class="wz-opt-label">Marble</div><div class="wz-opt-sub">Timeless look</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Quartzite')" onkeydown="handleWzKey(event, this, 'material', 'Quartzite')"><div class="wz-opt-img"><img src="../assets/img/material4-800.jpg" data-avif="../assets/img/material4-800.avif" alt="Durable Quartzite countertop slab showcasing natural quartzite texture" width="800" height="534" loading="lazy" decoding="async"></div><div class="wz-opt-label">Quartzite</div><div class="wz-opt-sub">Natural stone</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Porcelain')" onkeydown="handleWzKey(event, this, 'material', 'Porcelain')"><div class="wz-opt-img"><img src="../assets/img/material5-800.jpg" data-avif="../assets/img/material5-800.avif" alt="Sleek large-format Porcelain countertop slab in modern matte finish" width="800" height="407" loading="lazy" decoding="async"></div><div class="wz-opt-label">Porcelain</div><div class="wz-opt-sub">Ultra modern</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'material','Help me choose')" onkeydown="handleWzKey(event, this, 'material', 'Help me choose')"><div class="wz-opt-label">Help me choose</div><div class="wz-opt-sub">We'll advise</div></div>
+      </div>
+      <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(1)">← Back</button><button class="wz-next-btn" onclick="nextStep(3)" id="wz2next" disabled>Continue →</button></div>
+    </div>
+
+    <!-- STEP 3: Rough size -->
+    <div class="wz-step" id="wz3">
+      <div class="wz-step-tag">Step 3 of 5: Project Size *</div>
+      <div class="wz-q">Roughly how big<br><em>is the space?</em></div>
+      <div class="wz-hint">Provide an estimate — Cesar or Cristian will take exact measurements during our free visit.</div>
+      <div class="wz-opts" role="radiogroup" aria-label="Select estimated project size">
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','Under 30 sqft')" onkeydown="handleWzKey(event, this, 'size', 'Under 30 sqft')"><div class="wz-opt-label">Under 30 sqft</div><div class="wz-opt-sub">Small vanity / bar</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','30–60 sqft')" onkeydown="handleWzKey(event, this, 'size', '30–60 sqft')"><div class="wz-opt-label">30–60 sqft</div><div class="wz-opt-sub">Average kitchen</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','60–100 sqft')" onkeydown="handleWzKey(event, this, 'size', '60–100 sqft')"><div class="wz-opt-label">60–100 sqft</div><div class="wz-opt-sub">Large kitchen</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'size','100+ sqft')" onkeydown="handleWzKey(event, this, 'size', '100+ sqft')"><div class="wz-opt-label">100+ sqft</div><div class="wz-opt-sub">Full home / commercial</div></div>
+      </div>
+      <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(2)">← Back</button><button class="wz-next-btn" onclick="nextStep(4)" id="wz3next" disabled>Continue →</button></div>
+    </div>
+
+    <!-- STEP 4: Timeline -->
+    <div class="wz-step" id="wz4">
+      <div class="wz-step-tag">Step 4 of 5: Project Timeline *</div>
+      <div class="wz-q">When are you<br><em>looking to start?</em></div>
+      <div class="wz-hint">Choose a timeframe. We accommodate any timeline.</div>
+      <div class="wz-opts" role="radiogroup" aria-label="Select project timeline">
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','As soon as possible')" onkeydown="handleWzKey(event, this, 'timeline', 'As soon as possible')"><div class="wz-opt-label">ASAP</div><div class="wz-opt-sub">Ready to go</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','1–3 months')" onkeydown="handleWzKey(event, this, 'timeline', '1–3 months')"><div class="wz-opt-label">1–3 months</div><div class="wz-opt-sub">Planning ahead</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','3–6 months')" onkeydown="handleWzKey(event, this, 'timeline', '3–6 months')"><div class="wz-opt-label">3–6 months</div><div class="wz-opt-sub">Early stages</div></div>
+        <div class="wz-opt" tabindex="0" role="radio" aria-checked="false" onclick="selectOpt(this,'timeline','Just exploring')" onkeydown="handleWzKey(event, this, 'timeline', 'Just exploring')"><div class="wz-opt-label">Just exploring</div><div class="wz-opt-sub">No rush</div></div>
+      </div>
+      <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(3)">← Back</button><button class="wz-next-btn" onclick="nextStep(5)" id="wz4next" disabled>Continue →</button></div>
+    </div>
+
+    <!-- STEP 5: Contact info -->
+    <div class="wz-step" id="wz5">
+      <div class="wz-step-tag">Step 5 of 5: Contact Information *</div>
+      <div class="wz-q">Almost there —<br><em>let's confirm your details.</em></div>
+      <div class="wz-hint">Enter your details below. Cesar or Cristian will call or text to schedule your free visit.</div>
+      <!-- Summary -->
+      <div class="wz-summary">
+        <h4>Your project summary</h4>
+        <div class="wz-sum-row"><span>Project</span><span id="sumProject">—</span></div>
+        <div class="wz-sum-row"><span>Material</span><span id="sumMaterial">—</span></div>
+        <div class="wz-sum-row"><span>Size</span><span id="sumSize">—</span></div>
+        <div class="wz-sum-row"><span>Timeline</span><span id="sumTimeline">—</span></div>
+      </div>
+      <!-- Fields -->
+      <div class="wz-fields">
+        <div class="wz-row">
+          <div class="wz-fg">
+            <label for="wzFirst">First Name *</label>
+            <input type="text" id="wzFirst" placeholder="e.g. Jane" autocomplete="given-name" aria-required="true">
+            <div class="wz-error-msg" id="wzFirst-error">First name is required.</div>
+          </div>
+          <div class="wz-fg">
+            <label for="wzLast">Last Name *</label>
+            <input type="text" id="wzLast" placeholder="e.g. Smith" autocomplete="family-name" aria-required="true">
+            <div class="wz-error-msg" id="wzLast-error">Last name is required.</div>
+          </div>
+        </div>
+        <div class="wz-row">
+          <div class="wz-fg">
+            <label for="wzPhone">Phone *</label>
+            <input type="tel" id="wzPhone" placeholder="e.g. (201) 555-0199" autocomplete="tel" aria-required="true">
+            <div class="wz-error-msg" id="wzPhone-error">A valid phone number is required.</div>
+          </div>
+          <div class="wz-fg">
+            <label for="wzEmail">Email *</label>
+            <input type="email" id="wzEmail" placeholder="e.g. jane.smith@gmail.com" autocomplete="email" aria-required="true">
+            <div class="wz-error-msg" id="wzEmail-error">A valid email address is required.</div>
+          </div>
+        </div>
+        <div class="wz-fg">
+          <label for="wzAddr">Your Address / City (optional - for scheduling)</label>
+          <input type="text" id="wzAddr" placeholder="e.g. Union City, NJ" autocomplete="street-address">
+        </div>
+        <div class="wz-fg">
+          <label for="wzNote">Anything else we should know? (optional)</label>
+          <textarea id="wzNote" placeholder="e.g. Preferred days for a visit, existing countertop material, custom dimensions..."></textarea>
+        </div>
+      </div>
+      <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(4)">← Back</button><button class="wz-next-btn" onclick="submitWizard()" id="wz5submit">Send Request</button></div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div id="wz-success">
+      <div class="wz-success-icon" style="margin-bottom:20px"><svg viewBox="0 0 24 24" width="48" height="48" stroke="var(--gold)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+      <h3>Request sent!</h3>
+      <p>Thank you! Cesar or Cristian will call or text you within one business day to schedule your free in-home estimate.</p>
+      <div class="wz-what-next">
+        <p>📞 <strong>Need to reach us right now?</strong></p>
+        <p>Call the Office: <strong><a href="tel:+12015531919" style="color:var(--gold-lt)">201.553.1919</a></strong> or text Cesar: <strong><a href="sms:+12012816423" style="color:var(--gold-lt)">201.281.6423</a></strong></p>
+        <p style="margin-top: 8px">🤖 Or call <strong><a href="tel:+15512928353" style="color:var(--gold-lt)">551.292.8353</a></strong> to talk with Bella, our 24/7 AI Voice Agent.</p>
+      </div>
+      <button class="btn-gold" onclick="resetWizard()">Submit Another Request</button>
+    </div>
+
+    <!-- SUBMISSION FAILURE FALLBACK -->
+    <div id="wz-failure">
+      <div class="wz-failure-icon">⚠️</div>
+      <h3>Submission Error</h3>
+      <p>We are having trouble submitting your request online. To ensure Cristian or Cesar gets your request immediately, please call or text us directly with your project summary below.</p>
+      <div class="wz-saved-data">
+        <label for="wzSavedText">Your Saved Project Details (Copy &amp; Share)</label>
+        <textarea id="wzSavedText" readonly onclick="this.select()"></textarea>
+      </div>
+      <div class="wz-what-next" style="background: rgba(224,90,90,.1); border-color: rgba(224,90,90,.25)">
+        <p>📞 <strong>Call the Office:</strong> <a href="tel:+12015531919" style="color:var(--gold-lt)">201.553.1919</a></p>
+        <p>💬 <strong>Text Cesar (Owner):</strong> <a href="sms:+12012816423" style="color:var(--gold-lt)">201.281.6423</a></p>
+        <p>🤖 <strong>Or Call Bella (24/7 AI Agent):</strong> <a href="tel:+15512928353" style="color:var(--gold-lt)">551.292.8353</a></p>
+      </div>
+      <button class="btn-gold" style="margin-top: 20px" onclick="retryWizard()">Edit &amp; Try Again</button>
+    </div>
   </div>
 </section>
 
@@ -234,6 +464,174 @@ function toggleMenu(){menuOpen=!menuOpen;document.getElementById('mob-menu').cla
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menuOpen)toggleMenu()});
 const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}}),{threshold:.1});
 document.querySelectorAll('.r,.r2,.r3').forEach(el=>ro.observe(el));
+
+/* ── ESTIMATE WIZARD ── */
+const wzData = {project:'',material:'',size:'',timeline:'',sourceCta:'Contact Page'};
+const CONTACT_API_ENDPOINT = '/api/contact';
+function getContactEndpoint(){return CONTACT_API_ENDPOINT;}
+function go(id){if(menuOpen)toggleMenu();const el=document.getElementById(id);if(!el)return;window.scrollTo({top:el.getBoundingClientRect().top+scrollY-58,behavior:'smooth'})}
+let wzStep=1;
+function getProjectValue(){
+  if(wzData.project!=='Other')return wzData.project;
+  const custom=document.getElementById('projectOther').value.trim();
+  return custom ? `Other: ${custom}` : '';
+}
+function updateProjectOther(){
+  const wrap=document.getElementById('projectOtherWrap');
+  const input=document.getElementById('projectOther');
+  const isOther=wzData.project==='Other';
+  wrap.classList.toggle('show',isOther);
+  input.classList.toggle('err',isOther && !input.value.trim());
+  document.getElementById('wz1next').disabled=isOther ? !input.value.trim() : !wzData.project;
+}
+function selectOpt(el,key,val){
+  const parent=el.closest('.wz-opts');
+  parent.querySelectorAll('.wz-opt').forEach(o=>{
+    o.classList.remove('sel');
+    o.setAttribute('aria-checked', 'false');
+    o.setAttribute('aria-pressed', 'false');
+  });
+  el.classList.add('sel');
+  el.setAttribute('aria-checked', 'true');
+  el.setAttribute('aria-pressed', 'true');
+  wzData[key]=val;
+  const step=el.closest('.wz-step').id;
+  const nextMap={wz1:'wz1next',wz2:'wz2next',wz3:'wz3next',wz4:'wz4next'};
+  if(nextMap[step])document.getElementById(nextMap[step]).disabled=false;
+  if(key==='project')updateProjectOther();
+}
+function handleWzKey(e, el, key, val){
+  if(e.key === ' ' || e.key === 'Enter'){
+    e.preventDefault();
+    selectOpt(el, key, val);
+  }
+}
+function nextStep(n){
+  if(wzStep===1 && n>1 && wzData.project==='Other' && !document.getElementById('projectOther').value.trim()){
+    updateProjectOther();
+    document.getElementById('projectOther').focus();
+    return;
+  }
+  document.querySelectorAll('.wz-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('wz'+n).classList.add('active');
+  wzStep=n;
+  window.StoneBellisimoAnalytics?.track('form_step', { formStep: n, ctaLabel: wzData.sourceCta, placement: wzData.sourceCta });
+  document.querySelectorAll('.wz-dot').forEach(d=>{
+    const s=parseInt(d.dataset.step);
+    d.classList.remove('active','done');
+    if(s<n)d.classList.add('done');
+    else if(s===n)d.classList.add('active');
+  });
+  document.querySelectorAll('.wz-line').forEach((l,i)=>{
+    l.classList.toggle('done',i<n-1);
+  });
+  if(n===5){
+    document.getElementById('sumProject').textContent=getProjectValue()||'—';
+    document.getElementById('sumMaterial').textContent=wzData.material||'—';
+    document.getElementById('sumSize').textContent=wzData.size||'—';
+    document.getElementById('sumTimeline').textContent=wzData.timeline||'—';
+  }
+  go('wizard-section');
+}
+function retryWizard(){
+  document.getElementById('wz-failure').classList.remove('show');
+  document.getElementById('wzProgress').style.display='flex';
+  nextStep(5);
+}
+async function submitWizard(){
+  const f=document.getElementById('wzFirst');
+  const l=document.getElementById('wzLast');
+  const p=document.getElementById('wzPhone');
+  const e=document.getElementById('wzEmail');
+  const fErr=document.getElementById('wzFirst-error');
+  const lErr=document.getElementById('wzLast-error');
+  const pErr=document.getElementById('wzPhone-error');
+  const eErr=document.getElementById('wzEmail-error');
+
+  [f,l,p,e].forEach(el=>el.classList.remove('err'));
+  [fErr,lErr,pErr,eErr].forEach(el=>el.classList.remove('show'));
+
+  let valid=true;
+  if(!f.value.trim()){f.classList.add('err');fErr.classList.add('show');valid=false}
+  if(!l.value.trim()){l.classList.add('err');lErr.classList.add('show');valid=false}
+  if(!p.value.trim()){p.classList.add('err');pErr.classList.add('show');valid=false}
+  if(!e.value.trim()||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.value)){e.classList.add('err');eErr.classList.add('show');valid=false}
+  if(!valid){window.StoneBellisimoAnalytics?.track('form_error',{result:'validation',formStep:5,placement:wzData.sourceCta});go('wizard-section');return}
+
+  const submitBtn = document.getElementById('wz5submit');
+  if (submitBtn.disabled) return;
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
+
+  const projectSummaryStr = `Project: ${getProjectValue() || 'Not specified'}\nMaterial: ${wzData.material || 'Not specified'}\nSize: ${wzData.size || 'N/A'}\nTimeline: ${wzData.timeline || 'N/A'}\nAddress: ${document.getElementById('wzAddr').value.trim() || 'Not provided'}\nNotes: ${document.getElementById('wzNote').value.trim() || 'None'}`;
+
+  const payload = {
+    firstName: f.value.trim(),
+    lastName: l.value.trim(),
+    email: e.value.trim(),
+    phone: p.value.trim(),
+    projectType: getProjectValue() || 'Not specified',
+    material: wzData.material || 'Not specified',
+    message: projectSummaryStr,
+    source: `Website Wizard - ${wzData.sourceCta || 'Contact Page'}`,
+    dateCreated: new Date().toISOString().split('T')[0],
+    attribution: window.StoneBellisimoAnalytics?.attribution() || undefined
+  };
+
+  try {
+    const appCheckHeaders = await (window.StoneBellisimoAnalytics?.appCheckHeader?.() || Promise.resolve({}));
+    const response = await fetch(getContactEndpoint(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...appCheckHeaders },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      document.querySelectorAll('.wz-step').forEach(s=>s.classList.remove('active'));
+      document.getElementById('wz-success').classList.add('show');
+      document.getElementById('wzProgress').style.display='none';
+    } else {
+      throw new Error("Server responded with error status");
+    }
+  } catch (err) {
+    window.StoneBellisimoAnalytics?.track('form_error', { result: 'submission_failed', formStep: 5, placement: wzData.sourceCta });
+    document.querySelectorAll('.wz-step').forEach(s=>s.classList.remove('active'));
+    document.getElementById('wzProgress').style.display='none';
+
+    const savedDataText = `Customer Name: ${f.value.trim()} ${l.value.trim()}\nPhone: ${p.value.trim()}\nEmail: ${e.value.trim()}\n\n${projectSummaryStr}`;
+    document.getElementById('wzSavedText').value = savedDataText;
+
+    document.getElementById('wz-failure').classList.add('show');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send Request';
+  }
+}
+function resetWizard(){
+  Object.keys(wzData).forEach(k=>{
+    if (k === 'sourceCta') wzData[k] = 'Contact Page';
+    else wzData[k] = '';
+  });
+  document.querySelectorAll('.wz-opt').forEach(o=>{
+    o.classList.remove('sel');
+    o.setAttribute('aria-checked', 'false');
+    o.setAttribute('aria-pressed', 'false');
+  });
+  document.querySelectorAll('.wz-next-btn').forEach(b=>b.disabled=true);
+  document.getElementById('wz5submit').disabled=false;
+  document.getElementById('projectOther').value='';
+  updateProjectOther();
+  document.getElementById('wz-success').classList.remove('show');
+  document.getElementById('wz-failure').classList.remove('show');
+  document.getElementById('wzProgress').style.display='flex';
+  nextStep(1);
+}
+document.querySelectorAll('.wz-fg input').forEach(el=>el.addEventListener('input',()=>{
+  el.classList.remove('err');
+  const errEl = document.getElementById(el.id + '-error');
+  if (errEl) errEl.classList.remove('show');
+}));
+document.getElementById('projectOther').addEventListener('input',updateProjectOther);
 </script>
 <script src="../components/google-map.js?v=3" defer></script>
 <script src="../performance.js?v=2" defer></script>

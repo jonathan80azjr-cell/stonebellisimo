@@ -32,3 +32,6 @@ migration-checkpoint*.json
 
 # Customer exports/import sources.
 STONE BELLISIMO WEBSITE EMAILS*.csv
+
+# One-off operational notes (DNS cutover, etc.) — public data, just not site source.
+dns-firebase-cutover.txt
