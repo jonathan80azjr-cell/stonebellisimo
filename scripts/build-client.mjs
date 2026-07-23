@@ -21,5 +21,11 @@ await Promise.all([
     entryPoints: ['src/client/admin.js'],
     outfile: 'public/assets/js/admin.js',
     format: 'iife'
+  }),
+  build({
+    ...shared,
+    entryPoints: ['src/client/google-analytics.js'],
+    outfile: 'public/assets/js/analytics.js',
+    format: 'iife'
   })
 ]);

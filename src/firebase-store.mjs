@@ -88,6 +88,20 @@ export function createFirestoreStore(db) {
       return snapshot.exists ? { ...snapshot.data(), id: snapshot.id } : null;
     },
 
+    async getLatestLead() {
+      const snapshot = await leads.orderBy('submittedAt', 'desc').limit(1).get();
+      return snapshot.empty ? null : { ...snapshot.docs[0].data(), id: snapshot.docs[0].id };
+    },
+
+    async listLeadsSince(sinceIso, limit = 500) {
+      const snapshot = await leads
+        .where('submittedAt', '>=', sinceIso)
+        .orderBy('submittedAt', 'asc')
+        .limit(limit)
+        .get();
+      return rows(snapshot);
+    },
+
     async markImmediateEmailSent(id, sentAt, messageId) {
       const update = { immediateEmailSentAt: sentAt, updatedAt: sentAt };
       if (messageId) update.postmarkImmediateMessageId = messageId;

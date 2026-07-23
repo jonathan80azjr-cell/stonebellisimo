@@ -14,9 +14,42 @@ This repo implements the lead email automation in the Cloudflare Worker because 
 6. The lead is scheduled with `feedbackEmailDueAt = submittedAt + FEEDBACK_DELAY_DAYS`.
 7. The hourly Worker Cron finds due leads and sends the feedback email exactly once per successful send.
 8. Feedback can arrive from `/feedback` rating links or from Postmark Inbound email replies.
-9. Feedback is stored and an internal notification is sent to `BUSINESS_NOTIFICATION_EMAIL`.
+9. Feedback is stored and an internal notification is sent to the staff notification list.
 
 `FEEDBACK_DELAY_DAYS` defaults to `3` to match the current acceptance criteria. Set it to `7` if the business wants a one-week delay.
+
+## Staff Notifications
+
+Staff alerts run on Firebase only, as Firestore triggers and scheduled functions in `firebase-functions.mjs`. They are built in `src/admin-notifications.mjs` and share the branded template in `src/email/render.mjs`.
+
+| Alert | Trigger | Rate limit |
+| --- | --- | --- |
+| New lead | `leads/{leadId}` created | Once per lead; `trafficClass: test` submissions are skipped |
+| Unanswered reply | `postmark_inbound_events/{eventId}` created with status `unmatched`, `invalid_reference`, or `expired_reference` | Once per event |
+| Delivery problem | `postmark_delivery_events/{eventId}` created for a hard bounce, spam complaint, or unsubscribe | Once per event |
+| Email send failure | `email_events/{eventId}` created with status `failed` | One per hour |
+| Low rating | Feedback at or below 3/5 | Escalated inline on the existing feedback notification |
+| No leads | Daily 09:00 ET; fires when the newest lead is older than `NO_LEADS_ALERT_HOURS` | Once per day |
+| Weekly digest | Mondays 08:00 ET | Once per week |
+
+Two behaviors are load-bearing and should survive future edits:
+
+- **Loop guard.** Every alert is recorded in `email_events` under a type prefixed `admin_`, and the send-failure trigger ignores those types. Without it, a failing alert would raise an alert about itself indefinitely.
+- **At-least-once delivery.** Firestore may deliver a trigger more than once. Each alert first claims a slot in `admin_notification_state` inside a transaction, so a redelivered event sends nothing.
+
+Replies that *do* match a lead already notify through the feedback path, which is why only the unmatched statuses raise the reply alert — otherwise one customer reply would send two emails.
+
+### Configuration
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `ADMIN_NOTIFICATIONS_ENABLED` | `true` | Set to `false` to mute every staff alert |
+| `SB_NOTIFY_EMAILS` | empty | Comma-separated list that *replaces* the default recipients |
+| `NO_LEADS_ALERT_HOURS` | `72` | Silence tolerated before the watchdog alerts |
+
+Recipients default to the admin allowlist in `src/admin-accounts.mjs` plus anything in `SB_ADMIN_EMAILS`, so whoever can sign in to the dashboard gets the alerts.
+
+`BUSINESS_NOTIFICATION_EMAIL` previously received the feedback notification on its own and is no longer read by any code path. It is still defined in the env files as documentation of the old routing; delete it once the notification list is confirmed in production. `BUSINESS_REPLY_TO_EMAIL` is unaffected and still sets the reply address on customer confirmation emails.
 
 ## D1 Setup
 

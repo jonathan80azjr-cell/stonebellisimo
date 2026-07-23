@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { FieldValue } from 'firebase-admin/firestore';
 import { json, methodNotAllowed, normalizeText, readJson } from './lead-automation.mjs';
+import { PHONE_DWELL, PHONE_DWELL_REASONS } from './analytics-classification.mjs';
 
 const MAX_BATCH = 20;
 const MAX_BODY = 96 * 1024;
@@ -15,10 +16,13 @@ const ALLOWED_EVENTS = new Set([
   'gallery_view',
   'gallery_item_open',
   'gallery_video_play',
+  'phone_dwell',
   'performance'
 ]);
 const HIGH_INTENT_TYPES = new Set(['estimate', 'phone', 'sms', 'email', 'map']);
 const PERFORMANCE_NAMES = new Set(['CLS', 'FCP', 'INP', 'LCP', 'TTFB']);
+const DWELL_REASONS = new Set(PHONE_DWELL_REASONS);
+const DWELL_TYPES = new Set(['phone', 'sms']);
 
 function clean(value, max = 160) {
   return normalizeText(value, max);
@@ -50,25 +54,47 @@ function metricField(eventName) {
     gallery_view: 'galleryViews',
     gallery_item_open: 'galleryOpens',
     gallery_video_play: 'galleryVideoPlays',
+    phone_dwell: 'phoneDwellSignals',
     performance: 'performanceSamples'
   }[eventName];
 }
 
+// Campaign tags that mark a visit as deliberate QA rather than a real customer.
+// Keep these explicit and improbable as real marketing values: a false positive
+// silently removes genuine business traffic from every default report.
+// Server-only on purpose — the browser bundle must not carry the rule that
+// decides which visits disappear from business reporting.
+export const TEST_TRAFFIC_SOURCES = Object.freeze(['qa', 'test', 'staging', 'synthetic', 'lighthouse']);
+export const TEST_TRAFFIC_MEDIUMS = Object.freeze(['test', 'qa', 'synthetic', 'monitoring']);
+
+export function classifyTrafficClass({ utmSource = '', utmMedium = '' } = {}) {
+  const source = clean(utmSource, 100).toLowerCase();
+  const medium = clean(utmMedium, 100).toLowerCase();
+  if (TEST_TRAFFIC_SOURCES.includes(source)) return 'test';
+  if (TEST_TRAFFIC_MEDIUMS.includes(medium)) return 'test';
+  return 'production';
+}
+
 export function sanitizeAttribution(value = {}) {
   const source = value && typeof value === 'object' ? value : {};
+  const utmSource = clean(source.utmSource, 100);
+  const utmMedium = clean(source.utmMedium, 100);
   return {
     visitorId: cleanId(source.visitorId, 'visitor'),
     sessionId: cleanId(source.sessionId, 'session'),
     referrerHost: clean(source.referrerHost, 160).toLowerCase(),
     landingPage: cleanPath(source.landingPage),
-    utmSource: clean(source.utmSource, 100),
-    utmMedium: clean(source.utmMedium, 100),
+    utmSource,
+    utmMedium,
     utmCampaign: clean(source.utmCampaign, 120),
     utmTerm: clean(source.utmTerm, 120),
     utmContent: clean(source.utmContent, 120),
     deviceCategory: ['mobile', 'tablet', 'desktop'].includes(source.deviceCategory)
       ? source.deviceCategory
-      : 'unknown'
+      : 'unknown',
+    // Always recomputed from the sanitized campaign tags; `source.trafficClass`
+    // is deliberately ignored so a browser cannot classify its own traffic.
+    trafficClass: classifyTrafficClass({ utmSource, utmMedium })
   };
 }
 
@@ -104,13 +130,31 @@ export function validateAnalyticsEvent(input = {}) {
     result: clean(input.result, 40),
     metricName: clean(input.metricName, 12).toUpperCase(),
     metricValue: Number.isFinite(Number(input.metricValue)) ? Number(input.metricValue) : null,
-    navigationType: clean(input.navigationType, 40)
+    navigationType: clean(input.navigationType, 40),
+    dwellMs: Number.isFinite(Number(input.dwellMs)) ? Math.round(Number(input.dwellMs)) : 0,
+    exitReason: clean(input.exitReason, 20).toLowerCase()
   };
 
   if (eventName === 'performance') {
     if (!PERFORMANCE_NAMES.has(event.metricName) || event.metricValue === null || event.metricValue < 0) {
       return { error: 'Invalid performance metric.' };
     }
+  }
+
+  // A dwell signal is only interpretable next to the number it belongs to and
+  // the threshold the browser applied. Anything else is an unattributable
+  // duration that would still inflate the offline-call counters.
+  if (eventName === 'phone_dwell') {
+    if (!DWELL_TYPES.has(event.ctaType)) return { error: 'Phone dwell requires a phone or text CTA.' };
+    if (event.dwellMs < PHONE_DWELL.minMs || event.dwellMs > PHONE_DWELL.maxMs) {
+      return { error: 'Phone dwell duration is outside the accepted window.' };
+    }
+    if (!DWELL_REASONS.has(event.exitReason)) return { error: 'Unsupported phone dwell exit reason.' };
+    if (event.exitReason === 'dwell' && event.dwellMs < PHONE_DWELL.activeMs) {
+      return { error: 'Phone dwell duration is outside the accepted window.' };
+    }
+    // Desktop is the whole premise: a mobile visitor taps the number instead.
+    if (event.deviceCategory !== 'desktop') return { error: 'Phone dwell is only recorded for desktop visitors.' };
   }
 
   return { event };
@@ -215,24 +259,40 @@ export async function aggregateAnalyticsEvent(db, eventId, eventInput) {
     const date = event.date || new Date(event.occurredAt || Date.now()).toISOString().slice(0, 10);
     const sessionHash = event.sessionHash || hash(event.sessionId);
     const visitorHash = event.visitorHash || hash(event.visitorId);
-    const dailyReference = db.collection('analytics_daily').doc(date);
-    const sessionReference = db.collection('analytics_unique_daily').doc(`${date}__session__${sessionHash}`);
-    const visitorReference = db.collection('analytics_unique_daily').doc(`${date}__visitor__${visitorHash}`);
-    const sessionFactReference = db.collection('analytics_session_daily').doc(`${date}__${sessionHash}`);
+    // Test traffic aggregates into parallel documents. Production keeps its
+    // existing document IDs, so historical rows stay correct without migration.
+    const trafficClass = event.trafficClass === 'test' ? 'test' : 'production';
+    const scope = trafficClass === 'test' ? '__test' : '';
+    const dailyReference = db.collection('analytics_daily').doc(`${date}${scope}`);
+    const sessionReference = db.collection('analytics_unique_daily').doc(`${date}__session__${sessionHash}${scope}`);
+    const visitorReference = db.collection('analytics_unique_daily').doc(`${date}__visitor__${visitorHash}${scope}`);
+    const sessionFactReference = db.collection('analytics_session_daily').doc(`${date}__${sessionHash}${scope}`);
     const isCta = ['cta_impression', 'cta_click'].includes(event.eventName);
+    const isPhoneDwell = event.eventName === 'phone_dwell';
     const ctaKey = event.ctaId || `${event.ctaType}:${event.ctaLabel}:${event.placement}:${event.pagePath}`;
     const ctaHash = hash(ctaKey);
-    const ctaReference = db.collection('analytics_cta_daily').doc(`${date}__${ctaHash}`);
+    const ctaReference = db.collection('analytics_cta_daily').doc(`${date}__${ctaHash}${scope}`);
     const ctaUniqueReference = db.collection('analytics_unique_daily')
-      .doc(`${date}__cta__${event.eventName}__${ctaHash}__${sessionHash}`);
+      .doc(`${date}__cta__${event.eventName}__${ctaHash}__${sessionHash}${scope}`);
+    // Counted per session rather than per number: one visitor lingering over
+    // the office line and then the owner's line is one likely call, not two.
+    const phoneDwellSessionReference = db.collection('analytics_unique_daily')
+      .doc(`${date}__phone_dwell__${sessionHash}${scope}`);
     const references = [sessionReference, visitorReference, sessionFactReference];
+    // The two event families are disjoint, so at most one extra uniqueness
+    // document is read and snapshots[3] belongs to whichever applies.
     if (isCta) references.push(ctaUniqueReference);
+    if (isPhoneDwell) references.push(phoneDwellSessionReference);
     const snapshots = await transaction.getAll(...references);
     const sessionIsNew = !snapshots[0].exists;
     const visitorIsNew = !snapshots[1].exists;
     const sessionFact = snapshots[2].exists ? snapshots[2].data() : {};
     const ctaUniqueIsNew = isCta ? !snapshots[3].exists : false;
+    const phoneDwellSessionIsNew = isPhoneDwell ? !snapshots[3].exists : false;
     const isGalleryEngagement = ['gallery_view', 'gallery_item_open', 'gallery_video_play'].includes(event.eventName);
+    // phone_dwell is deliberately excluded: it is inferred from a timer rather
+    // than an action the visitor took, and folding it in here would silently
+    // change what every historical high-intent and gallery-funnel number means.
     const isHighIntent = (event.eventName === 'cta_click' && HIGH_INTENT_TYPES.has(event.ctaType)) ||
       (event.eventName === 'form_submit' && event.result === 'success');
     const eventTime = Number(event.occurredAt) || Date.now();
@@ -252,61 +312,77 @@ export async function aggregateAnalyticsEvent(db, eventId, eventInput) {
       !sessionFact.highIntentAfterGalleryAt;
 
     const field = metricField(event.eventName);
-    const dailyUpdate = { date, updatedAt: receivedAt, events: FieldValue.increment(1) };
+    const dailyUpdate = { date, trafficClass, updatedAt: receivedAt, events: FieldValue.increment(1) };
     if (field) dailyUpdate[field] = FieldValue.increment(1);
     if (sessionIsNew) dailyUpdate.sessions = FieldValue.increment(1);
     if (visitorIsNew) dailyUpdate.visitors = FieldValue.increment(1);
     if (isHighIntent) dailyUpdate.highIntentActions = FieldValue.increment(1);
     if (gallerySessionIsNew) dailyUpdate.gallerySessions = FieldValue.increment(1);
     if (galleryToIntentIsNew) dailyUpdate.galleryToIntentSessions = FieldValue.increment(1);
+    if (isPhoneDwell) dailyUpdate.phoneDwellMs = FieldValue.increment(Number(event.dwellMs) || 0);
+    if (phoneDwellSessionIsNew) {
+      dailyUpdate.phoneDwellSessions = FieldValue.increment(1);
+      transaction.create(phoneDwellSessionReference, { date, kind: 'phone_dwell', trafficClass, createdAt: receivedAt });
+    }
     transaction.set(dailyReference, dailyUpdate, { merge: true });
-    if (sessionIsNew) transaction.create(sessionReference, { date, kind: 'session', createdAt: receivedAt });
-    if (visitorIsNew) transaction.create(visitorReference, { date, kind: 'visitor', createdAt: receivedAt });
+    if (sessionIsNew) transaction.create(sessionReference, { date, kind: 'session', trafficClass, createdAt: receivedAt });
+    if (visitorIsNew) transaction.create(visitorReference, { date, kind: 'visitor', trafficClass, createdAt: receivedAt });
 
-    const sessionUpdate = { date, sessionHash, updatedAt: receivedAt };
+    const sessionUpdate = { date, sessionHash, trafficClass, updatedAt: receivedAt };
     if (isGalleryEngagement && galleryAt !== priorGalleryAt) sessionUpdate.galleryEngagedAt = galleryAt;
+    if (isPhoneDwell && !sessionFact.phoneDwellAt) sessionUpdate.phoneDwellAt = eventTime;
     if (isHighIntent && !sessionFact.highIntentAt) sessionUpdate.highIntentAt = eventTime;
     if (isHighIntent && latestHighIntentAt !== priorLatestHighIntentAt) sessionUpdate.latestHighIntentAt = latestHighIntentAt;
     if (galleryToIntentIsNew) sessionUpdate.highIntentAfterGalleryAt = latestHighIntentAt;
     transaction.set(sessionFactReference, sessionUpdate, { merge: true });
 
-    if (isCta) {
+    if (isCta || isPhoneDwell) {
       const ctaUpdate = {
         date,
+        trafficClass,
         ctaId: event.ctaId || ctaHash,
         ctaType: event.ctaType || 'other',
         ctaLabel: event.ctaLabel || 'Untitled CTA',
         targetLabel: event.targetLabel || '',
         placement: event.placement || 'page',
         pagePath: event.pagePath,
-        updatedAt: receivedAt,
-        [event.eventName === 'cta_click' ? 'clicks' : 'impressions']: FieldValue.increment(1)
+        updatedAt: receivedAt
       };
-      if (ctaUniqueIsNew) {
-        ctaUpdate[event.eventName === 'cta_click' ? 'uniqueClicks' : 'uniqueImpressions'] = FieldValue.increment(1);
-        transaction.create(ctaUniqueReference, { date, kind: event.eventName, createdAt: receivedAt });
+      if (isCta) {
+        ctaUpdate[event.eventName === 'cta_click' ? 'clicks' : 'impressions'] = FieldValue.increment(1);
+        if (ctaUniqueIsNew) {
+          ctaUpdate[event.eventName === 'cta_click' ? 'uniqueClicks' : 'uniqueImpressions'] = FieldValue.increment(1);
+          transaction.create(ctaUniqueReference, { date, kind: event.eventName, trafficClass, createdAt: receivedAt });
+        }
+      } else {
+        ctaUpdate.dwellSignals = FieldValue.increment(1);
+        ctaUpdate.dwellMsTotal = FieldValue.increment(Number(event.dwellMs) || 0);
+        ctaUpdate[`dwell_${event.exitReason}`] = FieldValue.increment(1);
       }
       transaction.set(ctaReference, ctaUpdate, { merge: true });
     }
 
     if (event.eventName === 'page_view') {
-      addDimension(transaction, db, date, 'page', event.pagePath, event.pagePath, receivedAt);
-      addDimension(transaction, db, date, 'referrer', event.referrerHost || 'Direct', event.referrerHost || 'Direct', receivedAt);
-      addDimension(transaction, db, date, 'device', event.deviceCategory, event.deviceCategory, receivedAt);
-      if (event.utmCampaign) addDimension(transaction, db, date, 'campaign', event.utmCampaign, event.utmCampaign, receivedAt);
+      const dimensionContext = { date, receivedAt, trafficClass, scope };
+      addDimension(transaction, db, dimensionContext, 'page', event.pagePath, event.pagePath);
+      addDimension(transaction, db, dimensionContext, 'referrer', event.referrerHost || 'Direct', event.referrerHost || 'Direct');
+      addDimension(transaction, db, dimensionContext, 'device', event.deviceCategory, event.deviceCategory);
+      if (event.utmCampaign) addDimension(transaction, db, dimensionContext, 'campaign', event.utmCampaign, event.utmCampaign);
     }
 
-    transaction.create(markerReference, { eventId, date, summarizedAt: receivedAt });
+    transaction.create(markerReference, { eventId, date, trafficClass, summarizedAt: receivedAt });
     transaction.set(eventReference, { summarized: true, summarizedAt: receivedAt }, { merge: true });
     return true;
   });
 }
 
-function addDimension(transaction, db, date, dimension, key, label, receivedAt) {
-  const reference = db.collection('analytics_dimension_daily').doc(`${date}__${dimension}__${hash(key)}`);
+function addDimension(transaction, db, context, dimension, key, label) {
+  const { date, receivedAt, trafficClass, scope } = context;
+  const reference = db.collection('analytics_dimension_daily').doc(`${date}__${dimension}__${hash(key)}${scope}`);
   transaction.set(reference, {
     date,
     dimension,
+    trafficClass,
     key: clean(key, 240),
     label: clean(label, 240),
     count: FieldValue.increment(1),
@@ -330,6 +406,35 @@ function parseRange(request) {
   return { start: startCandidate, end: endCandidate };
 }
 
+const TRAFFIC_FILTERS = new Set(['production', 'test', 'all']);
+
+function parseTrafficFilter(request) {
+  const value = clean(new URL(request.url).searchParams.get('trafficClass'), 20).toLowerCase();
+  return TRAFFIC_FILTERS.has(value) ? value : 'production';
+}
+
+// Aggregates written before test classification existed carry no trafficClass
+// and are business traffic, so an absent value must read as production.
+function rowTrafficClass(row) {
+  return row.trafficClass === 'test' ? 'test' : 'production';
+}
+
+function selectTraffic(rows, filter) {
+  return filter === 'all' ? rows : rows.filter(row => rowTrafficClass(row) === filter);
+}
+
+// Including both traffic classes yields one row per date per class; the chart and
+// totals need a single row per date.
+function mergeDailyByDate(rows, fields) {
+  const grouped = new Map();
+  for (const row of rows) {
+    const merged = grouped.get(row.date) || { date: row.date };
+    for (const field of fields) merged[field] = Number(merged[field] || 0) + Number(row[field] || 0);
+    grouped.set(row.date, merged);
+  }
+  return [...grouped.values()].sort((left, right) => (left.date < right.date ? -1 : 1));
+}
+
 function previousRange({ start, end }) {
   const startDate = new Date(`${start}T00:00:00.000Z`);
   const endDate = new Date(`${end}T00:00:00.000Z`);
@@ -351,6 +456,7 @@ export async function handleAdminAnalytics(request, db) {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
   try {
     const { start, end } = parseRange(request);
+    const trafficFilter = parseTrafficFilter(request);
     const comparisonRange = previousRange({ start, end });
     const [dailySnapshot, comparisonSnapshot, ctaSnapshot, dimensionSnapshot] = await Promise.all([
       db.collection('analytics_daily').where('date', '>=', start).where('date', '<=', end).orderBy('date').get(),
@@ -358,20 +464,27 @@ export async function handleAdminAnalytics(request, db) {
       db.collection('analytics_cta_daily').where('date', '>=', start).where('date', '<=', end).get(),
       db.collection('analytics_dimension_daily').where('date', '>=', start).where('date', '<=', end).get()
     ]);
-    const daily = dailySnapshot.docs.map(document => document.data());
-    const comparisonDaily = comparisonSnapshot.docs.map(document => document.data());
-    const ctas = ctaSnapshot.docs.map(document => document.data());
-    const dimensions = dimensionSnapshot.docs.map(document => document.data());
+    const allDaily = dailySnapshot.docs.map(document => document.data());
     const totalFields = [
       'sessions', 'visitors', 'pageViews', 'ctaImpressions', 'ctaClicks', 'formStarts',
       'formSubmissions', 'formErrors', 'highIntentActions', 'galleryViews', 'galleryOpens',
-      'galleryVideoPlays', 'gallerySessions', 'galleryToIntentSessions'
+      'galleryVideoPlays', 'gallerySessions', 'galleryToIntentSessions',
+      'phoneDwellSignals', 'phoneDwellSessions', 'phoneDwellMs'
     ];
+    const daily = mergeDailyByDate(selectTraffic(allDaily, trafficFilter), [...totalFields, 'events']);
+    const comparisonDaily = selectTraffic(comparisonSnapshot.docs.map(document => document.data()), trafficFilter);
+    const ctas = selectTraffic(ctaSnapshot.docs.map(document => document.data()), trafficFilter);
+    const dimensions = selectTraffic(dimensionSnapshot.docs.map(document => document.data()), trafficFilter);
+    const testTraffic = sumRows(
+      allDaily.filter(row => rowTrafficClass(row) === 'test'),
+      ['sessions', 'events', 'pageViews', 'formSubmissions']
+    );
     const totals = sumRows(daily, totalFields);
     const comparisonTotals = sumRows(comparisonDaily, totalFields);
     totals.ctr = calculateCtr(totals.ctaClicks, totals.ctaImpressions);
     totals.formConversionRate = totals.sessions ? totals.formSubmissions / totals.sessions : 0;
     totals.galleryToIntentRate = totals.gallerySessions ? totals.galleryToIntentSessions / totals.gallerySessions : 0;
+    totals.averagePhoneDwellMs = totals.phoneDwellSignals ? totals.phoneDwellMs / totals.phoneDwellSignals : 0;
     comparisonTotals.ctr = calculateCtr(comparisonTotals.ctaClicks, comparisonTotals.ctaImpressions);
     comparisonTotals.formConversionRate = comparisonTotals.sessions ? comparisonTotals.formSubmissions / comparisonTotals.sessions : 0;
     comparisonTotals.galleryToIntentRate = comparisonTotals.gallerySessions
@@ -387,6 +500,8 @@ export async function handleAdminAnalytics(request, db) {
     return json({
       success: true,
       range: { start, end },
+      trafficClass: trafficFilter,
+      testTraffic: { ...testTraffic, excluded: trafficFilter === 'production' },
       totals,
       comparison: { range: comparisonRange, totals: comparisonTotals },
       daily,
@@ -412,9 +527,11 @@ function aggregateCtas(rows) {
       impressions: 0,
       clicks: 0,
       uniqueImpressions: 0,
-      uniqueClicks: 0
+      uniqueClicks: 0,
+      dwellSignals: 0,
+      dwellMsTotal: 0
     };
-    for (const field of ['impressions', 'clicks', 'uniqueImpressions', 'uniqueClicks']) {
+    for (const field of ['impressions', 'clicks', 'uniqueImpressions', 'uniqueClicks', 'dwellSignals', 'dwellMsTotal']) {
       item[field] += Number(row[field] || 0);
     }
     grouped.set(key, item);
@@ -423,7 +540,8 @@ function aggregateCtas(rows) {
     .map(item => ({
       ...item,
       ctr: calculateCtr(item.clicks, item.impressions),
-      uniqueCtr: calculateCtr(item.uniqueClicks, item.uniqueImpressions)
+      uniqueCtr: calculateCtr(item.uniqueClicks, item.uniqueImpressions),
+      averageDwellMs: item.dwellSignals ? item.dwellMsTotal / item.dwellSignals : 0
     }))
     .sort((left, right) => right.clicks - left.clicks);
 }

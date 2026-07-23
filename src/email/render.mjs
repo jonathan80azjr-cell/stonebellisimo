@@ -269,57 +269,98 @@ export function renderFeedbackRequestEmail({ lead, token, baseUrl }) {
   };
 }
 
+// A 1/5 and a 5/5 used to arrive looking identical. Ratings at or below
+// LOW_RATING_THRESHOLD are the ones that turn into public reviews if nobody
+// calls, so they get their own subject line and urgent styling.
+export const LOW_RATING_THRESHOLD = 3;
+
+export function isLowRating(rating) {
+  const value = Number(rating);
+  return Number.isFinite(value) && value > 0 && value <= LOW_RATING_THRESHOLD;
+}
+
 export function renderInternalFeedbackNotificationEmail({ lead, feedback, baseUrl }) {
   const ratingLabel = feedback.rating ? `${feedback.rating}/5` : 'Needs review';
-  const subject = feedback.rating
-    ? `New Stone Bellisimo feedback: ${ratingLabel}`
-    : 'Stone Bellisimo feedback reply needs review';
+  const low = isLowRating(feedback.rating);
+  const customer = lead.customerName || 'a customer';
+  const subject = low
+    ? `Low rating (${ratingLabel}) from ${customer}`
+    : feedback.rating
+      ? `New Stone Bellisimo feedback: ${ratingLabel}`
+      : 'Stone Bellisimo feedback reply needs review';
+
+  return renderInternalAlertEmail({
+    eyebrow: low ? 'Low rating' : 'Customer feedback',
+    tone: low ? 'urgent' : 'neutral',
+    title: subject,
+    intro: low
+      ? `${customer} rated their experience ${ratingLabel}. A phone call now usually resolves it before it becomes a public review.`
+      : `A customer submitted feedback through ${feedback.source || 'the feedback system'}.`,
+    rows: [
+      ['Customer', lead.customerName],
+      ['Rating', ratingLabel],
+      ['Phone', lead.phone],
+      ['Email', lead.email],
+      ['Project type', lead.projectType],
+      ['Material', lead.material],
+      ['Comments', feedback.comment || 'No comment provided.']
+    ],
+    ...(low && lead.phone
+      ? { ctaLabel: `Call ${lead.phone}`, ctaUrl: `tel:${String(lead.phone).replace(/[^0-9+]/g, '')}` }
+      : {}),
+    note: `Source: ${feedback.source || 'unknown'} - ${feedback.receivedAt || ''}\nSite: ${normalizeBaseUrl(baseUrl)}`
+  });
+}
+
+// Shared shell for every staff-facing alert. Internal mail is read on a phone
+// between jobs, so the details table carries the message and the CTA is the one
+// action worth taking; `tone: 'urgent'` adds the band that survives skimming.
+export function renderInternalAlertEmail({
+  eyebrow = 'Internal alert',
+  title,
+  intro = '',
+  rows = [],
+  note = '',
+  ctaLabel = '',
+  ctaUrl = '',
+  tone = 'neutral'
+}) {
+  const subject = String(title || '').trim() || 'Stone Bellisimo alert';
+  const visibleRows = rows.filter(([, value]) => value !== undefined && value !== null && String(value).trim() !== '');
+  const urgent = tone === 'urgent';
+  const accent = urgent ? '#a8342a' : COLORS.goldDark;
+
+  const rowsHtml = visibleRows.length
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:22px 0 0;border:1px solid ${COLORS.border};border-radius:12px;overflow:hidden;">
+        ${visibleRows.map(([label, value]) => `
+          <tr>
+            <td style="padding:12px 14px;background:${COLORS.sand};border-bottom:1px solid ${COLORS.border};font:600 13px Arial,sans-serif;color:${COLORS.ink};width:132px;vertical-align:top;">${escapeHtml(label)}</td>
+            <td style="padding:12px 14px;border-bottom:1px solid ${COLORS.border};font:400 14px/1.55 Arial,sans-serif;color:${COLORS.muted};vertical-align:top;">${nl2br(String(value))}</td>
+          </tr>
+        `).join('')}
+      </table>`
+    : '';
+
   const bodyHtml = `
-    <p style="margin:0 0 16px;font:400 16px/1.75 Arial,sans-serif;color:${COLORS.ink};">A customer submitted feedback through ${escapeHtml(feedback.source || 'the feedback system')}.</p>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border:1px solid ${COLORS.border};border-radius:12px;overflow:hidden;">
-      ${[
-        ['Customer', lead.customerName],
-        ['Rating', ratingLabel],
-        ['Phone', lead.phone],
-        ['Email', lead.email],
-        ['Project type', lead.projectType],
-        ['Material', lead.material],
-        ['Comments', feedback.comment || 'No comment provided.']
-      ].map(([label, value]) => `
-        <tr>
-          <td style="padding:12px 14px;background:${COLORS.sand};border-bottom:1px solid ${COLORS.border};font:600 13px Arial,sans-serif;color:${COLORS.ink};width:132px;vertical-align:top;">${escapeHtml(label)}</td>
-          <td style="padding:12px 14px;border-bottom:1px solid ${COLORS.border};font:400 14px/1.55 Arial,sans-serif;color:${COLORS.muted};vertical-align:top;">${nl2br(value || '')}</td>
-        </tr>
-      `).join('')}
-    </table>
-    <p style="margin:18px 0 0;font:400 13px/1.65 Arial,sans-serif;color:${COLORS.muted};">Source: ${escapeHtml(feedback.source || 'unknown')} - ${escapeHtml(feedback.receivedAt || '')}</p>
+    ${urgent ? `<div style="margin:0 0 20px;padding:12px 16px;border-radius:10px;background:#fbecea;border:1px solid #e8c4bf;font:700 13px Arial,sans-serif;color:${accent};">Needs attention</div>` : ''}
+    ${intro ? `<p style="margin:0 0 4px;font:400 16px/1.75 Arial,sans-serif;color:${COLORS.ink};">${nl2br(intro)}</p>` : ''}
+    ${rowsHtml}
+    ${ctaUrl && ctaLabel ? `<p style="margin:24px 0 0;"><a href="${escapeHtml(ctaUrl)}" style="display:inline-block;border-radius:999px;background:${COLORS.gold};color:#ffffff;font:700 14px Arial,sans-serif;text-decoration:none;padding:14px 22px;">${escapeHtml(ctaLabel)}</a></p>` : ''}
+    ${note ? `<p style="margin:20px 0 0;font:400 13px/1.65 Arial,sans-serif;color:${COLORS.muted};">${nl2br(note)}</p>` : ''}
   `;
 
   const text = [
     subject,
     '',
-    `Customer: ${lead.customerName || ''}`,
-    `Rating: ${ratingLabel}`,
-    `Phone: ${lead.phone || ''}`,
-    `Email: ${lead.email || ''}`,
-    `Project type: ${lead.projectType || ''}`,
-    `Material: ${lead.material || ''}`,
-    '',
-    `Comments: ${feedback.comment || 'No comment provided.'}`,
-    '',
-    `Source: ${feedback.source || 'unknown'}`,
-    `Received: ${feedback.receivedAt || ''}`,
-    `Site: ${normalizeBaseUrl(baseUrl)}`
+    ...(intro ? [intro, ''] : []),
+    ...visibleRows.map(([label, value]) => `${label}: ${value}`),
+    ...(ctaUrl && ctaLabel ? ['', `${ctaLabel}: ${ctaUrl}`] : []),
+    ...(note ? ['', note] : [])
   ].join('\n');
 
   return {
     subject,
-    html: emailShell({
-      preheader: subject,
-      eyebrow: 'Customer feedback',
-      title: subject,
-      bodyHtml
-    }),
+    html: emailShell({ preheader: intro || subject, eyebrow, title: subject, bodyHtml }),
     text
   };
 }

@@ -6,7 +6,8 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { onRequest } from 'firebase-functions/v2/https';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
-import { defineSecret } from 'firebase-functions/params';
+import { beforeUserCreated, beforeUserSignedIn, HttpsError } from 'firebase-functions/v2/identity';
+import { defineSecret, defineString } from 'firebase-functions/params';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import {
   handleContactRequest,
@@ -30,9 +31,28 @@ import {
 } from './src/analytics.mjs';
 import {
   handleAdminSearchConsole,
+  readSearchConsoleHealth,
   syncRecentSearchConsole
 } from './src/search-console.mjs';
 import { authorizeAdminRequest, verifyAppCheckRequest, verifyPublicOrigin } from './src/firebase-security.mjs';
+import { adminAllowlist, evaluateAdminSignIn } from './src/admin-accounts.mjs';
+import {
+  buildCustomerReplyAlert,
+  buildDeliveryProblemAlert,
+  buildEmailFailureAlert,
+  buildNewLeadAlert,
+  buildNoLeadsAlert,
+  buildSearchConsoleFailureAlert,
+  buildWeeklyDigestAlert,
+  claimNotificationSlot,
+  COOLDOWNS,
+  isAdminNotificationEvent,
+  isDeliveryProblem,
+  isUnansweredReply,
+  NOTIFICATION_TYPES,
+  sendAdminNotification,
+  summarizeLeadWindow
+} from './src/admin-notifications.mjs';
 
 const SECRET_NAMES = [
   'SB_PROXY_SECRET',
@@ -47,6 +67,18 @@ const SECRET_NAMES = [
 const SECRETS = Object.fromEntries(SECRET_NAMES.map(name => [name, defineSecret(name)]));
 const SECRET_PARAMETERS = Object.values(SECRETS);
 
+// The runtime service account is a deploy-time option resolved during the CLI's
+// code-analysis phase, not at container runtime. A plain process.env read here
+// is not populated at analysis time, and calling .value() on a param in a
+// config returns a deferred sentinel rather than the literal — so the Param
+// object is passed to setGlobalOptions directly and firebase-functions resolves
+// it from .env.<project> when building the deploy manifest. The default is the
+// dedicated least-privilege runtime identity; override it in .env to roll back
+// to the platform default compute account.
+const runtimeServiceAccount = defineString('FUNCTIONS_SERVICE_ACCOUNT', {
+  default: 'functions-runtime@stone-bellisimo-dashboard.iam.gserviceaccount.com'
+});
+
 if (!getApps().length) initializeApp();
 const db = getFirestore();
 db.settings({ ignoreUndefinedProperties: true });
@@ -56,7 +88,7 @@ setGlobalOptions({
   region: 'us-east1',
   maxInstances: 10,
   memory: '256MiB',
-  ...(process.env.FUNCTIONS_SERVICE_ACCOUNT ? { serviceAccount: process.env.FUNCTIONS_SERVICE_ACCOUNT } : {})
+  serviceAccount: runtimeServiceAccount
 });
 
 function secretValue(name) {
@@ -174,7 +206,7 @@ function firebaseClientConfig(env) {
   return {
     configured: Boolean(apiKey && projectId),
     emulator,
-    authEmulatorUrl: emulator ? 'http://127.0.0.1:9099' : '',
+    authEmulatorUrl: emulator ? `http://${process.env.FIREBASE_AUTH_EMULATOR_HOST || '127.0.0.1:9099'}` : '',
     firebaseConfig: {
       apiKey,
       authDomain: process.env.SB_FIREBASE_AUTH_DOMAIN || (projectId ? `${projectId}.firebaseapp.com` : ''),
@@ -250,9 +282,155 @@ export const siteApi = onRequest({ secrets: SECRET_PARAMETERS }, async (request,
   }
 });
 
+// Google and password sign-in both pass through these blocking functions, so an
+// approved administrator is provisioned on first sign-in and everyone else is
+// rejected before an account exists. They replace manual claim provisioning.
+function enforceAdminAllowlist(event, eventType) {
+  const email = event.data?.email || event.additionalUserInfo?.profile?.email || '';
+  const decision = evaluateAdminSignIn(email, { allowlist: adminAllowlist(process.env), emulator: isEmulator() });
+  if (!decision.allowed) {
+    console.warn(JSON.stringify({ message: 'Blocked non-administrator authentication', eventType, email }));
+    throw new HttpsError('permission-denied', decision.message);
+  }
+  if (!decision.admin) return;
+  return { customClaims: { ...(event.data?.customClaims || {}), admin: true } };
+}
+
+export const restrictAdminSignUp = beforeUserCreated(event => enforceAdminAllowlist(event, 'beforeCreate'));
+
+export const restrictAdminSignIn = beforeUserSignedIn(event => enforceAdminAllowlist(event, 'beforeSignIn'));
+
 export const summarizeAnalyticsEvent = onDocumentCreated('analytics_events/{eventId}', async event => {
   if (!event.data) return;
   await aggregateAnalyticsEvent(db, event.params.eventId, event.data.data());
+});
+
+// Staff alerts below. Firestore delivers these triggers at least once, so each
+// one claims a slot keyed by the document it reacts to before sending; a
+// redelivered event finds the slot taken and sends nothing.
+const HOUR_MS = 60 * 60 * 1000;
+
+export const notifyNewLead = onDocumentCreated({
+  document: 'leads/{leadId}',
+  secrets: SECRET_PARAMETERS
+}, async event => {
+  const data = event.data?.data();
+  if (!data) return;
+  // QA submissions are already hidden from reporting; they should not ring phones either.
+  if (data.attribution?.trafficClass === 'test') return;
+  if (!await claimNotificationSlot(db, `lead:${event.params.leadId}`, COOLDOWNS.perDocument, Date.now())) return;
+
+  const env = runtimeEnv();
+  const lead = { ...data, id: event.params.leadId };
+  await sendAdminNotification({
+    env,
+    store,
+    type: NOTIFICATION_TYPES.newLead,
+    alert: buildNewLeadAlert(lead, env),
+    lead,
+    // Replying to the alert reaches the customer, not the alert system.
+    replyTo: lead.email || ''
+  });
+});
+
+export const notifyUnansweredReply = onDocumentCreated({
+  document: 'postmark_inbound_events/{eventId}',
+  secrets: SECRET_PARAMETERS
+}, async event => {
+  const data = event.data?.data();
+  // Replies that matched a lead already notified through the feedback path.
+  if (!data || !isUnansweredReply(data)) return;
+  if (!await claimNotificationSlot(db, `inbound:${event.params.eventId}`, COOLDOWNS.perDocument, Date.now())) return;
+
+  const env = runtimeEnv();
+  await sendAdminNotification({
+    env,
+    store,
+    type: NOTIFICATION_TYPES.customerReply,
+    alert: buildCustomerReplyAlert(data, env),
+    replyTo: data.fromEmail || ''
+  });
+});
+
+export const notifyDeliveryProblem = onDocumentCreated({
+  document: 'postmark_delivery_events/{eventId}',
+  secrets: SECRET_PARAMETERS
+}, async event => {
+  const data = event.data?.data();
+  if (!data || !isDeliveryProblem(data)) return;
+  if (!await claimNotificationSlot(db, `delivery:${event.params.eventId}`, COOLDOWNS.perDocument, Date.now())) return;
+
+  const env = runtimeEnv();
+  await sendAdminNotification({
+    env,
+    store,
+    type: NOTIFICATION_TYPES.deliveryProblem,
+    alert: buildDeliveryProblemAlert(data, env),
+    metadata: { delivery_event: data.eventType || '' }
+  });
+});
+
+export const notifyEmailFailure = onDocumentCreated({
+  document: 'email_events/{eventId}',
+  secrets: SECRET_PARAMETERS
+}, async event => {
+  const data = event.data?.data();
+  if (!data || data.status !== 'failed') return;
+  // The guard that stops a failing alert from alerting about itself forever.
+  if (isAdminNotificationEvent(data.eventType)) return;
+  if (!await claimNotificationSlot(db, 'email_failure', COOLDOWNS.emailFailure, Date.now())) return;
+
+  const env = runtimeEnv();
+  await sendAdminNotification({
+    env,
+    store,
+    type: NOTIFICATION_TYPES.emailFailure,
+    alert: buildEmailFailureAlert(data, env),
+    metadata: { failed_event: data.eventType || '' }
+  });
+});
+
+// A broken contact form produces no errors at all, only silence. This is the
+// only check that treats silence itself as the symptom.
+export const leadWatchdogSchedule = onSchedule({
+  schedule: '0 9 * * *',
+  timeZone: 'America/New_York',
+  secrets: SECRET_PARAMETERS
+}, async () => {
+  const env = runtimeEnv();
+  const hours = Number(env.NO_LEADS_ALERT_HOURS || 72);
+  const latest = await store.getLatestLead();
+  const lastMs = latest?.submittedAt ? new Date(latest.submittedAt).getTime() : 0;
+  if (lastMs && Date.now() - lastMs < hours * HOUR_MS) return;
+  if (!await claimNotificationSlot(db, 'no_leads', COOLDOWNS.noLeads, Date.now())) return;
+
+  await sendAdminNotification({
+    env,
+    store,
+    type: NOTIFICATION_TYPES.noLeads,
+    alert: buildNoLeadsAlert({ hours, lastLead: latest }, env)
+  });
+});
+
+export const weeklyDigestSchedule = onSchedule({
+  schedule: '0 8 * * 1',
+  timeZone: 'America/New_York',
+  secrets: SECRET_PARAMETERS
+}, async () => {
+  const env = runtimeEnv();
+  const until = new Date();
+  const since = new Date(until.getTime() - 7 * 24 * HOUR_MS);
+  const leads = await store.listLeadsSince(since.toISOString(), 1000);
+  const summary = summarizeLeadWindow(leads);
+  if (!await claimNotificationSlot(db, `digest:${since.toISOString().slice(0, 10)}`, 6 * 24 * HOUR_MS, Date.now())) return;
+
+  await sendAdminNotification({
+    env,
+    store,
+    type: NOTIFICATION_TYPES.weeklyDigest,
+    alert: buildWeeklyDigestAlert({ summary, since: since.toISOString(), until: until.toISOString() }, env),
+    metadata: { lead_count: summary.total }
+  });
 });
 
 export const processFeedbackSchedule = onSchedule({
@@ -266,13 +444,36 @@ export const processFeedbackSchedule = onSchedule({
 
 export const importSearchConsoleSchedule = onSchedule({
   schedule: '15 5 * * *',
-  timeZone: 'America/New_York'
+  timeZone: 'America/New_York',
+  // Needed to send the failure alert; the import itself uses the runtime
+  // service account's Application Default Credentials.
+  secrets: SECRET_PARAMETERS
 }, async event => {
+  const env = runtimeEnv();
   try {
-    const result = await syncRecentSearchConsole(db, runtimeEnv());
+    const result = await syncRecentSearchConsole(db, env);
     console.info(JSON.stringify({ message: 'Search Console import completed', scheduleTime: event.scheduleTime, ...result }));
   } catch (error) {
     console.error(JSON.stringify({ message: 'Search Console import failed', error: error?.message || String(error) }));
+
+    // This ran unnoticed for days before anyone read a log, which is the exact
+    // failure this alert exists to prevent.
+    const health = await readSearchConsoleHealth(db);
+    if (await claimNotificationSlot(db, 'search_console_failure', COOLDOWNS.searchConsoleFailure, Date.now())) {
+      await sendAdminNotification({
+        env,
+        store,
+        type: NOTIFICATION_TYPES.searchConsoleFailure,
+        alert: buildSearchConsoleFailureAlert({
+          errorCode: error?.status || null,
+          consecutiveFailures: Number(health?.consecutiveFailures || 1),
+          lastSuccessAt: health?.lastSuccessAt || null,
+          siteUrl: env.SEARCH_CONSOLE_SITE_URL || 'sc-domain:stonebellisimollc.com',
+          serviceAccount: env.FUNCTIONS_SERVICE_ACCOUNT || 'the Functions runtime service account'
+        }, env),
+        metadata: { error_code: error?.status || 'error' }
+      });
+    }
     throw error;
   }
 });

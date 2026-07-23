@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { ReCaptchaEnterpriseProvider, getToken, initializeAppCheck } from 'firebase/app-check';
-import { classifyCta, markImpressionOnce, slugAnalyticsValue } from '../analytics-classification.mjs';
+import { PHONE_DWELL, classifyCta, markImpressionOnce, slugAnalyticsValue } from '../analytics-classification.mjs';
 
 const STORAGE = {
   visitor: 'sb_analytics_visitor',
@@ -11,6 +11,9 @@ const STORAGE = {
 const SESSION_TIMEOUT = 30 * 60 * 1000;
 const MAX_QUEUE = 100;
 const pagePath = location.pathname || '/';
+// Phone and text CTAs the visitor actually used. A dwell on a number they went
+// on to click is the same contact attempt reported twice.
+const clickedContactCtas = new Set();
 let appCheck = null;
 let configReady = false;
 let flushing = false;
@@ -241,11 +244,90 @@ function setupCtas() {
     if (!element || element.closest('[data-no-analytics]')) return;
     const detail = classify(element);
     track('cta_click', detail);
+    if (['phone', 'sms'].includes(detail.ctaType)) clickedContactCtas.add(detail.ctaId);
     const galleryCall = element.getAttribute('onclick') || '';
     if (/openGalleryModal/.test(galleryCall)) {
       track('gallery_item_open', { galleryItem: element.querySelector('img')?.alt || detail.ctaLabel, placement: 'homepage-gallery' });
     }
   }, { capture: true });
+}
+
+// Desktop only: on a phone, tapping the number is the call, and that tap is
+// already a cta_click. On a desktop the visitor reads the number off the screen
+// and dials on a separate handset, which leaves no click to count. What is
+// observable is the number holding the viewport while the visitor stops driving
+// the page — a proxy for an off-site call, never proof of one.
+function setupPhoneDwell() {
+  if (deviceCategory() !== 'desktop' || !('IntersectionObserver' in window)) return;
+  const elements = [...document.querySelectorAll('a[href^="tel:"],a[href^="sms:"],[data-analytics-phone]')]
+    .filter(element => !element.closest('[data-no-analytics]'));
+  if (!elements.length) return;
+
+  const states = new Map(elements.map(element => [element, { visible: false, dwellMs: 0, reported: false }]));
+  let lastInputAt = Date.now();
+  let tickAt = Date.now();
+  let ticker = 0;
+
+  const report = (element, exitReason) => {
+    const state = states.get(element);
+    if (!state || state.reported) return;
+    const dwellMs = Math.min(Math.round(state.dwellMs), PHONE_DWELL.maxMs);
+    if (dwellMs < (exitReason === 'dwell' ? PHONE_DWELL.activeMs : PHONE_DWELL.minMs)) return;
+    state.reported = true;
+    const detail = classify(element);
+    if (!clickedContactCtas.has(detail.ctaId)) track('phone_dwell', { ...detail, dwellMs, exitReason });
+    if ([...states.values()].every(item => item.reported)) {
+      clearInterval(ticker);
+      ticker = 0;
+    }
+  };
+
+  const reportVisible = exitReason => {
+    for (const [element, state] of states) if (state.visible) report(element, exitReason);
+  };
+
+  const tick = () => {
+    const now = Date.now();
+    // A throttled background timer or a sleeping machine can skip minutes at a
+    // time; only credit dwell the visitor could plausibly have been present for.
+    const elapsed = Math.min(now - tickAt, PHONE_DWELL.tickMs * 3);
+    tickAt = now;
+    if (document.visibilityState !== 'visible') return;
+    if (now - lastInputAt >= PHONE_DWELL.idleMs) return reportVisible('idle');
+    for (const state of states.values()) if (state.visible && !state.reported) state.dwellMs += elapsed;
+  };
+
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      const state = states.get(entry.target);
+      if (!state) continue;
+      const visible = entry.isIntersecting && entry.intersectionRatio >= 0.5;
+      // Scrolling the number out of view ends the dwell either way.
+      if (state.visible && !visible) report(entry.target, 'dwell');
+      state.visible = visible;
+    }
+  }, { threshold: [0.5] });
+  for (const element of states.keys()) observer.observe(element);
+
+  for (const type of ['pointerdown', 'pointermove', 'keydown', 'scroll', 'wheel']) {
+    addEventListener(type, () => { lastInputAt = Date.now(); }, { passive: true });
+  }
+  // Window blur, not element blur: leaving the browser with the number on
+  // screen is the strongest evidence available that the call moved off-site.
+  addEventListener('blur', () => reportVisible('blur'));
+  // The page may never run script again after these, so send rather than leave
+  // the signal to the debounced flush timer.
+  addEventListener('pagehide', () => { reportVisible('dwell'); flush(); }, { once: true });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      reportVisible('hidden');
+      flush();
+      return;
+    }
+    tickAt = Date.now();
+    lastInputAt = Date.now();
+  });
+  ticker = setInterval(tick, PHONE_DWELL.tickMs);
 }
 
 function setupGallery() {
@@ -330,6 +412,7 @@ function boot() {
   currentSession();
   preserveExistingEnhancements();
   setupCtas();
+  setupPhoneDwell();
   setupGallery();
   observePerformance();
   track('page_view');

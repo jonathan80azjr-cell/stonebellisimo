@@ -4,6 +4,7 @@ import {
   renderImmediateConfirmationEmail,
   renderInternalFeedbackNotificationEmail
 } from './email/render.mjs';
+import { notificationRecipients } from './admin-accounts.mjs';
 
 export const JSON_HEADERS = {
   'content-type': 'application/json; charset=utf-8',
@@ -1162,7 +1163,9 @@ function renderThanksPage() {
 }
 
 async function notifyBusinessOfFeedback({ env, store, lead, feedback, request }) {
-  const to = getEnv(env, 'BUSINESS_NOTIFICATION_EMAIL', BUSINESS_INFO.email);
+  // Feedback now reaches everyone who can act on it, not one shared address.
+  const recipients = notificationRecipients(env);
+  const to = recipients.join(', ');
   if (!to) return;
 
   const notification = renderInternalFeedbackNotificationEmail({

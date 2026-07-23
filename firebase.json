@@ -25,7 +25,12 @@
   },
   "auth": {
     "providers": {
-      "emailPassword": true
+      "emailPassword": true,
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "Stone Bellisimo",
+        "supportEmail": "jensyjimenez723@gmail.com",
+        "authorizedRedirectUris": ["https://stone-bellisimo-dashboard.firebaseapp.com/__/auth/handler"]
+      }
     }
   },
   "hosting": {

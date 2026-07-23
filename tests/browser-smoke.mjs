@@ -11,6 +11,7 @@ const projectId = process.env.GCLOUD_PROJECT || 'demo-stonebellisimo';
 initializeApp({ projectId });
 const auth = getAuth();
 const db = getFirestore();
+const site = process.env.SB_SMOKE_BASE_URL || 'http://127.0.0.1:5002';
 const email = 'dashboard.admin@example.com';
 const password = 'Secure!Dashboard123';
 let user;
@@ -31,9 +32,10 @@ const browser = await chromium.launch({
 });
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
-  await page.goto('http://127.0.0.1:5002/admin/', { waitUntil: 'networkidle' });
+  await page.goto(`${site}/admin/`, { waitUntil: 'networkidle' });
   await page.getByRole('heading', { name: 'Welcome back.' }).waitFor();
   assert.equal(await page.locator('.login-logo').getAttribute('alt'), 'Stone Bellisimo LLC');
+  assert.equal(await page.locator('#signInGoogle').isVisible(), true, 'Google sign-in must be offered');
   await page.locator('#loginEmail').fill(email);
   await page.locator('#loginPassword').fill(password);
   await page.locator('#signIn').click();
@@ -52,7 +54,7 @@ try {
     submittedPayload = route.request().postDataJSON();
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true }) });
   });
-  await page.goto('http://127.0.0.1:5002/?utm_source=browser&utm_campaign=dashboard-test', { waitUntil: 'domcontentloaded' });
+  await page.goto(`${site}/?utm_source=browser&utm_campaign=dashboard-test`, { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => {
     window.openWizard('Browser Smoke');
     window.selectOpt(document.querySelector('#wz1 .wz-opt'), 'project', 'Kitchen Countertops');
@@ -77,7 +79,7 @@ try {
 
   await page.unroute('**/api/contact');
   await page.route('**/api/analytics/events', route => route.abort());
-  await page.goto('http://127.0.0.1:5002/', { waitUntil: 'domcontentloaded' });
+  await page.goto(`${site}/`, { waitUntil: 'domcontentloaded' });
   await page.locator('a[href="./contact-us/"]:visible').first().click();
   await page.waitForURL('**/contact-us/');
   assert.match(page.url(), /\/contact-us\/$/, 'navigation must proceed even when analytics ingestion fails');

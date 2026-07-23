@@ -25,6 +25,27 @@ export function classifyCta({ href = '', onclick = '', explicitType = '', label 
   return { type, targetLabel: clean(targetLabel, 120) };
 }
 
+// A desktop visitor who dials from a handset never touches the tel: link, so
+// the only observable trace is the number sitting on screen while they stop
+// interacting with the page. These thresholds are shared so the browser timer
+// and the server validator can never drift apart and admit signals the client
+// would not have produced.
+export const PHONE_DWELL = Object.freeze({
+  // Floor for a signal that ended in a handoff (window blur, tab hidden, idle).
+  minMs: 4000,
+  // Floor for a signal that only ended because the number scrolled away — the
+  // visitor was still driving the page, so it needs more time to mean anything.
+  activeMs: 8000,
+  // No pointer, key, or scroll for this long ends the dwell. Without it an
+  // abandoned tab left on the contact section reads as an hour-long call.
+  idleMs: 45000,
+  maxMs: 600000,
+  tickMs: 1000
+});
+
+// Ordered strongest to weakest as evidence that the visitor left the page to dial.
+export const PHONE_DWELL_REASONS = Object.freeze(['blur', 'hidden', 'idle', 'dwell']);
+
 export function markImpressionOnce(seen, key) {
   if (seen.has(key)) return false;
   seen.add(key);

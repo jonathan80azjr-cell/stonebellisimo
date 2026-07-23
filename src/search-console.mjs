@@ -6,6 +6,23 @@ const SEARCH_SCOPE = 'https://www.googleapis.com/auth/webmasters.readonly';
 const DEFAULT_SITE = 'sc-domain:stonebellisimollc.com';
 const BRAND_PATTERN = /stone\s*bellisimo|stonebellisimo/i;
 
+// Health is stored per source so later importers (ad spend, call tracking) can
+// share the collection without a schema change.
+const HEALTH_COLLECTION = 'analytics_health';
+const HEALTH_DOC = 'search_console';
+
+// Google returns the same two statuses for the two mistakes that actually
+// happen here, and neither is self-explanatory in a log line at 5am.
+const REQUEST_HINTS = Object.freeze({
+  401: ' The runtime credentials were rejected.',
+  403: ' The Functions service account is not a user on this Search Console property.',
+  404: ' The property does not exist under this exact site URL.'
+});
+
+// The scheduled import runs daily, so anything past two days means at least one
+// run failed or never fired. Google itself lags ~2 days, hence the offset.
+const STALE_AFTER_MS = 36 * 60 * 60 * 1000;
+
 function hash(value) {
   return createHash('sha256').update(String(value || '')).digest('hex').slice(0, 32);
 }
@@ -48,7 +65,15 @@ export async function syncSearchConsole({
 
   async function query(body) {
     const response = await fetchImpl(endpoint, { method: 'POST', headers, body: JSON.stringify(body) });
-    if (!response.ok) throw new Error(`Search Console request failed with ${response.status}.`);
+    if (!response.ok) {
+      // The status is what tells an operator whether this is a permission
+      // problem they can fix or a Google outage they must wait out, so carry it
+      // on the error rather than only in the message. The response body is
+      // deliberately not read: it can echo the site URL and token metadata.
+      const error = new Error(`Search Console request failed with ${response.status}.${REQUEST_HINTS[response.status] || ''}`);
+      error.status = response.status;
+      throw error;
+    }
     return response.json();
   }
 
@@ -123,16 +148,111 @@ export async function syncSearchConsole({
   };
 }
 
+// Health writes never throw. A failed import must surface as its own error, not
+// as a bookkeeping error that masks the original cause.
+async function recordHealth(db, patch) {
+  if (!db) return;
+  try {
+    await db.collection(HEALTH_COLLECTION).doc(HEALTH_DOC).set({
+      ...patch,
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
+  } catch (error) {
+    console.error(JSON.stringify({
+      message: 'Search Console health write failed',
+      error: error?.message || String(error)
+    }));
+  }
+}
+
+export async function readSearchConsoleHealth(db) {
+  if (!db) return null;
+  try {
+    const snapshot = await db.collection(HEALTH_COLLECTION).doc(HEALTH_DOC).get();
+    return snapshot.exists ? snapshot.data() : null;
+  } catch (error) {
+    console.error(JSON.stringify({
+      message: 'Search Console health read failed',
+      error: error?.message || String(error)
+    }));
+    return null;
+  }
+}
+
+// Three states, because "not working" and "not set up yet" need different
+// instructions: one is a regression, the other has never run.
+export function evaluateSearchConsoleHealth(health, nowMs = Date.now()) {
+  if (!health || !health.lastAttemptAt) {
+    return {
+      status: 'pending',
+      message: 'The scheduled Search Console import has not run yet. It runs daily at 5:15 AM Eastern.'
+    };
+  }
+
+  const lastSuccessMs = health.lastSuccessAt ? new Date(health.lastSuccessAt).getTime() : 0;
+  if (!lastSuccessMs) {
+    return {
+      status: 'failed',
+      message: `The Search Console import has never succeeded. Last attempt failed with ${health.lastErrorCode || 'an error'}.${REQUEST_HINTS[health.lastErrorCode] || ''}`,
+      lastErrorCode: health.lastErrorCode || null,
+      consecutiveFailures: Number(health.consecutiveFailures || 0)
+    };
+  }
+
+  if (Number(health.consecutiveFailures || 0) > 0) {
+    return {
+      status: 'failed',
+      message: `The last ${health.consecutiveFailures} Search Console import(s) failed with ${health.lastErrorCode || 'an error'}. Data is stale since ${health.latestDataDate || 'the last success'}.${REQUEST_HINTS[health.lastErrorCode] || ''}`,
+      lastErrorCode: health.lastErrorCode || null,
+      consecutiveFailures: Number(health.consecutiveFailures || 0)
+    };
+  }
+
+  if (nowMs - lastSuccessMs > STALE_AFTER_MS) {
+    return {
+      status: 'stale',
+      message: `The Search Console import last succeeded on ${health.lastSuccessAt}. A daily run appears to have been skipped.`
+    };
+  }
+
+  return {
+    status: 'healthy',
+    message: `Search Console data is current through ${health.latestDataDate || 'the last import'}. Google publishes results about two days behind.`
+  };
+}
+
 export async function syncRecentSearchConsole(db, env = {}) {
   const lagDays = Math.max(2, Math.min(7, Number(env.SEARCH_CONSOLE_LAG_DAYS) || 2));
   const end = new Date(Date.now() - lagDays * 86400000);
   const start = new Date(end.getTime() - 6 * 86400000);
-  return syncSearchConsole({
-    db,
-    siteUrl: env.SEARCH_CONSOLE_SITE_URL || DEFAULT_SITE,
-    startDate: isoDate(start),
-    endDate: isoDate(end)
-  });
+  const attemptedAt = new Date().toISOString();
+
+  try {
+    const result = await syncSearchConsole({
+      db,
+      siteUrl: env.SEARCH_CONSOLE_SITE_URL || DEFAULT_SITE,
+      startDate: isoDate(start),
+      endDate: isoDate(end)
+    });
+    await recordHealth(db, {
+      lastAttemptAt: attemptedAt,
+      lastSuccessAt: result.syncedAt,
+      latestDataDate: result.endDate,
+      rowsWritten: result.totals + result.queries,
+      lastErrorCode: null,
+      consecutiveFailures: 0
+    });
+    return result;
+  } catch (error) {
+    const previous = await readSearchConsoleHealth(db);
+    await recordHealth(db, {
+      lastAttemptAt: attemptedAt,
+      // A status code is safe to store; the raw message can carry the site URL.
+      lastErrorCode: error?.status || 'error',
+      consecutiveFailures: Number(previous?.consecutiveFailures || 0) + 1
+    });
+    throw error;
+  }
 }
 
 export async function handleAdminSearchConsole(request, db, env = {}) {
@@ -155,11 +275,12 @@ export async function handleAdminSearchConsole(request, db, env = {}) {
   const previousStart = new Date(previousEnd.getTime() - (days - 1) * 86400000);
   const comparison = { start: isoDate(previousStart), end: isoDate(previousEnd) };
 
-  const [dailySnapshot, querySnapshot, comparisonDailySnapshot, comparisonQuerySnapshot] = await Promise.all([
+  const [dailySnapshot, querySnapshot, comparisonDailySnapshot, comparisonQuerySnapshot, healthRecord] = await Promise.all([
     db.collection('search_console_daily').where('date', '>=', start).where('date', '<=', end).orderBy('date').get(),
     db.collection('search_console_queries').where('date', '>=', start).where('date', '<=', end).get(),
     db.collection('search_console_daily').where('date', '>=', comparison.start).where('date', '<=', comparison.end).orderBy('date').get(),
-    db.collection('search_console_queries').where('date', '>=', comparison.start).where('date', '<=', comparison.end).get()
+    db.collection('search_console_queries').where('date', '>=', comparison.start).where('date', '<=', comparison.end).get(),
+    readSearchConsoleHealth(db)
   ]);
   const daily = dailySnapshot.docs.map(document => document.data());
   const rows = querySnapshot.docs.map(document => document.data());
@@ -186,6 +307,12 @@ export async function handleAdminSearchConsole(request, db, env = {}) {
     topQueries,
     brandedQueries,
     topPages,
+    health: {
+      ...evaluateSearchConsoleHealth(healthRecord),
+      lastAttemptAt: healthRecord?.lastAttemptAt || null,
+      lastSuccessAt: healthRecord?.lastSuccessAt || null,
+      latestDataDate: healthRecord?.latestDataDate || null
+    },
     limitations: 'Search Console reports appearances and clicks for this site; anonymized or low-volume queries may be omitted.'
   });
 }

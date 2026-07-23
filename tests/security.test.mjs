@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { authorizeAdminRequest, readBearerToken, verifyAppCheckRequest, verifyPublicOrigin } from '../src/firebase-security.mjs';
+import { ADMIN_EMAILS, adminAllowlist, evaluateAdminSignIn, isAdminEmail } from '../src/admin-accounts.mjs';
 
 test('Firebase bearer authorization requires the admin custom claim', async () => {
   const missing = new Request('https://example.com/api/admin/leads');
@@ -14,6 +15,32 @@ test('Firebase bearer authorization requires the admin custom claim', async () =
   assert.equal(admin.ok, true);
   const invalid = await authorizeAdminRequest(request, async () => { throw new Error('expired'); });
   assert.equal(invalid.status, 401);
+});
+
+test('only allowlisted administrators may sign in or receive the admin claim', () => {
+  assert.deepEqual(ADMIN_EMAILS.slice(), [
+    'jensyjimenez723@gmail.com',
+    'jonathan80azjr@gmail.com',
+    'stonebellisimollc@outlook.com'
+  ]);
+  assert.equal(isAdminEmail('  JensyJimenez723@Gmail.com '), true);
+  assert.equal(isAdminEmail('jensyjimenez723@gmail.com.attacker.example'), false);
+  assert.equal(isAdminEmail(''), false);
+  assert.equal(isAdminEmail(undefined), false);
+
+  for (const email of ADMIN_EMAILS) {
+    assert.deepEqual(evaluateAdminSignIn(email), { allowed: true, admin: true });
+  }
+  const stranger = evaluateAdminSignIn('stranger@gmail.com');
+  assert.equal(stranger.allowed, false);
+  assert.equal(stranger.admin, false);
+
+  // Emulator accounts sign in for local QA but never earn the claim from here.
+  assert.deepEqual(evaluateAdminSignIn('dashboard.admin@example.com', { emulator: true }), { allowed: true, admin: false });
+
+  const extended = adminAllowlist({ SB_ADMIN_EMAILS: ' Owner@Example.com , jensyjimenez723@gmail.com ' });
+  assert.deepEqual(extended, [...ADMIN_EMAILS, 'owner@example.com']);
+  assert.equal(evaluateAdminSignIn('owner@example.com', { allowlist: extended }).admin, true);
 });
 
 test('App Check rejects missing and invalid tokens only after enforcement', async () => {

@@ -3,14 +3,16 @@ import {
   browserSessionPersistence,
   connectAuthEmulator,
   getAuth,
+  GoogleAuthProvider,
   onAuthStateChanged,
   setPersistence,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut
 } from 'firebase/auth';
 
 const $ = id => document.getElementById(id);
-const state = { auth: null, user: null, leads: [], selected: null, nextCursor: null, rangeDays: 30 };
+const state = { auth: null, user: null, leads: [], selected: null, nextCursor: null, rangeDays: 30, trafficClass: 'production' };
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
@@ -24,6 +26,7 @@ function formatDate(value) {
 
 function number(value) { return new Intl.NumberFormat().format(Number(value || 0)); }
 function percent(value) { return `${(Number(value || 0) * 100).toFixed(1)}%`; }
+function seconds(milliseconds) { return `${Math.round(Number(milliseconds || 0) / 1000)}s`; }
 
 async function api(path, options = {}) {
   if (!state.user) throw new Error('Sign in is required.');
@@ -227,7 +230,7 @@ function lineChart(rows) {
 
 function renderCtaTable(rows) {
   if (!rows.length) return '<div class="empty-state"><h3>No CTA activity yet</h3><p>Impressions and clicks will appear as visitors engage with the site.</p></div>';
-  return `<div class="table-scroll"><table><thead><tr><th>CTA</th><th>Page / placement</th><th>Type</th><th>Impressions</th><th>Clicks</th><th>CTR</th><th>Unique CTR</th></tr></thead><tbody>${rows.slice(0, 30).map(row => `<tr><td><strong>${escapeHtml(row.ctaLabel)}</strong>${row.targetLabel ? `<small>${escapeHtml(row.targetLabel)}</small>` : ''}</td><td>${escapeHtml(row.pagePath)}<small>${escapeHtml(row.placement)}</small></td><td><span class="status-pill neutral">${escapeHtml(row.ctaType)}</span></td><td>${number(row.impressions)}</td><td>${number(row.clicks)}</td><td>${percent(row.ctr)}</td><td>${percent(row.uniqueCtr)}</td></tr>`).join('')}</tbody></table></div>`;
+  return `<div class="table-scroll"><table><thead><tr><th>CTA</th><th>Page / placement</th><th>Type</th><th>Impressions</th><th>Clicks</th><th>CTR</th><th>Unique CTR</th><th>Read &amp; dialed</th></tr></thead><tbody>${rows.slice(0, 30).map(row => `<tr><td><strong>${escapeHtml(row.ctaLabel)}</strong>${row.targetLabel ? `<small>${escapeHtml(row.targetLabel)}</small>` : ''}</td><td>${escapeHtml(row.pagePath)}<small>${escapeHtml(row.placement)}</small></td><td><span class="status-pill neutral">${escapeHtml(row.ctaType)}</span></td><td>${number(row.impressions)}</td><td>${number(row.clicks)}</td><td>${percent(row.ctr)}</td><td>${percent(row.uniqueCtr)}</td><td>${row.dwellSignals ? `${number(row.dwellSignals)}<small>${seconds(row.averageDwellMs)} average</small>` : '—'}</td></tr>`).join('')}</tbody></table></div>`;
 }
 
 function breakdown(title, rows) {
@@ -245,19 +248,60 @@ function intentBreakdown(ctas) {
   return types.map(type => ({ type, clicks: ctas.filter(row => row.ctaType === type).reduce((sum, row) => sum + Number(row.clicks || 0), 0) }));
 }
 
+function renderTrafficNotice(analytics) {
+  const notice = $('trafficNotice');
+  if (!notice) return;
+  const test = analytics.testTraffic || {};
+  const sessions = Number(test.sessions || 0);
+  if (analytics.trafficClass === 'production') {
+    notice.hidden = !sessions;
+    notice.textContent = sessions
+      ? `Business traffic only. ${number(sessions)} QA test ${sessions === 1 ? 'session is' : 'sessions are'} excluded from these numbers.`
+      : '';
+    return;
+  }
+  notice.hidden = false;
+  notice.textContent = sessions
+    ? `Including QA test traffic: ${number(sessions)} test ${sessions === 1 ? 'session is' : 'sessions are'} counted below and these totals are not business results.`
+    : 'Including QA test traffic. No test sessions were recorded in this range.';
+}
+
+// A green tick with no date is what let a broken import look fine for days, so
+// the healthy state still states when the data was last refreshed.
+function renderSearchHealth(health) {
+  const banner = $('searchHealth');
+  if (!banner) return;
+  if (!health || !health.status) {
+    banner.hidden = true;
+    return;
+  }
+
+  const timestamp = health.lastSuccessAt || health.lastAttemptAt;
+  banner.hidden = false;
+  banner.dataset.status = health.status;
+  banner.textContent = timestamp
+    ? `${health.message} Last checked ${new Date(timestamp).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}.`
+    : health.message;
+}
+
 function renderAnalytics(analytics, search) {
   const t = analytics.totals, p = analytics.comparison.totals;
+  renderTrafficNotice(analytics);
   $('analyticsMetrics').innerHTML = [
     analyticsCard('Sessions', number(t.sessions), t.sessions, p.sessions, 'Anonymous 30-minute visits'),
     analyticsCard('Page views', number(t.pageViews), t.pageViews, p.pageViews, 'Pages viewed across the site'),
     analyticsCard('Estimate submissions', number(t.formSubmissions), t.formSubmissions, p.formSubmissions, 'Server-confirmed requests'),
-    analyticsCard('High-intent actions', number(t.highIntentActions), t.highIntentActions, p.highIntentActions, 'Calls, directions, email, text & estimates')
+    analyticsCard('High-intent actions', number(t.highIntentActions), t.highIntentActions, p.highIntentActions, 'Calls, directions, email, text & estimates'),
+    analyticsCard('Likely off-site calls', number(t.phoneDwellSessions), t.phoneDwellSessions, p.phoneDwellSessions, 'Desktop sessions that sat on a number, then stopped')
   ].join('');
   $('ctaChart').innerHTML = lineChart(analytics.daily);
   $('ctaSummary').textContent = `${number(t.ctaClicks)} clicks from ${number(t.ctaImpressions)} impressions · ${percent(t.ctr)} raw CTR`;
   $('ctaTable').innerHTML = renderCtaTable(analytics.ctas);
   const intents = intentBreakdown(analytics.ctas);
-  $('intentGrid').innerHTML = intents.map(item => `<article class="intent-card"><span class="intent-icon">${({ phone:'☎',map:'↗',sms:'•••',email:'@',estimate:'◇' })[item.type]}</span><div><strong>${number(item.clicks)}</strong><span>${({ phone:'Phone link clicks',map:'Directions intent',sms:'Text link clicks',email:'Email link clicks',estimate:'Estimate CTA clicks' })[item.type]}</span></div></article>`).join('');
+  $('offlineCallNote').textContent = t.phoneDwellSignals
+    ? `${number(t.phoneDwellSessions)} desktop ${t.phoneDwellSessions === 1 ? 'session' : 'sessions'} held a phone number on screen for ${seconds(t.averagePhoneDwellMs)} on average and then went quiet or left the browser, across ${number(t.phoneDwellSignals)} ${t.phoneDwellSignals === 1 ? 'number' : 'numbers'}. Desktop visitors dial from a handset, so these calls leave no click behind — treat this as a floor on interest, not a call count.`
+    : 'No desktop visitor lingered on a phone number long enough to suggest they dialled it from another device in this range.';
+  $('intentGrid').innerHTML = intents.map(item =>`<article class="intent-card"><span class="intent-icon">${({ phone:'☎',map:'↗',sms:'•••',email:'@',estimate:'◇' })[item.type]}</span><div><strong>${number(item.clicks)}</strong><span>${({ phone:'Phone link clicks',map:'Directions intent',sms:'Text link clicks',email:'Email link clicks',estimate:'Estimate CTA clicks' })[item.type]}</span></div></article>`).join('');
   $('galleryFunnel').innerHTML = `<div class="funnel"><div style="--size:100%"><strong>${number(t.gallerySessions)}</strong><span>Gallery-engaged sessions</span></div><div style="--size:${t.gallerySessions ? Math.max(28, t.galleryToIntentRate * 100) : 28}%"><strong>${number(t.galleryToIntentSessions)}</strong><span>Later high-intent actions</span></div></div><p class="funnel-note">${percent(t.galleryToIntentRate)} of gallery-engaged sessions later clicked a phone, map, text, email, or estimate action during the same visit.</p>`;
   $('breakdownGrid').innerHTML = [breakdown('Top landing pages', analytics.breakdowns.page || []), breakdown('Referrers', analytics.breakdowns.referrer || []), breakdown('Campaigns', analytics.breakdowns.campaign || []), breakdown('Devices', analytics.breakdowns.device || [])].join('');
 
@@ -271,6 +315,7 @@ function renderAnalytics(analytics, search) {
   ].join('');
   $('searchTables').innerHTML = searchTable('“Stone Bellisimo” queries', search.brandedQueries || []) + searchTable('Top queries', search.topQueries || []) + searchTable('Top landing pages', search.topPages || []);
   $('searchNotice').textContent = search.configured ? search.limitations : 'Search Console is connected in code but has not imported data yet. Verify the domain property and grant the Functions service account read-only access.';
+  renderSearchHealth(search.health);
   $('analyticsContent').dataset.loaded = 'true';
 }
 
@@ -282,7 +327,7 @@ async function loadAnalytics() {
   const params = new URLSearchParams(range);
   try {
     const [analytics, search] = await Promise.all([
-      api(`/api/admin/analytics?${params}`),
+      api(`/api/admin/analytics?${params}&trafficClass=${state.trafficClass}`),
       api(`/api/admin/search-console?${params}`)
     ]);
     $('analyticsContent').innerHTML = $('analyticsTemplate').innerHTML;
@@ -298,12 +343,21 @@ function bindAnalyticsControls() {
   document.querySelectorAll('[data-range]').forEach(button => {
     button.classList.toggle('active', String(button.dataset.range) === String(state.rangeDays));
   });
+  document.querySelectorAll('[data-traffic]').forEach(button => {
+    button.classList.toggle('active', button.dataset.traffic === state.trafficClass);
+  });
   const toolbar = document.querySelector('.analytics-toolbar');
   if (toolbar?.dataset.bound) return;
   if (toolbar) toolbar.dataset.bound = 'true';
   document.querySelectorAll('[data-range]').forEach(button => {
     button.addEventListener('click', () => {
       state.rangeDays = Number(button.dataset.range);
+      loadAnalytics();
+    });
+  });
+  document.querySelectorAll('[data-traffic]').forEach(button => {
+    button.addEventListener('click', () => {
+      state.trafficClass = button.dataset.traffic;
       loadAnalytics();
     });
   });
@@ -317,6 +371,33 @@ function bindAnalyticsControls() {
   });
 }
 
+// Signing in is not the same as being an administrator: the account also needs
+// the admin custom claim the Auth blocking functions grant to the allowlist.
+async function adminClaimState(user) {
+  try {
+    const result = await user.getIdTokenResult(true);
+    return result.claims.admin === true ? 'admin' : 'denied';
+  } catch {
+    return 'unverified';
+  }
+}
+
+const CLAIM_MESSAGES = {
+  denied: 'That account is not approved for the Stone Bellisimo dashboard.',
+  unverified: 'Your access could not be verified. Check your connection and sign in again.'
+};
+
+function googleSignInMessage(error) {
+  const code = error?.code || '';
+  if (['auth/popup-closed-by-user', 'auth/cancelled-popup-request', 'auth/user-cancelled'].includes(code)) return '';
+  if (code === 'auth/popup-blocked') return 'Your browser blocked the Google window. Allow pop-ups for this site and try again.';
+  if (code === 'auth/account-exists-with-different-credential') {
+    return 'This email already signs in with a password. Use the email form below, then link Google from your account.';
+  }
+  if (code === 'auth/unauthorized-domain') return 'This domain is not authorized for Google sign-in yet.';
+  return 'This Google account is not approved for the Stone Bellisimo dashboard.';
+}
+
 async function initialize() {
   try {
     const response = await fetch('/api/firebase-config', { headers: { accept: 'application/json' } });
@@ -327,6 +408,12 @@ async function initialize() {
     if (config.emulator && config.authEmulatorUrl) connectAuthEmulator(state.auth, config.authEmulatorUrl, { disableWarnings: true });
     await setPersistence(state.auth, browserSessionPersistence);
     onAuthStateChanged(state.auth, async user => {
+      const claim = user ? await adminClaimState(user) : 'admin';
+      if (user && claim !== 'admin') {
+        await signOut(state.auth).catch(() => {});
+        $('loginError').textContent = CLAIM_MESSAGES[claim];
+        return;
+      }
       state.user = user;
       $('authLoading').hidden = true;
       $('loginView').hidden = Boolean(user);
@@ -341,8 +428,23 @@ async function initialize() {
     $('loginView').hidden = false;
     $('loginError').textContent = error.message;
     $('signIn').disabled = true;
+    $('signInGoogle').disabled = true;
   }
 }
+
+$('signInGoogle').addEventListener('click', async () => {
+  $('loginError').textContent = '';
+  $('signInGoogle').disabled = true;
+  try {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    await signInWithPopup(state.auth, provider);
+  } catch (error) {
+    $('loginError').textContent = googleSignInMessage(error);
+  } finally {
+    $('signInGoogle').disabled = false;
+  }
+});
 
 $('loginForm').addEventListener('submit', async event => {
   event.preventDefault();

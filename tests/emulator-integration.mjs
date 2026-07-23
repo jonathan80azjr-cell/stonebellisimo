@@ -78,6 +78,83 @@ assert.equal(analytics.totals.ctr, 1);
 assert.equal(analytics.totals.galleryToIntentRate, 1);
 assert.equal(analytics.ctas.find(row => row.ctaId === 'phone-office').uniqueCtr, 1);
 
+// Desktop visitors dial from a handset, so a long look at a number is the only
+// trace of the call. Two numbers held in one visit is still one likely call.
+const dwellEvents = [
+  event('dwell_1', 'phone_dwell', { ctaId: 'phone-office', ctaType: 'phone', ctaLabel: 'Call office', targetLabel: '+12015531919', placement: 'homepage-contact', dwellMs: 14000, exitReason: 'blur' }),
+  event('dwell_2', 'phone_dwell', { ctaId: 'phone-bella', ctaType: 'phone', ctaLabel: 'Call Bella', targetLabel: '+15512928353', placement: 'homepage-contact', dwellMs: 6000, exitReason: 'idle' })
+];
+response = await handleAnalyticsEvents(new Request('http://localhost/api/analytics/events', {
+  method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ events: dwellEvents })
+}), db);
+assert.equal(response.status, 202);
+for (const item of dwellEvents) assert.equal(await aggregateAnalyticsEvent(db, item.id), true);
+
+const dailyWithDwell = (await db.collection('analytics_daily').doc(today).get()).data();
+assert.equal(dailyWithDwell.phoneDwellSignals, 2);
+assert.equal(dailyWithDwell.phoneDwellSessions, 1, 'two numbers held in one session are one likely call');
+assert.equal(dailyWithDwell.phoneDwellMs, 20000);
+assert.equal(dailyWithDwell.highIntentActions, 3, 'inferred dwell must not inflate the recorded high-intent count');
+
+const dwellCta = (await db.collection('analytics_cta_daily').where('ctaId', '==', 'phone-office').get())
+  .docs.map(document => document.data()).find(row => row.trafficClass === 'production');
+assert.equal(dwellCta.dwellSignals, 1, 'dwell lands on the same CTA row as that number’s clicks');
+assert.equal(dwellCta.clicks, 1, 'dwell must not disturb the click counters on that row');
+assert.equal(dwellCta.dwell_blur, 1);
+
+const dwellReport = await (await handleAdminAnalytics(new Request(`http://localhost/api/admin/analytics?start=${today}&end=${today}`), db)).json();
+assert.equal(dwellReport.totals.phoneDwellSessions, 1);
+assert.equal(dwellReport.totals.averagePhoneDwellMs, 10000);
+assert.equal(dwellReport.ctas.find(row => row.ctaId === 'phone-bella').averageDwellMs, 6000);
+
+// Test traffic must aggregate separately and stay out of default reporting.
+const qaEvents = [
+  event('qa_view_1', 'page_view', {
+    visitorId: 'visitor_qa', sessionId: 'session_qa', utmSource: 'qa', utmMedium: 'test',
+    utmCampaign: 'roi_validation'
+  }),
+  event('qa_phone_1', 'cta_click', {
+    visitorId: 'visitor_qa', sessionId: 'session_qa', utmSource: 'qa', utmMedium: 'test',
+    ctaId: 'phone-office', ctaType: 'phone', ctaLabel: 'Call office', placement: 'homepage-contact'
+  })
+];
+response = await handleAnalyticsEvents(new Request('http://localhost/api/analytics/events', {
+  method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ events: qaEvents })
+}), db);
+assert.equal(response.status, 202);
+for (const item of qaEvents) assert.equal(await aggregateAnalyticsEvent(db, item.id), true);
+
+const productionDailyAfterQa = (await db.collection('analytics_daily').doc(today).get()).data();
+assert.equal(productionDailyAfterQa.pageViews, 1, 'QA page views must not reach the production daily total');
+assert.equal(productionDailyAfterQa.sessions, 1, 'QA sessions must not reach the production daily total');
+
+const qaDaily = (await db.collection('analytics_daily').doc(`${today}__test`).get()).data();
+assert.equal(qaDaily.trafficClass, 'test');
+assert.equal(qaDaily.pageViews, 1);
+assert.equal(qaDaily.sessions, 1);
+assert.equal(qaDaily.highIntentActions, 1);
+
+const qaCtaSnapshot = await db.collection('analytics_cta_daily').where('trafficClass', '==', 'test').get();
+assert.equal(qaCtaSnapshot.size, 1, 'QA CTA facts are stored apart from business CTA facts');
+assert.ok(qaCtaSnapshot.docs[0].id.endsWith('__test'), 'test CTA facts use a distinct document ID');
+assert.equal((await db.collection('analytics_cta_daily').where('ctaId', '==', 'phone-office').get()).size, 2);
+
+const defaultResponse = await handleAdminAnalytics(new Request(`http://localhost/api/admin/analytics?start=${today}&end=${today}`), db);
+const defaultAnalytics = await defaultResponse.json();
+assert.equal(defaultAnalytics.trafficClass, 'production');
+assert.equal(defaultAnalytics.totals.pageViews, 1, 'the dashboard excludes test traffic by default');
+assert.equal(defaultAnalytics.testTraffic.excluded, true);
+assert.equal(defaultAnalytics.testTraffic.sessions, 1, 'excluded test volume stays visible to the administrator');
+assert.equal(defaultAnalytics.ctas.find(row => row.ctaId === 'phone-office').clicks, 1, 'QA clicks stay out of business CTA reporting');
+
+const includeResponse = await handleAdminAnalytics(new Request(`http://localhost/api/admin/analytics?start=${today}&end=${today}&trafficClass=all`), db);
+const includeAnalytics = await includeResponse.json();
+assert.equal(includeAnalytics.trafficClass, 'all');
+assert.equal(includeAnalytics.totals.pageViews, 2, 'the explicit toggle includes test traffic');
+assert.equal(includeAnalytics.testTraffic.excluded, false);
+assert.equal(includeAnalytics.daily.length, 1, 'both traffic classes merge into one row per date');
+assert.equal(includeAnalytics.ctas.find(row => row.ctaId === 'phone-office').clicks, 2);
+
 const outOfOrderBase = Date.now() - 5000;
 const outOfOrderEvents = [
   event('phone_out_of_order', 'cta_click', {

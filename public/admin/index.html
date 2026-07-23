@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' http://127.0.0.1:9099 https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com; frame-src 'self'; form-action 'self'">
+  <!-- Google sign-in adds the gapi loader (script-src) and the Firebase auth handler iframe (frame-src). -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' http://127.0.0.1:9099 https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://stone-bellisimo-dashboard.firebaseapp.com; frame-src 'self' http://127.0.0.1:9099 https://apis.google.com https://accounts.google.com https://stone-bellisimo-dashboard.firebaseapp.com; form-action 'self'">
   <title>Dashboard | Stone Bellisimo</title>
   <link rel="icon" href="/assets/img/stone-bellisimo-favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,6 +36,16 @@
         <span class="eyebrow">Secure dashboard</span>
         <h1>Welcome back.</h1>
         <p class="login-intro">Sign in with your administrator account to view leads and website engagement.</p>
+        <button id="signInGoogle" class="button google full" type="button">
+          <svg class="google-mark" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+            <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62Z"/>
+            <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.93v2.33A9 9 0 0 0 9 18Z"/>
+            <path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.93a9 9 0 0 0 0 8.1l3.04-2.33Z"/>
+            <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.59C13.46.9 11.43 0 9 0A9 9 0 0 0 .93 4.95l3.04 2.33C4.68 5.16 6.66 3.58 9 3.58Z"/>
+          </svg>
+          Continue with Google
+        </button>
+        <p class="login-divider"><span>or sign in with email</span></p>
         <label for="loginEmail">Email address</label>
         <input id="loginEmail" type="email" autocomplete="username" required>
         <label for="loginPassword">Password</label>
@@ -111,6 +122,7 @@
             <button data-range="7" type="button">7 days</button><button data-range="30" class="active" type="button">30 days</button><button data-range="90" type="button">90 days</button><button id="customRangeButton" type="button">Custom</button>
           </div>
           <div id="customRange" class="custom-range" hidden><label>Start<input id="rangeStart" type="date"></label><label>End<input id="rangeEnd" type="date"></label><button id="applyRange" class="button secondary" type="button">Apply</button></div>
+          <div class="range-control" aria-label="Traffic class"><button data-traffic="production" class="active" type="button">Business traffic</button><button data-traffic="all" type="button">Include QA tests</button></div>
         </div>
         <div id="analyticsContent" aria-live="polite"></div>
       </section>
@@ -130,6 +142,7 @@
   </aside>
 
   <template id="analyticsTemplate">
+    <p id="trafficNotice" class="quiet" hidden></p>
     <div id="analyticsMetrics" class="metric-grid analytics-metrics"></div>
     <section class="panel chart-panel">
       <div class="section-heading"><div><span class="eyebrow">Engagement trend</span><h2>CTA impressions, clicks &amp; CTR</h2><p id="ctaSummary"></p></div></div>
@@ -142,6 +155,7 @@
     <section class="analytics-section">
       <div class="section-heading"><div><span class="eyebrow">Contact intent</span><h2>How visitors try to reach you</h2><p>These are link clicks and intent signals—not verified calls, messages, or visits.</p></div></div>
       <div id="intentGrid" class="intent-grid"></div>
+      <p id="offlineCallNote" class="quiet"></p>
     </section>
     <div class="two-column">
       <section class="panel gallery-panel"><div class="section-heading"><div><span class="eyebrow">Homepage gallery</span><h2>Gallery-to-contact funnel</h2><p>Sessions that engaged with work samples, then took a high-intent action.</p></div></div><div id="galleryFunnel"></div></section>
@@ -150,6 +164,7 @@
     <section class="analytics-section"><div class="section-heading"><div><span class="eyebrow">Acquisition</span><h2>Where engaged visitors come from</h2></div></div><div id="breakdownGrid" class="breakdown-grid"></div></section>
     <section class="search-console-section">
       <div class="section-heading"><div><span class="eyebrow">Organic search visibility</span><h2>Google Search Console</h2><p id="searchNotice"></p></div><span class="google-chip">G · Search Console</span></div>
+      <p id="searchHealth" class="health-banner" hidden></p>
       <div id="searchMetrics" class="metric-grid search-metrics"></div>
       <div id="searchTables" class="two-column search-tables"></div>
     </section>
