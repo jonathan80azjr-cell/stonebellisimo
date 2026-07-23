@@ -24,8 +24,18 @@ function uuid(prefix) {
   return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2)}`;
 }
 
+// JSON.parse(null) does not throw: it stringifies null to "null" and returns
+// the JS value null, so a missing storage key would slip past the fallback and
+// hand callers a null where they asked for {} or []. setupCtas() then read a
+// sessionId key off that null, threw, and aborted boot() before page_view and
+// the CTA click listener were ever wired up. Treat a null/undefined input or
+// parse result as absent so every caller gets the shape it requested.
 function safeParse(value, fallback) {
-  try { return JSON.parse(value); } catch { return fallback; }
+  if (value === null || value === undefined) return fallback;
+  try {
+    const parsed = JSON.parse(value);
+    return parsed === null || parsed === undefined ? fallback : parsed;
+  } catch { return fallback; }
 }
 
 function clean(value, max = 160) {
@@ -408,14 +418,25 @@ async function configureAppCheck() {
   flush();
 }
 
+// One broken enhancement must never take the rest of analytics down with it.
+// setupCtas() throwing on a fresh session is what silently dropped every page
+// view and CTA click for the life of the site; isolating each step guarantees
+// the visit is still recorded and the surviving observers still run.
+function runSafely(label, fn) {
+  try { fn(); } catch (error) {
+    try { console.warn(`Analytics setup step "${label}" failed`, error); } catch {}
+  }
+}
+
 function boot() {
   currentSession();
-  preserveExistingEnhancements();
-  setupCtas();
-  setupPhoneDwell();
-  setupGallery();
-  observePerformance();
+  // Record the visit first, before any observer wiring that could throw.
   track('page_view');
+  runSafely('preserveExistingEnhancements', preserveExistingEnhancements);
+  runSafely('setupCtas', setupCtas);
+  runSafely('setupPhoneDwell', setupPhoneDwell);
+  runSafely('setupGallery', setupGallery);
+  runSafely('observePerformance', observePerformance);
   configureAppCheck();
   addEventListener('online', flush);
 }
