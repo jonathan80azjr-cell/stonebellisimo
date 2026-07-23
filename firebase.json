@@ -39,7 +39,9 @@
     "trailingSlash": true,
     "redirects": [
       { "source": "/service-areas", "destination": "/areas-we-serve/", "type": 301 },
-      { "source": "/service-areas/**", "destination": "/areas-we-serve/", "type": 301 }
+      { "source": "/service-areas/**", "destination": "/areas-we-serve/", "type": 301 },
+      { "source": "/favicon.ico", "destination": "/assets/img/stone-bellisimo-favicon.png", "type": 302 },
+      { "source": "/security.txt", "destination": "/.well-known/security.txt", "type": 301 }
     ],
     "rewrites": [
       { "source": "/api/**", "function": { "functionId": "siteApi", "region": "us-east1" } },

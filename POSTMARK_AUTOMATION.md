@@ -9,12 +9,11 @@ This repo implements the lead email automation in the Cloudflare Worker because 
 1. The website submits the free estimate form to `/api/contact`.
 2. The Worker validates and normalizes the form fields.
 3. A durable D1 lead record is created in `LEADS_DB`.
-4. The existing `N8N_WEBHOOK_URL` forwarding still runs with the lead payload.
-5. Postmark sends the immediate confirmation email from `admin@stonebellisimollc.com`.
-6. The lead is scheduled with `feedbackEmailDueAt = submittedAt + FEEDBACK_DELAY_DAYS`.
-7. The hourly Worker Cron finds due leads and sends the feedback email exactly once per successful send.
-8. Feedback can arrive from `/feedback` rating links or from Postmark Inbound email replies.
-9. Feedback is stored and an internal notification is sent to the staff notification list.
+4. Postmark sends the immediate confirmation email from `admin@stonebellisimollc.com`.
+5. The lead is scheduled with `feedbackEmailDueAt = submittedAt + FEEDBACK_DELAY_DAYS`.
+6. The hourly Worker Cron finds due leads and sends the feedback email exactly once per successful send.
+7. Feedback can arrive from `/feedback` rating links or from Postmark Inbound email replies.
+8. Feedback is stored and an internal notification is sent to the staff notification list.
 
 `FEEDBACK_DELAY_DAYS` defaults to `3` to match the current acceptance criteria. Set it to `7` if the business wants a one-week delay.
 
@@ -103,7 +102,6 @@ npm run worker:secret:admin-session
 
 Required secrets:
 
-- `N8N_WEBHOOK_URL`: existing n8n workflow webhook.
 - `POSTMARK_SERVER_TOKEN`: Postmark server API token.
 - `FEEDBACK_TOKEN_SECRET`: long random secret for signed feedback links.
 - `POSTMARK_INBOUND_SECRET`: shared secret for `/api/postmark/inbound`.
@@ -283,28 +281,6 @@ For a production smoke test:
    ```
 
 You can also run `npm run worker:dev` and visit `http://localhost:8787/__scheduled` to test the Worker scheduled handler locally with Wrangler.
-
-## n8n Payload
-
-The existing n8n webhook still receives the original contact fields plus automation metadata:
-
-```json
-{
-  "firstName": "Jane",
-  "lastName": "Client",
-  "email": "jane@example.com",
-  "phone": "201.555.0100",
-  "projectType": "Kitchen Countertops",
-  "material": "Quartz",
-  "source": "Website Wizard - Hero",
-  "message": "Project details...",
-  "customerName": "Jane Client",
-  "leadId": "lead_...",
-  "submittedAt": "2026-07-01T12:00:00.000Z",
-  "feedbackEmailDueAt": "2026-07-04T12:00:00.000Z",
-  "dateCreated": "2026-07-01"
-}
-```
 
 ## Data Tables
 

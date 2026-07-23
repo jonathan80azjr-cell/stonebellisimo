@@ -550,9 +550,7 @@ app.all('/api/contact', contactLimiter, async (req, res) => {
       contentType: 'application/json'
     });
     const response = await handleContactRequest(request, localEnv(req), {
-      store: localStore,
-      requireWebhook: isProduction,
-      allowLocalWebhook: !isProduction
+      store: localStore
     });
     await sendFetchResponse(res, response);
   } catch (error) {

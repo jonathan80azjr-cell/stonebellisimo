@@ -16,7 +16,7 @@ test('contact submissions are rate limited before persistence or outbound delive
     })
   });
   const response = await handleContactRequest(request, {
-    ENVIRONMENT: 'production', N8N_WEBHOOK_URL: 'https://example.com/webhook',
+    ENVIRONMENT: 'production',
     FEEDBACK_TOKEN_SECRET: 'unit-test-feedback-secret', CONTACT_RATE_LIMIT: '2'
   }, { store });
   assert.equal(response.status, 429);

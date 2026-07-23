@@ -56,7 +56,6 @@ import {
 
 const SECRET_NAMES = [
   'SB_PROXY_SECRET',
-  'N8N_WEBHOOK_URL',
   'POSTMARK_SERVER_TOKEN',
   'FEEDBACK_TOKEN_SECRET',
   'POSTMARK_INBOUND_SECRET',
@@ -133,14 +132,16 @@ function isEmulator() {
 function requireProxy(request) {
   const expected = secretValue('SB_PROXY_SECRET');
   const provided = request.headers.get('x-sb-proxy-secret') || '';
-  // Firebase Hosting's local rewrite calls the Functions emulator directly;
-  // there is no Cloudflare Worker available to attach the production secret.
-  if (isEmulator() && !provided) return null;
-  if (!expected && isEmulator()) return null;
-  if (!expected) return json({ success: false, message: 'Backend proxy is not configured.' }, 503);
-  return safeEqual(provided, expected)
-    ? null
-    : json({ success: false, message: 'Unauthorized proxy request.' }, 401);
+  // Post-cutover, Firebase Hosting is the front door: its rewrites (and the
+  // emulator) call this function directly and cannot attach a secret, so a
+  // missing secret is expected and allowed. Security is enforced per route
+  // downstream: trusted-origin + App Check on public POSTs, Firebase Auth on
+  // /api/admin, shared secrets on /api/postmark, and signed tokens on
+  // /feedback. A secret that IS presented must still match, so reinstating a
+  // Cloudflare Worker proxy keeps working unchanged.
+  if (!provided) return null;
+  if (expected && safeEqual(provided, expected)) return null;
+  return json({ success: false, message: 'Unauthorized proxy request.' }, 401);
 }
 
 async function requireFirebaseAdmin(request) {
@@ -249,7 +250,6 @@ async function routeRequest(request) {
     if (appCheck) return appCheck;
     return handleContactRequest(request, env, {
       store,
-      requireWebhook: true,
       sanitizeAttribution,
       recordAnalytics: event => recordServerConversion(db, event),
       createLeadWithAnalytics: (lead, event) => createLeadWithServerConversion(db, lead, event)

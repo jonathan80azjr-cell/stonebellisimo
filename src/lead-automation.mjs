@@ -330,55 +330,6 @@ function getBaseUrl(request, env) {
   return new URL(request.url).origin;
 }
 
-function getWebhookUrl(env, { allowLocal = false } = {}) {
-  const rawUrl = getEnv(env, 'N8N_WEBHOOK_URL');
-  if (!rawUrl || rawUrl === 'YOUR_N8N_WEBHOOK_URL_HERE') return null;
-
-  try {
-    const webhookUrl = new URL(rawUrl);
-    const isLocalWebhook = ['localhost', '127.0.0.1', '::1'].includes(webhookUrl.hostname);
-
-    if (webhookUrl.protocol !== 'https:' && !(allowLocal && webhookUrl.protocol === 'http:' && isLocalWebhook)) {
-      return null;
-    }
-
-    return webhookUrl.toString();
-  } catch (error) {
-    return null;
-  }
-}
-
-async function forwardToWebhook(payload, env, { allowLocal = false } = {}) {
-  const webhookUrl = getWebhookUrl(env, { allowLocal });
-  if (!webhookUrl) return { skipped: true };
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
-
-  try {
-    const response = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(payload),
-      signal: controller.signal
-    });
-
-    if (!response.ok) {
-      return {
-        ok: false,
-        status: response.status,
-        message: `Webhook returned ${response.status} ${response.statusText}`
-      };
-    }
-
-    return { ok: true };
-  } catch (error) {
-    return { ok: false, message: error?.message || 'Webhook request failed.' };
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
 function d1Changes(result) {
   return Number(result?.meta?.changes || result?.changes || 0);
 }
@@ -841,15 +792,9 @@ export async function handleContactRequest(request, env, options = {}) {
   if (request.method === 'OPTIONS') return new Response(null, { status: 204 });
   if (request.method !== 'POST') return methodNotAllowed(['POST', 'OPTIONS']);
 
-  const webhookUrl = getWebhookUrl(env, { allowLocal: options.allowLocalWebhook });
-  const requireWebhook = options.requireWebhook ?? true;
-  if (requireWebhook && !webhookUrl) {
-    return json(
-      { success: false, message: 'Contact form is temporarily unavailable. Please call us directly.' },
-      503
-    );
-  }
-
+  // Firestore is the system of record: the lead is persisted here and the admin
+  // dashboard reads it directly, so there is no outbound forwarding step that
+  // can block a submission or drop a lead.
   const { body, error, status } = await readJson(request);
   if (error) {
     return json({ success: false, message: error }, status);
@@ -873,27 +818,6 @@ export async function handleContactRequest(request, env, options = {}) {
     ? options.createLeadWithAnalytics
     : null;
   if (!createWithAnalytics) await store.createLead(lead);
-
-  const webhookPayload = {
-    ...contact,
-    source: lead.source,
-    customerName: lead.customerName,
-    leadId: lead.id,
-    submittedAt: lead.submittedAt,
-    feedbackEmailDueAt: lead.feedbackEmailDueAt,
-    dateCreated: lead.submittedAt.split('T')[0]
-  };
-
-  const webhookResult = await forwardToWebhook(webhookPayload, env, { allowLocal: options.allowLocalWebhook });
-  if (webhookResult.ok === false) {
-    console.error('Failed to forward contact request to webhook:', webhookResult);
-    if (requireWebhook) {
-      return json(
-        { success: false, message: 'We could not submit your request. Please call us directly.' },
-        502
-      );
-    }
-  }
 
   if (createWithAnalytics) {
     await createWithAnalytics(lead, {

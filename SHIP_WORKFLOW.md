@@ -1,39 +1,38 @@
 # `npm run ship` Workflow Logic
 
-This project uses `npm run ship` as a small release pipeline. The goal is to make the common shipping path repeatable: stage the current work, block obvious secret leaks, create a commit, push it to GitHub, and deploy the Cloudflare Worker plus static assets.
+This project uses `npm run ship` as a small release pipeline. The goal is to make the common shipping path repeatable: stage the current work, block obvious secret leaks, create a commit, push it to GitHub, and deploy the site to Firebase Hosting — with the riskier Firebase backend behind an opt-in prompt.
 
-Current script in `package.json`:
+The logic lives in `scripts/ship.sh` (invoked by `"ship": "sh scripts/ship.sh"` in `package.json`), so it is easier to read and harden than a one-line script.
 
 ```sh
-read -r -p "Commit message [Ship latest changes]: " message; message=${message:-Ship latest changes}; git add . && npm run secrets:check && git commit -m "$message" && git push && npm run deploy:worker
+sh scripts/ship.sh
 ```
 
 ## What It Does
 
-1. Prompts for a commit message.
-2. Uses `Ship latest changes` when no message is entered.
-3. Stages the working tree with `git add .`.
-4. Runs `npm run secrets:check`.
-5. Commits the staged changes.
-6. Pushes the commit to the configured Git remote.
-7. Deploys production with `npm run deploy:worker`.
+1. Prompts for a commit message (defaults to `Ship latest changes`).
+2. Stages the working tree with `git add .`.
+3. Runs `npm run secrets:check`.
+4. Commits the staged changes.
+5. Pushes the commit to the configured Git remote.
+6. Deploys Firebase Hosting with `npm run deploy` — **always**. This runs the `predeploy` build hook, then `firebase deploy --only hosting`.
+7. Asks `Also deploy Firebase backend (functions, firestore rules, auth)? [y/N]`. Only on an explicit `y`/`yes` does it run `npm run firebase:deploy` (which runs `npm run check` first). The default is No.
 
-The `&&` operators are intentional. Each step only runs if the previous step succeeds. If the secrets check fails, the commit is not created. If the commit fails, nothing is pushed. If the push fails, deployment does not run.
+`set -eu` at the top of the script plays the role the `&&` chain used to: each step only runs if the previous one succeeds. If the secrets check fails, the commit is not created. If the commit fails, nothing is pushed. If the push fails, no deploy runs.
 
 ## Why This Workflow Exists
 
-The repo has two important production surfaces:
+Production is served entirely by Firebase:
 
-- Static website files in `public/`.
-- Cloudflare Worker code in `cloudflare-worker.mjs`, with Worker assets configured in `wrangler.jsonc`.
+- Static website files in `public/` are served by **Firebase Hosting**.
+- The API (`/api/**`, `/feedback`) is served by the **`siteApi` Firebase Function** via hosting rewrites.
+- Auth, Firestore rules/indexes, and the scheduled/event-driven functions round out the backend.
 
-Production traffic is served by Cloudflare Workers, not by the local Express server. That means the safest release action after changing frontend files, Worker API routes, email automation, or configuration is:
+The Cloudflare Worker that used to serve this traffic has been decommissioned — the web DNS records are `DNS only` (grey cloud), so no Worker runs on the request path. Cloudflare now only provides DNS and Email Routing, both managed in the Cloudflare dashboard rather than with Wrangler.
 
-```sh
-npm run deploy:worker
-```
+## Why the Backend Is Gated
 
-`npm run ship` wraps that deploy step with version control hygiene so production changes are also recorded in Git.
+Hosting is safe to ship on every run: deploys are versioned and instantly rollback-able from the Firebase console. The backend is not. A bad Firestore rule can lock the database, and a bad auth change can lock administrators out. Those targets ship only when you answer `y` at the prompt, so a routine content deploy never touches them by accident.
 
 ## Guardrail: Secret File Check
 
@@ -53,7 +52,7 @@ That command executes `scripts/check-no-secrets.mjs`. The script asks Git which 
 - `.dev.vars`
 - `.dev.vars.production`
 
-This is intentionally Git-aware. It checks what would actually be committed, instead of scanning only the current folder. Production secrets should live in the hosting provider, such as Cloudflare Worker secrets created with `wrangler secret put`, not in committed files.
+This is intentionally Git-aware. It checks what would actually be committed, instead of scanning only the current folder. Production secrets should live in the hosting provider, such as Firebase Functions secrets set with `firebase functions:secrets:set`, not in committed files.
 
 ## Hardened Release Logic
 
@@ -105,7 +104,7 @@ That is convenient for a small project, but the portable rule is: stage only wha
 
 ```sh
 git status --short
-git add public cloudflare-worker.mjs src scripts package.json wrangler.jsonc
+git add public src scripts functions firebase.json package.json
 ```
 
 ### 3. Run Checks Before Commit
@@ -157,7 +156,7 @@ secrets.json
 service-account*.json
 ```
 
-For this repo, the allowlisted production configuration lives in `wrangler.jsonc` under `vars`, while real secret values are stored through Wrangler secrets. That separation is the model to preserve:
+For this repo, non-secret production configuration lives in the Firebase Functions runtime environment (see `runtimeEnv()` defaults in `firebase-functions.mjs`), while real secret values are stored as Firebase Functions secrets. That separation is the model to preserve:
 
 - Non-secret config can be committed.
 - Secret config must live in the deployment platform.
@@ -182,14 +181,14 @@ CI deploys from the pushed commit
 For local deploy environments, this repo keeps the deploy command on the developer machine:
 
 ```sh
-npm run deploy:worker
+npm run deploy
 ```
 
 ### 7. Deploy the Correct Runtime
 
-This project has both a local Express server and a Cloudflare Worker. The ship workflow deploys the Worker because production uses Cloudflare routes and Worker assets.
+This project has a local Express server (`server.js`) for development and Firebase for production. The ship workflow deploys Firebase Hosting on every run, then optionally the Firebase backend.
 
-Do not replace the final step with a generic static deploy unless the production architecture changes. `npm run deploy` publishes `public/` to GitHub Pages, but it does not deploy the Worker API routes, D1 bindings, Cron trigger, or Worker secrets integration.
+Do not point the deploy at the legacy `deploy:ghpages:legacy` (GitHub Pages) path: it publishes only `public/` and does not deploy the `siteApi` Function that serves `/api/**` and `/feedback`, the Firestore rules/indexes, auth config, or the scheduled/event-driven functions.
 
 ## Cross-Environment Template
 
@@ -222,7 +221,7 @@ Recommended hardening for multi-language projects:
 - Use `set -eu` in shell scripts so unset variables and failed commands stop the release.
 - Keep checks in separate scripts so Node, Python, Go, PHP, Ruby, and static-only projects can each define their own implementation.
 - Run secret checks before committing and again in CI.
-- Make deployment target explicit, such as `deploy:worker`, `deploy:api`, `deploy:web`, or `deploy:prod`.
+- Make deployment target explicit, such as `deploy:hosting`, `deploy:api`, `deploy:web`, or `deploy:prod`.
 - Avoid committing generated local state, caches, logs, credentials, or build artifacts unless the hosting platform requires them.
 - Prefer platform secret stores for production credentials.
 - Keep rollback possible by ensuring every deploy is tied to a Git commit.
@@ -239,4 +238,4 @@ The current one-line `package.json` script works, but a dedicated script would b
 }
 ```
 
-That script could run `npm run check`, print `git status --short` before staging, and verify that Wrangler is authenticated before trying to deploy. Keeping the release logic in a script file also makes it easier to adapt the same workflow for projects that are not primarily JavaScript.
+That script could run `npm run check`, print `git status --short` before staging, and verify that the Firebase CLI is authenticated before trying to deploy. Keeping the release logic in a script file also makes it easier to adapt the same workflow for projects that are not primarily JavaScript.

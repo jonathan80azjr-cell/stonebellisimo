@@ -80,7 +80,6 @@ Store the following with Firebase Secret Manager:
 
 ```sh
 firebase functions:secrets:set SB_PROXY_SECRET --project <project-id>
-firebase functions:secrets:set N8N_WEBHOOK_URL --project <project-id>
 firebase functions:secrets:set POSTMARK_SERVER_TOKEN --project <project-id>
 firebase functions:secrets:set FEEDBACK_TOKEN_SECRET --project <project-id>
 firebase functions:secrets:set POSTMARK_INBOUND_SECRET --project <project-id>
@@ -298,7 +297,7 @@ Cutover order:
    npm run firebase:migrate:d1 -- --project <project-id> --phase delta
    ```
 
-5. Verify a real contact submission, n8n delivery, immediate Postmark email, feedback link, Postmark webhooks, dashboard email send, analytics ingestion, and Search Console status.
+5. Verify a real contact submission, Firestore lead write, immediate Postmark email, feedback link, Postmark webhooks, dashboard email send, analytics ingestion, and Search Console status.
 6. Watch App Check monitor-mode logs. When legitimate production requests consistently carry valid tokens, set `APP_CHECK_ENFORCED=true` and redeploy Functions.
 7. Leave D1 and the old Worker code path available but read-only for 30 days. Only then remove the D1 bindings and Cloudflare Cron.
 
