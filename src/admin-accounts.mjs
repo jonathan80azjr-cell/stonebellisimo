@@ -4,7 +4,8 @@
 export const ADMIN_EMAILS = Object.freeze([
   'jensyjimenez723@gmail.com',
   'jonathan80azjr@gmail.com',
-  'stonebellisimollc@outlook.com'
+  'stonebellisimollc@outlook.com',
+  'eidandreammer@gmail.com'
 ]);
 
 export const ADMIN_DENIED_MESSAGE = 'This account is not an approved Stone Bellisimo administrator.';

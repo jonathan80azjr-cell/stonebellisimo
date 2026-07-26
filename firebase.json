@@ -29,7 +29,10 @@
       "googleSignIn": {
         "oAuthBrandDisplayName": "Stone Bellisimo",
         "supportEmail": "jensyjimenez723@gmail.com",
-        "authorizedRedirectUris": ["https://stone-bellisimo-dashboard.firebaseapp.com/__/auth/handler"]
+        "authorizedRedirectUris": [
+          "https://stone-bellisimo-dashboard.firebaseapp.com/__/auth/handler",
+          "https://stonebellisimollc.com/__/auth/handler"
+        ]
       }
     }
   },
