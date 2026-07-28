@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/admin.css?v=1">
+  <link rel="stylesheet" href="/assets/css/admin.css?v=2">
 </head>
 <body>
   <div id="authLoading" class="auth-loading" role="status">
@@ -105,7 +105,7 @@
               <div><span class="eyebrow">Inbox</span><h2>Client inquiries</h2><p id="leadCount">Loading leads…</p></div>
               <div class="lead-filters">
                 <label class="search-box"><span class="sr-only">Search leads</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="leadSearch" type="search" placeholder="Search name, phone, project…"></label>
-                <label><span class="sr-only">Filter by status</span><select id="leadStatus"><option value="all">All leads</option><option value="needs_feedback">Needs feedback</option><option value="feedback_sent">Feedback sent</option><option value="feedback_received">Feedback received</option><option value="email_failed">Email issue</option></select></label>
+                <label><span class="sr-only">Filter by status</span><select id="leadStatus"><option value="all">All leads</option><option value="new">New</option><option value="in_progress">In progress</option><option value="completed">Completed</option><option value="needs_feedback">Needs feedback</option><option value="feedback_sent">Feedback sent</option><option value="feedback_received">Feedback received</option><option value="email_failed">Email issue</option></select></label>
               </div>
             </div>
             <div id="leadList" class="lead-list" aria-live="polite"></div>
@@ -175,6 +175,6 @@
   </template>
 
   <div id="toast" class="toast" role="status"></div>
-  <script src="/assets/js/admin.js?v=2" defer></script>
+  <script src="/assets/js/admin.js?v=3" defer></script>
 </body>
 </html>

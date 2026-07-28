@@ -24,6 +24,8 @@ const ADMIN_COOKIE = 'sb_admin_session';
 const ADMIN_SESSION_SECONDS = 8 * 60 * 60;
 const ADMIN_BODY_LIMIT = 64 * 1024;
 const ADMIN_SEARCH_LIMIT = 48;
+const BITE_SITES_RATE_BPS = 1000;
+const BUSINESS_STATUSES = new Set(['new', 'in_progress', 'completed']);
 const encoder = new TextEncoder();
 
 function escapeHtml(value = '') {
@@ -179,6 +181,9 @@ function leadListWhere(search, status) {
       SELECT 1 FROM email_events e
       WHERE e.leadId = leads.id AND e.status = 'failed'
     )`);
+  } else if (BUSINESS_STATUSES.has(status)) {
+    where.push("COALESCE(businessStatus, 'new') = ?");
+    params.push(status);
   }
 
   return {
@@ -288,6 +293,66 @@ async function getLeadDetail(request, env, leadId, options = {}) {
     deliveryEvents: deliveryEvents.results || [],
     inboundEvents: inboundEvents.results || []
   });
+}
+
+function currencyToCents(value) {
+  if (value === null || value === undefined || String(value).trim() === '') return null;
+  const raw = String(value).trim();
+  if (!/^\$?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d{1,2})?$/.test(raw)) {
+    throw new Error('Client charge must be a valid dollar amount with no more than two decimal places.');
+  }
+  const normalized = raw.replace(/^\$/, '').replace(/,/g, '');
+  const [whole, fraction = ''] = normalized.split('.');
+  const cents = Number(whole) * 100 + Number(fraction.padEnd(2, '0'));
+  if (!Number.isSafeInteger(cents) || cents > 10_000_000_000) {
+    throw new Error('Client charge is too large.');
+  }
+  return cents;
+}
+
+async function updateLeadBusiness(request, env, leadId, options = {}) {
+  const { body, error, status } = await readJson(request, ADMIN_BODY_LIMIT);
+  if (error) return json({ success: false, message: error }, status);
+
+  try {
+    const businessStatus = normalizeText(body?.businessStatus, 30);
+    if (!BUSINESS_STATUSES.has(businessStatus)) throw new Error('Choose a valid lead status.');
+    const clientChargeCents = currencyToCents(body?.clientCharge);
+    if (businessStatus === 'completed' && (!clientChargeCents || clientChargeCents <= 0)) {
+      throw new Error('Enter the amount charged to the client before marking this lead completed.');
+    }
+
+    const updatedAt = nowIso();
+    const update = {
+      businessStatus,
+      clientChargeCents,
+      biteSitesShareCents: clientChargeCents === null ? null : Math.round(clientChargeCents * BITE_SITES_RATE_BPS / 10_000),
+      biteSitesRateBps: BITE_SITES_RATE_BPS,
+      updatedAt
+    };
+
+    let lead;
+    if (options.adminStore?.updateLeadBusiness) {
+      lead = await options.adminStore.updateLeadBusiness(leadId, update);
+    } else {
+      const db = env?.LEADS_DB;
+      if (!db) return json({ success: false, message: 'LEADS_DB binding is not configured.' }, 503);
+      const existing = await db.prepare('SELECT * FROM leads WHERE id = ? LIMIT 1').bind(leadId).first();
+      if (!existing) return json({ success: false, message: 'Lead not found.' }, 404);
+      const completedAt = businessStatus === 'completed' ? (existing.completedAt || updatedAt) : null;
+      await db.prepare(`
+        UPDATE leads
+        SET businessStatus = ?, clientChargeCents = ?, biteSitesShareCents = ?, biteSitesRateBps = ?, completedAt = ?, updatedAt = ?
+        WHERE id = ?
+      `).bind(businessStatus, clientChargeCents, update.biteSitesShareCents, BITE_SITES_RATE_BPS, completedAt, updatedAt, leadId).run();
+      lead = { ...existing, ...update, completedAt, id: leadId };
+    }
+
+    if (!lead) return json({ success: false, message: 'Lead not found.' }, 404);
+    return json({ success: true, lead });
+  } catch (error) {
+    return json({ success: false, message: error?.message || 'Could not update this lead.' }, 400);
+  }
 }
 
 async function renderAdminEmail({ env, lead, body }) {
@@ -803,6 +868,9 @@ export async function handleAdminRequest(request, env, options = {}) {
   const leadMatch = url.pathname.match(/^\/api\/admin\/leads\/([^/]+)$/);
   if (leadMatch && request.method === 'GET') {
     return getLeadDetail(request, env, decodeURIComponent(leadMatch[1]), options);
+  }
+  if (leadMatch && request.method === 'PATCH') {
+    return updateLeadBusiness(request, env, decodeURIComponent(leadMatch[1]), options);
   }
 
   if (url.pathname === '/api/admin/email/preview') return previewEmail(request, env, options);

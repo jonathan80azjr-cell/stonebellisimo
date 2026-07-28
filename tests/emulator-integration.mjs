@@ -220,6 +220,16 @@ const pageTwo = await store.listLeads({ limit: 2, cursor: pageOne.nextCursor });
 assert.equal(pageTwo.leads.length, 1);
 assert.equal((await store.listLeads({ search: 'Kitchen' })).leads[0].id, 'lead_2');
 
+const businessUpdatedAt = new Date().toISOString();
+const updatedBusinessLead = await store.updateLeadBusiness('lead_2', {
+  businessStatus: 'in_progress', clientChargeCents: 250_000, biteSitesShareCents: 25_000,
+  biteSitesRateBps: 1000, updatedAt: businessUpdatedAt
+});
+assert.equal(updatedBusinessLead.businessStatus, 'in_progress');
+assert.equal(updatedBusinessLead.clientChargeCents, 250_000);
+assert.equal(updatedBusinessLead.biteSitesShareCents, 25_000);
+assert.equal((await store.listLeads({ status: 'in_progress' })).leads[0].id, 'lead_2');
+
 const claims = await Promise.all([
   store.claimFeedbackLead('lead_1', new Date().toISOString(), new Date(Date.now() - 900000).toISOString()),
   store.claimFeedbackLead('lead_1', new Date().toISOString(), new Date(Date.now() - 900000).toISOString())

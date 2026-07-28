@@ -392,6 +392,9 @@ function newestFirst(a, b) {
 }
 
 function localLeadMatchesStatus(lead, status) {
+  if (['new', 'in_progress', 'completed'].includes(status)) {
+    return (lead.businessStatus || 'new') === status;
+  }
   if (status === 'needs_feedback') {
     return ['pending', 'sending'].includes(lead.feedbackStatus || 'pending') && !lead.feedbackEmailSentAt;
   }
@@ -446,6 +449,16 @@ const localAdminStore = {
   async getLeadById(id) {
     const data = await readLocalData();
     return data.leads.find(lead => lead.id === id) || null;
+  },
+
+  async updateLeadBusiness(id, update) {
+    return mutateLocalData(data => {
+      const lead = data.leads.find(item => item.id === id);
+      if (!lead) return null;
+      const completedAt = update.businessStatus === 'completed' ? (lead.completedAt || update.updatedAt) : null;
+      Object.assign(lead, update, { completedAt });
+      return { ...lead };
+    });
   },
 
   async getLeadDetail(id) {

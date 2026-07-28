@@ -12,7 +12,7 @@ import {
 } from 'firebase/auth';
 
 const $ = id => document.getElementById(id);
-const state = { auth: null, user: null, leads: [], selected: null, nextCursor: null, rangeDays: 30, trafficClass: 'production' };
+const state = { auth: null, user: null, leads: [], selected: null, nextCursor: null, leadTotal: 0, rangeDays: 30, trafficClass: 'production' };
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
@@ -27,6 +27,10 @@ function formatDate(value) {
 function number(value) { return new Intl.NumberFormat().format(Number(value || 0)); }
 function percent(value) { return `${(Number(value || 0) * 100).toFixed(1)}%`; }
 function seconds(milliseconds) { return `${Math.round(Number(milliseconds || 0) / 1000)}s`; }
+function moneyFromCents(value) {
+  if (value === null || value === undefined || value === '') return '—';
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(value) / 100);
+}
 
 async function api(path, options = {}) {
   if (!state.user) throw new Error('Sign in is required.');
@@ -69,6 +73,8 @@ function showView(name) {
 }
 
 function leadStatus(lead) {
+  if (lead.businessStatus === 'completed') return ['Completed', 'success'];
+  if (lead.businessStatus === 'in_progress') return ['In progress', 'warm'];
   if (['received', 'unparsed'].includes(lead.feedbackStatus)) return ['Feedback received', 'success'];
   if (lead.feedbackEmailLastError) return ['Email issue', 'danger'];
   if (lead.feedbackEmailSentAt) return ['Feedback requested', 'warm'];
@@ -100,6 +106,7 @@ async function loadLeads({ append = false } = {}) {
     const data = await api(`/api/admin/leads?${params}`);
     state.leads = append ? [...state.leads, ...(data.leads || [])] : (data.leads || []);
     state.nextCursor = data.nextCursor || null;
+    state.leadTotal = Number(data.count || 0);
     $('leadCount').textContent = `${number(data.count)} total lead${data.count === 1 ? '' : 's'}`;
     renderLeadList(append);
     renderLeadStats(data.count);
@@ -112,15 +119,17 @@ async function loadLeads({ append = false } = {}) {
 }
 
 function renderLeadStats(total) {
-  const confirmed = state.leads.filter(lead => lead.immediateEmailSentAt).length;
-  const feedback = state.leads.filter(lead => ['received', 'unparsed'].includes(lead.feedbackStatus)).length;
-  const pending = state.leads.filter(lead => !lead.immediateEmailSentAt).length;
+  const inProgress = state.leads.filter(lead => lead.businessStatus === 'in_progress').length;
+  const completed = state.leads.filter(lead => lead.businessStatus === 'completed').length;
+  const biteSitesShare = state.leads
+    .filter(lead => lead.businessStatus === 'completed')
+    .reduce((sum, lead) => sum + Number(lead.biteSitesShareCents || 0), 0);
   $('leadStats').innerHTML = [
     ['Total leads', total, 'All captured inquiries'],
-    ['Showing confirmed', confirmed, 'Confirmation email recorded'],
-    ['Feedback received', feedback, 'Review or reply captured'],
-    ['Needs attention', pending, 'No confirmation on record']
-  ].map(([label, value, caption]) => `<article class="metric-card"><span>${label}</span><strong>${number(value)}</strong><small>${caption}</small></article>`).join('');
+    ['In progress', inProgress, 'Among the leads showing'],
+    ['Completed', completed, 'Among the leads showing'],
+    ['Bite Sites share', moneyFromCents(biteSitesShare), '10% of completed charges showing']
+  ].map(([label, value, caption]) => `<article class="metric-card"><span>${label}</span><strong>${typeof value === 'string' ? escapeHtml(value) : number(value)}</strong><small>${caption}</small></article>`).join('');
 }
 
 function renderEmptyLead() {
@@ -150,6 +159,46 @@ function detailRows(lead) {
   ];
 }
 
+function chargeInputValue(cents) {
+  return cents === null || cents === undefined ? '' : (Number(cents) / 100).toFixed(2);
+}
+
+function previewBiteSitesShare() {
+  const output = $('biteSitesSharePreview');
+  if (!output) return;
+  const raw = $('clientCharge').value.trim().replace(/^\$/, '').replace(/,/g, '');
+  if (!/^\d+(?:\.\d{0,2})?$/.test(raw)) {
+    output.textContent = '—';
+    return;
+  }
+  const cents = Math.round(Number(raw) * 100);
+  output.textContent = moneyFromCents(Math.round(cents * 0.1));
+}
+
+async function saveBusinessUpdate(detail) {
+  const button = $('saveBusiness');
+  button.disabled = true;
+  $('businessSaveStatus').textContent = 'Saving…';
+  try {
+    const data = await api(`/api/admin/leads/${encodeURIComponent(state.selected)}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ businessStatus: $('businessStatus').value, clientCharge: $('clientCharge').value })
+    });
+    detail.lead = data.lead;
+    if (['new', 'in_progress', 'completed'].includes($('leadStatus').value) && $('leadStatus').value !== data.lead.businessStatus) {
+      $('leadStatus').value = 'all';
+    }
+    await loadLeads();
+    renderLeadDetail(detail);
+    showToast(`Lead updated. Bite Sites share: ${moneyFromCents(data.lead.biteSitesShareCents)}.`);
+  } catch (error) {
+    $('businessSaveStatus').textContent = error.message;
+    showToast(error.message, 'bad');
+  } finally {
+    if ($('saveBusiness')) $('saveBusiness').disabled = false;
+  }
+}
+
 function renderLeadDetail(data) {
   const lead = data.lead;
   const [status, tone] = leadStatus(lead);
@@ -159,6 +208,7 @@ function renderLeadDetail(data) {
     ...(data.inboundEvents || []).map(item => ({ title: `Inbound reply · ${item.status || 'received'}`, date: item.receivedAt, text: item.subject || item.fromEmail }))
   ].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
   $('leadDetail').innerHTML = `<div class="detail-head"><div><span class="eyebrow">Lead profile</span><h2>${escapeHtml(lead.customerName || 'Unnamed lead')}</h2><span class="status-pill ${tone}">${status}</span></div><div class="detail-actions">${lead.phone ? `<a class="icon-button" href="tel:${escapeHtml(lead.phone)}">Call</a>` : ''}<button class="icon-button" id="composeEmail" type="button">Follow up</button></div></div>
+    <section class="subsection business-panel"><div class="section-heading"><div><span class="eyebrow">Project outcome</span><h3>Lead status &amp; revenue</h3><p>Record the project stage and client charge. Bite Sites is calculated automatically at 10%.</p></div></div><div class="business-fields"><label>Status<select id="businessStatus"><option value="new" ${(lead.businessStatus || 'new') === 'new' ? 'selected' : ''}>New</option><option value="in_progress" ${lead.businessStatus === 'in_progress' ? 'selected' : ''}>In progress</option><option value="completed" ${lead.businessStatus === 'completed' ? 'selected' : ''}>Completed</option></select></label><label>Amount charged to client<div class="currency-input"><span>$</span><input id="clientCharge" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" value="${escapeHtml(chargeInputValue(lead.clientChargeCents))}"></div></label><div class="share-card"><span>Bite Sites · 10%</span><strong id="biteSitesSharePreview">${escapeHtml(moneyFromCents(lead.biteSitesShareCents))}</strong></div></div><div class="business-actions"><button id="saveBusiness" class="button primary" type="button">Save project update</button><span id="businessSaveStatus">${lead.completedAt ? `Completed ${escapeHtml(formatDate(lead.completedAt))}` : ''}</span></div></section>
     <dl class="detail-grid">${detailRows(lead).map(([label, value]) => `<div class="detail-item ${label === 'Message' ? 'wide' : ''}"><dt>${label}</dt><dd>${escapeHtml(value || '—')}</dd></div>`).join('')}</dl>
     <section class="subsection"><div class="section-heading"><div><span class="eyebrow">Customer voice</span><h3>Feedback</h3></div></div>${(data.feedback || []).length ? `<div class="timeline">${data.feedback.map(item => `<article><span class="timeline-dot"></span><div><strong>${item.rating ? `${item.rating}/5` : 'Unrated'} · ${escapeHtml(item.source || 'Feedback')}</strong><time>${escapeHtml(formatDate(item.receivedAt))}</time><p>${escapeHtml(item.comment || 'No written comment.')}</p></div></article>`).join('')}</div>` : '<p class="quiet">No feedback has been received yet.</p>'}</section>
     <section class="subsection"><div class="section-heading"><div><span class="eyebrow">Communication</span><h3>Email history</h3></div></div>${eventRows.length ? `<div class="timeline">${eventRows.map(item => `<article><span class="timeline-dot"></span><div><strong>${escapeHtml(item.title)}</strong><time>${escapeHtml(formatDate(item.date))}</time><p>${escapeHtml(item.text || 'No additional details.')}</p></div></article>`).join('')}</div>` : '<p class="quiet">No email events recorded.</p>'}</section>`;
@@ -166,6 +216,8 @@ function renderLeadDetail(data) {
     $('emailPanel').hidden = false;
     previewEmail();
   });
+  $('clientCharge').addEventListener('input', previewBiteSitesShare);
+  $('saveBusiness').addEventListener('click', () => saveBusinessUpdate(data));
 }
 
 function composerPayload() {

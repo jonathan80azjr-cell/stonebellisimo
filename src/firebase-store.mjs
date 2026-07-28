@@ -19,6 +19,9 @@ function newestFirst(left, right) {
 }
 
 function matchesStatus(lead, status) {
+  if (['new', 'in_progress', 'completed'].includes(status)) {
+    return (lead.businessStatus || 'new') === status;
+  }
   if (status === 'needs_feedback') {
     return ['pending', 'sending'].includes(lead.feedbackStatus || 'pending') && !lead.feedbackEmailSentAt;
   }
@@ -86,6 +89,25 @@ export function createFirestoreStore(db) {
     async getLeadById(id) {
       const snapshot = await leads.doc(id).get();
       return snapshot.exists ? { ...snapshot.data(), id: snapshot.id } : null;
+    },
+
+    async updateLeadBusiness(id, update) {
+      const reference = leads.doc(id);
+      return db.runTransaction(async transaction => {
+        const snapshot = await transaction.get(reference);
+        if (!snapshot.exists) return null;
+        const current = snapshot.data();
+        const saved = {
+          businessStatus: update.businessStatus,
+          clientChargeCents: update.clientChargeCents,
+          biteSitesShareCents: update.biteSitesShareCents,
+          biteSitesRateBps: update.biteSitesRateBps,
+          completedAt: update.businessStatus === 'completed' ? (current.completedAt || update.updatedAt) : null,
+          updatedAt: update.updatedAt
+        };
+        transaction.update(reference, saved);
+        return { ...current, ...saved, id: snapshot.id };
+      });
     },
 
     async getLatestLead() {
