@@ -2,6 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { FieldValue } from 'firebase-admin/firestore';
 import { json, methodNotAllowed, normalizeText, readJson } from './lead-automation.mjs';
 import { PHONE_DWELL, PHONE_DWELL_REASONS } from './analytics-classification.mjs';
+import { leadIdentityKeys } from './lead-identity.mjs';
 
 const MAX_BATCH = 20;
 const MAX_BODY = 96 * 1024;
@@ -92,6 +93,17 @@ export function sanitizeAttribution(value = {}) {
     deviceCategory: ['mobile', 'tablet', 'desktop'].includes(source.deviceCategory)
       ? source.deviceCategory
       : 'unknown',
+    // First touch is carried separately from the current session because lead
+    // credit belongs to the visit that acquired the customer, not the visit
+    // they happened to submit on. The browser persists this across sessions;
+    // it is sanitized here on exactly the same terms as the live session.
+    firstTouchAt: Number.isFinite(Number(source.firstTouchAt)) ? Number(source.firstTouchAt) : 0,
+    firstTouchLandingPage: cleanPath(source.firstTouchLandingPage),
+    firstTouchReferrerHost: clean(source.firstTouchReferrerHost, 160).toLowerCase(),
+    firstTouchUtmSource: clean(source.firstTouchUtmSource, 100),
+    firstTouchUtmMedium: clean(source.firstTouchUtmMedium, 100),
+    firstTouchUtmCampaign: clean(source.firstTouchUtmCampaign, 120),
+    firstTouchUtmContent: clean(source.firstTouchUtmContent, 120),
     // Always recomputed from the sanitized campaign tags; `source.trafficClass`
     // is deliberately ignored so a browser cannot classify its own traffic.
     trafficClass: classifyTrafficClass({ utmSource, utmMedium })
@@ -209,13 +221,43 @@ export async function createLeadWithServerConversion(db, lead, input = {}) {
   const storedEvent = analyticsEventDocument(validated.event);
   const leadReference = db.collection('leads').doc(lead.id);
   const eventReference = db.collection('analytics_events').doc(validated.event.id);
-  await db.runTransaction(async transaction => {
-    const [leadSnapshot, eventSnapshot] = await transaction.getAll(leadReference, eventReference);
+  const identityKeys = leadIdentityKeys(lead);
+  const identityReferences = identityKeys.map(identity => db.collection('lead_identities').doc(identity.id));
+  return db.runTransaction(async transaction => {
+    const snapshots = await transaction.getAll(leadReference, eventReference, ...identityReferences);
+    const [leadSnapshot, eventSnapshot, ...identitySnapshots] = snapshots;
     if (leadSnapshot.exists || eventSnapshot.exists) throw new Error('Lead or conversion already exists.');
-    transaction.create(leadReference, { ...lead });
-    transaction.create(eventReference, storedEvent);
+    const existingIds = [...new Set(identitySnapshots.filter(snapshot => snapshot.exists).map(snapshot => snapshot.data().leadId).filter(Boolean))];
+    if (existingIds.length > 1) throw new Error('Lead identities resolve to conflicting contacts and require staff reconciliation.');
+    const linkedLeadId = existingIds[0] || lead.id;
+    const linkedLeadReference = db.collection('leads').doc(linkedLeadId);
+    if (existingIds.length) {
+      const linkedSnapshot = await transaction.get(linkedLeadReference);
+      if (!linkedSnapshot.exists) throw new Error('A lead identity points to a missing lead.');
+      const current = linkedSnapshot.data();
+      transaction.update(linkedLeadReference, {
+        lastTouch: lead.lastTouch || current.lastTouch || null,
+        sourcePlatform: current.sourcePlatform || lead.sourcePlatform || null,
+        sourceContentId: lead.sourceContentId || current.sourceContentId || null,
+        sourceHistory: FieldValue.arrayUnion({
+          source: lead.source,
+          platform: lead.sourcePlatform || null,
+          contentId: lead.sourceContentId || null,
+          at: lead.submittedAt
+        }),
+        updatedAt: lead.updatedAt
+      });
+    } else {
+      transaction.create(linkedLeadReference, { ...lead, sourceHistory: [{ source: lead.source, platform: lead.sourcePlatform || null, contentId: lead.sourceContentId || null, at: lead.submittedAt }] });
+    }
+    for (const [index, identity] of identityKeys.entries()) {
+      if (!identitySnapshots[index].exists) {
+        transaction.create(identityReferences[index], { type: identity.type, leadId: linkedLeadId, createdAt: lead.createdAt });
+      }
+    }
+    transaction.create(eventReference, { ...storedEvent, leadId: linkedLeadId });
+    return { created: !existingIds.length, leadId: linkedLeadId };
   });
-  return true;
 }
 
 function analyticsEventDocument(event) {

@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   renderFeedbackRequestEmail,
+  renderFollowUpStatusEmail,
   renderImmediateConfirmationEmail
 } from '../src/email/render.mjs';
 
@@ -116,6 +117,7 @@ async function main() {
 
   const emails = {
     confirmation: renderImmediateConfirmationEmail({ lead }),
+    follow_up_status: renderFollowUpStatusEmail({ lead }),
     feedback: renderFeedbackRequestEmail({
       lead,
       token: 'preview-token-only-links-will-not-submit',
@@ -125,7 +127,7 @@ async function main() {
 
   const selected = type === 'both' ? Object.entries(emails) : [[type, emails[type]]];
   if (selected.some(([, email]) => !email)) {
-    throw new Error('--type must be confirmation, feedback, or both.');
+    throw new Error('--type must be confirmation, follow_up_status, feedback, or both.');
   }
 
   for (const [name, email] of selected) {
@@ -138,7 +140,7 @@ async function main() {
       const recipient = requiredEnv('POSTMARK_TEST_EMAIL');
       const result = await sendPostmarkEmail(email, {
         to: recipient,
-        tag: name === 'feedback' ? 'feedback_request_test' : 'immediate_confirmation_test'
+        tag: name === 'feedback' ? 'feedback_request_test' : name === 'follow_up_status' ? 'follow_up_status_test' : 'immediate_confirmation_test'
       });
       console.log(`Sent ${name} test email to ${recipient}`);
       if (result?.MessageID || result?.MessageId) {

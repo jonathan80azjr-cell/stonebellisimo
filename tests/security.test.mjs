@@ -21,7 +21,8 @@ test('only allowlisted administrators may sign in or receive the admin claim', (
   assert.deepEqual(ADMIN_EMAILS.slice(), [
     'jensyjimenez723@gmail.com',
     'jonathan80azjr@gmail.com',
-    'stonebellisimollc@outlook.com'
+    'stonebellisimollc@outlook.com',
+    'eidandreammer@gmail.com'
   ]);
   assert.equal(isAdminEmail('  JensyJimenez723@Gmail.com '), true);
   assert.equal(isAdminEmail('jensyjimenez723@gmail.com.attacker.example'), false);

@@ -11,6 +11,7 @@ import {
   recordServerConversion
 } from '../src/analytics.mjs';
 import { createFirestoreStore } from '../src/firebase-store.mjs';
+import { createGrowthStore, normalizeSocialInquiry } from '../src/growth-store.mjs';
 import { handleAdminSearchConsole, syncSearchConsole } from '../src/search-console.mjs';
 import { createFeedbackToken, processDueFeedbackEmails, sha256Hex } from '../src/lead-automation.mjs';
 
@@ -20,6 +21,7 @@ initializeAdminApp({ projectId });
 const db = getAdminFirestore();
 db.settings({ ignoreUndefinedProperties: true });
 const store = createFirestoreStore(db);
+const growthStore = createGrowthStore(db);
 const today = new Date().toISOString().slice(0, 10);
 
 function event(id, eventName, detail = {}) {
@@ -190,8 +192,29 @@ const [atomicLeadSnapshot, atomicEventSnapshot] = await db.getAll(
 );
 assert.equal(atomicLeadSnapshot.exists, true);
 assert.equal(atomicEventSnapshot.exists, true, 'lead and server conversion must commit atomically');
+const duplicateIdentityLead = { ...atomicLead, id: 'lead_atomic_duplicate', submittedAt: new Date().toISOString(), createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+const deduped = await createLeadWithServerConversion(db, duplicateIdentityLead, event('conversion_lead_atomic_duplicate', 'form_submit', {
+  visitorId: 'visitor_atomic_2', sessionId: 'session_atomic_2', ctaId: 'estimate-footer', ctaType: 'estimate'
+}));
+assert.deepEqual(deduped, { created: false, leadId: atomicLead.id }, 'same normalized phone/email must reuse one canonical lead');
+assert.equal((await db.collection('leads').doc(duplicateIdentityLead.id).get()).exists, false);
 await db.collection('leads').doc(atomicLead.id).delete();
 await db.collection('analytics_events').doc('conversion_lead_atomic_conversion').delete();
+await db.collection('analytics_events').doc('conversion_lead_atomic_duplicate').delete();
+for (const identity of (await db.collection('lead_identities').where('leadId', '==', atomicLead.id).get()).docs) await identity.ref.delete();
+
+const householdOne = { ...atomicLead, id: 'lead_household_stone', firstName: 'Ada', lastName: 'Stone', email: 'ada.stone@example.com', phone: '2015550177' };
+const householdTwo = { ...atomicLead, id: 'lead_household_rivera', firstName: 'Ben', lastName: 'Rivera', email: 'ben.rivera@example.com', phone: '2015550177' };
+const householdOneResult = await createLeadWithServerConversion(db, householdOne, event('conversion_household_stone', 'form_submit', { visitorId: 'visitor_household_1', sessionId: 'session_household_1', ctaId: 'estimate-hero', ctaType: 'estimate' }));
+const householdTwoResult = await createLeadWithServerConversion(db, householdTwo, event('conversion_household_rivera', 'form_submit', { visitorId: 'visitor_household_2', sessionId: 'session_household_2', ctaId: 'estimate-footer', ctaType: 'estimate' }));
+assert.deepEqual(householdOneResult, { created: true, leadId: householdOne.id });
+assert.deepEqual(householdTwoResult, { created: true, leadId: householdTwo.id }, 'shared household phone with different surname must not merge contacts');
+for (const leadId of [householdOne.id, householdTwo.id]) {
+  await db.collection('leads').doc(leadId).delete();
+  for (const identity of (await db.collection('lead_identities').where('leadId', '==', leadId).get()).docs) await identity.ref.delete();
+}
+await db.collection('analytics_events').doc('conversion_household_stone').delete();
+await db.collection('analytics_events').doc('conversion_household_rivera').delete();
 
 const leadEnv = {
   ENVIRONMENT: 'test', PUBLIC_SITE_URL: 'http://localhost:5000', POSTMARK_MOCK_MODE: 'true',
@@ -230,14 +253,89 @@ assert.equal(updatedBusinessLead.clientChargeCents, 250_000);
 assert.equal(updatedBusinessLead.biteSitesShareCents, 25_000);
 assert.equal((await store.listLeads({ status: 'in_progress' })).leads[0].id, 'lead_2');
 
+for (let index = 1; index <= 3; index += 1) {
+  await db.collection('leads').doc(`lead_${index}`).update({
+    businessStatus: 'completed', salesStatus: 'Job Completed', reviewRequestDueAt: dueAt,
+    reviewRequestStatus: 'pending', reviewRequestAttemptCount: 0
+  });
+}
+const reviewClaimedAt = new Date().toISOString();
 const claims = await Promise.all([
-  store.claimFeedbackLead('lead_1', new Date().toISOString(), new Date(Date.now() - 900000).toISOString()),
-  store.claimFeedbackLead('lead_1', new Date().toISOString(), new Date(Date.now() - 900000).toISOString())
+  store.claimReviewRequest('lead_1', 'request', reviewClaimedAt, new Date(Date.now() - 900000).toISOString()),
+  store.claimReviewRequest('lead_1', 'request', reviewClaimedAt, new Date(Date.now() - 900000).toISOString())
 ]);
-assert.equal(claims.filter(Boolean).length, 1, 'only one scheduled worker may claim a feedback lead');
-await db.collection('leads').doc('lead_1').update({ feedbackEmailClaimedAt: null, feedbackStatus: 'pending' });
+assert.equal(claims.filter(Boolean).length, 1, 'only one scheduled worker may claim a review request');
+await db.collection('leads').doc('lead_1').update({ reviewRequestClaimedAt: null, reviewRequestStatus: 'pending' });
+await db.collection('review_requests').doc('lead_1_request').set({ claimedAt: null, state: 'pending' }, { merge: true });
 const feedbackSummary = await processDueFeedbackEmails(leadEnv, { store });
-assert.equal(feedbackSummary.sent, 3, 'scheduled feedback processing claims and records each due message once');
+assert.equal(feedbackSummary.sent, 3, 'completion-based review processing claims and records each due message once');
+
+const inquiry = normalizeSocialInquiry({
+  platform: 'instagram', accountId: 'ig-account', remoteInquiryId: 'dm-emulator', remoteContactId: 'contact-emulator',
+  category: 'estimate_intent', projectType: 'Kitchen', material: 'Quartz', city: 'Hoboken', usableContactMethod: 'platform_dm'
+});
+const firstInquiry = await growthStore.recordInquiryEvent('hl_inquiry_emulator', inquiry);
+const replayedInquiry = await growthStore.recordInquiryEvent('hl_inquiry_emulator', inquiry);
+assert.equal(firstInquiry.duplicate, false);
+assert.equal(replayedInquiry.duplicate, true, 'replayed social webhooks must not duplicate inquiries');
+const inquiryId = 'instagram:dm-emulator';
+const firstOptOutAt = new Date(Date.now() - 5000).toISOString();
+await growthStore.recordConsentEvent('hl_optout_1', { inquiryDocumentId: inquiryId, consentStatus: 'revoked', consentVersion: 'consent-v1', occurredAt: firstOptOutAt });
+await growthStore.recordConsentEvent('hl_optout_2', { inquiryDocumentId: inquiryId, consentStatus: 'declined', consentVersion: 'consent-v1', occurredAt: new Date().toISOString() });
+assert.equal((await growthStore.getInquiry(inquiryId)).optedOutAt, firstOptOutAt, 'repeat opt-outs retain the original timestamp');
+await assert.rejects(
+  growthStore.recordConsentEvent('hl_bad_restore', { inquiryDocumentId: inquiryId, consentStatus: 'granted', consentVersion: 'consent-v1' }),
+  /named human/
+);
+await growthStore.recordHumanConsentEvent(inquiryId, 'consent-v2', 'Jensy');
+const restored = await growthStore.getInquiry(inquiryId);
+assert.equal(restored.dnd, false);
+assert.equal(restored.consentRestoredBy, 'Jensy');
+await growthStore.recordConsentEvent('hl_restore_cycle_optout', {
+  inquiryDocumentId: inquiryId, consentStatus: 'revoked', consentVersion: 'consent-v2', occurredAt: new Date().toISOString()
+});
+await growthStore.recordHumanConsentEvent(inquiryId, 'consent-v2', 'Jonathan');
+const restoredAgain = await growthStore.getInquiry(inquiryId);
+assert.equal(restoredAgain.dnd, false, 'the same approved wording may support a later fresh human consent event');
+assert.equal(restoredAgain.consentRestoredBy, 'Jonathan');
+const qualified = await growthStore.recordQualificationEvent('hl_qualified_emulator', {
+  inquiryDocumentId: inquiryId, serviceFit: true, serviceAreaFit: true, genuineProjectIntent: true,
+  usableContactMethod: 'platform_dm', consentStatus: 'granted', consentVersion: 'consent-v2',
+  claimedBy: 'Jensy', qualificationVersion: 'SB_GROWTH_V1'
+});
+const replayedQualification = await growthStore.recordQualificationEvent('hl_qualified_emulator', {
+  inquiryDocumentId: inquiryId, serviceFit: true, serviceAreaFit: true, genuineProjectIntent: true,
+  usableContactMethod: 'platform_dm', consentStatus: 'granted', consentVersion: 'consent-v2', claimedBy: 'Jensy'
+});
+assert.equal(qualified.duplicate, false);
+assert.equal(replayedQualification.duplicate, true, 'qualification replay must create one lead and opportunity mirror');
+assert.equal((await db.collection('leads').doc(qualified.lead.id).get()).data().salesStatus, 'Qualified');
+const postQualificationOptOutAt = new Date().toISOString();
+await growthStore.recordConsentEvent('hl_optout_after_qualification', {
+  inquiryDocumentId: inquiryId, consentStatus: 'revoked', consentVersion: 'consent-v2', occurredAt: postQualificationOptOutAt
+});
+const optedOutLead = (await db.collection('leads').doc(qualified.lead.id).get()).data();
+assert.equal(optedOutLead.dnd, true, 'a later opt-out propagates to the canonical Firebase lead');
+assert.equal(optedOutLead.optedOutAt, postQualificationOptOutAt);
+await db.collection('leads').doc(qualified.lead.id).update({
+  businessStatus: 'completed',
+  salesStatus: 'Job Completed',
+  reviewRequestDueAt: dueAt,
+  reviewRequestStatus: 'pending'
+});
+assert.equal(
+  await store.claimReviewRequest(qualified.lead.id, 'request', new Date().toISOString(), new Date(Date.now() - 900000).toISOString()),
+  false,
+  'a cross-channel opt-out suppresses completion-based review outreach'
+);
+await growthStore.setControl({ level: 'L4', targetType: 'lead', targetId: 'lead_3', active: true }, 'Jonathan');
+const l4Lead = (await db.collection('leads').doc('lead_3').get()).data();
+assert.equal(l4Lead.dnd, true, 'L4 writes canonical lead suppression, not only a dashboard flag');
+assert.ok(l4Lead.optedOutAt);
+await assert.rejects(
+  growthStore.setControl({ level: 'L4', targetType: 'lead', targetId: 'lead_3', active: false }, 'Jonathan'),
+  /named-human consent event/
+);
 
 const firstFeedback = await store.saveFeedback({ leadId: 'lead_1', rating: 5, comment: 'Excellent', source: 'test', receivedAt: new Date().toISOString() });
 const duplicateFeedback = await store.saveFeedback({ leadId: 'lead_1', rating: 4, comment: 'Duplicate', source: 'test', receivedAt: new Date().toISOString() });

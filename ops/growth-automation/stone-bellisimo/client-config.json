@@ -1,0 +1,346 @@
+{
+  "_README": [
+    "No secrets belong here. Unresolved placeholder and verification markers are live-write hard stops.",
+    "Known values may be recorded before verification, but their verification_state and evidence_reference must be completed before a write.",
+    "This initial configuration authorizes no external writes."
+  ],
+  "client": {
+    "code": "SB",
+    "display_name": "Stone Bellisimo",
+    "vertical": "appointment_services",
+    "vertical_module": "appointment_services",
+    "program_code": "SB_GROWTH_V1",
+    "timezone": "America/New_York"
+  },
+  "business_truth": {
+    "canonical_phone_display": "201-553-1919",
+    "canonical_phone_e164": "+12015531919",
+    "sales_handoff_phone_display": "201-281-6423",
+    "sales_handoff_owner": "Cesar",
+    "address": "618 23rd Street, Union City, NJ 07087",
+    "hours": {
+      "monday": "08:00-17:00",
+      "tuesday": "08:00-17:00",
+      "wednesday": "08:00-17:00",
+      "thursday": "08:00-17:00",
+      "friday": "08:00-17:00",
+      "saturday": "closed",
+      "sunday": "closed"
+    },
+    "website_url": "https://stonebellisimollc.com",
+    "website_verification_state": "verified",
+    "website_evidence_reference": "public/contact-us/index.html:10-18; https://stonebellisimollc.com/contact-us/ retrieved 2026-08-26",
+    "directions_url": "https://maps.google.com/?q=618+23rd+Street,+Union+City,+NJ+07087",
+    "directions_verification_state": "verified",
+    "directions_evidence_reference": "public/contact-us/index.html:232-237; https://stonebellisimollc.com/contact-us/ retrieved 2026-08-26",
+    "estimate_form_url": "https://stonebellisimollc.com/contact-us/#wizard-section",
+    "estimate_form_verification_state": "verified",
+    "estimate_form_evidence_reference": "public/contact-us/index.html:189,203,259-395; https://stonebellisimollc.com/contact-us/ retrieved 2026-08-26",
+    "estimate_form_preserves_parameters": true,
+    "estimate_form_parameter_evidence_reference": "read-only production browser fixture 2026-08-26: /contact-us/?utm_source=instagram&utm_medium=organic_social&utm_campaign=sb_organic_202608&utm_content=verification-feed preserved all controlled UTMs in window.StoneBellisimoAnalytics.attribution(); no form submission performed",
+    "services_offered": [
+      "quartz",
+      "granite",
+      "marble",
+      "quartzite",
+      "porcelain",
+      "kitchen countertops",
+      "vanities",
+      "fireplaces",
+      "commercial work",
+      "fabrication",
+      "installation",
+      "free in-home estimates"
+    ],
+    "services_explicitly_not_offered": "REQUIRED_UNSET",
+    "gbp_primary_category": "Countertop store",
+    "gbp_secondary_categories": "REQUIRED_UNSET",
+    "google_place_id": "ChIJVbaFyYZXwokRgfG3kFqd5MY",
+    "google_place_id_verification_state": "verified",
+    "google_place_id_evidence_reference": "public/index.html:1113 review-source links, in production since before 2026-08-26",
+    "google_review_link": "https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY"
+  },
+  "approved_copy": {
+    "copy_version": "v1-REQUIRED_UNSET",
+    "consent_line": "REQUIRED_UNSET",
+    "consent_text_version": "consent_v1-REQUIRED_UNSET",
+    "comment_acknowledgement": "REQUIRED_UNSET",
+    "dm_reply_templates": "REQUIRED_UNSET",
+    "review_request": "REQUIRED_UNSET",
+    "review_reply_templates": "REQUIRED_UNSET",
+    "offer_copy": "REQUIRED_UNSET",
+    "approved_by": "REQUIRED_UNSET",
+    "approved_at": "REQUIRED_UNSET",
+    "signoff": "REQUIRED_UNSET",
+    "evidence_reference": "REQUIRED_UNSET"
+  },
+  "staffing": {
+    "co_owners": [
+      "Jensy",
+      "Jonathan"
+    ],
+    "owner_emails": [
+      "jensyjimenez723@gmail.com",
+      "jonathan80azjr@gmail.com"
+    ],
+    "approval_owners": [
+      "Jensy",
+      "Jonathan"
+    ],
+    "inbound_alert_owners": [
+      "Jensy",
+      "Jonathan"
+    ],
+    "sales_handoff_owner": "Cesar",
+    "jensy_highlevel_user_id": "REQUIRED_UNSET",
+    "jonathan_highlevel_user_id": "REQUIRED_UNSET",
+    "cesar_highlevel_user_id": "REQUIRED_UNSET",
+    "kill_switch_owners": [
+      "Jensy",
+      "Jonathan"
+    ],
+    "privacy_incident_owners": [
+      "Jensy",
+      "Jonathan"
+    ],
+    "native_post_removal_owners": [
+      "Jensy",
+      "Jonathan"
+    ],
+    "claim_rule": "first claimant owns the conversation; claiming stops later alerts",
+    "sla": {
+      "inbound_reminder_minutes": 15,
+      "inbound_breach_minutes": 30,
+      "new_review_draft_business_minutes": 60,
+      "new_review_response_business_days": 1
+    }
+  },
+  "quiet_hours": {
+    "start": "17:00",
+    "end": "08:00",
+    "use_location_timezone": true,
+    "customer_outbound_obeys": true,
+    "inbound_reply_exempt": true,
+    "internal_owner_alerts_and_escalations_immediate": true,
+    "claim_sla_basis": "staffed_hours"
+  },
+  "channels": {
+    "in_scope": [
+      "google_business_profile",
+      "instagram",
+      "facebook"
+    ],
+    "deferred": [
+      "pinterest",
+      "houzz",
+      "x",
+      "paid_ads",
+      "lead_ads",
+      "call_tracking",
+      "sms",
+      "bella_voice"
+    ],
+    "meta_dm_window_hours": 24,
+    "google_business_messaging": "deprecated_do_not_automate",
+    "sms_registered": false,
+    "email_domain_authenticated": "UNVERIFIED"
+  },
+  "accounts": {
+    "highlevel_location": {
+      "id": "rB7WMB7KbqDC4eLCCfyX",
+      "verification_state": "verified",
+      "evidence_reference": "authenticated read-only HighLevel agency sub-account list and location Business Profile on 2026-08-26; Stone Bellisimo, 618 23rd St, Union City NJ 07087, (201) 553-1919, America/New_York"
+    },
+    "native_gbp_account": {
+      "id": "REQUIRED_UNSET",
+      "verification_state": "UNVERIFIED",
+      "evidence_reference": "REQUIRED_UNSET"
+    },
+    "native_gbp_location": {
+      "id": "493379912316823800",
+      "verification_state": "verified",
+      "evidence_reference": "HighLevel Social Planner connection readback 2026-08-26; native originId"
+    },
+    "social_planner_gbp_account": {
+      "id": "6a8f4eddb22f84a729e92308_rB7WMB7KbqDC4eLCCfyX_493379912316823800",
+      "verification_state": "verified",
+      "evidence_reference": "HighLevel Social Planner connection readback 2026-08-26; connected, not expired, syncPosts true"
+    },
+    "social_planner_gbp_profile": {
+      "id": "6a8f4ee3e77e79b97c114fd8",
+      "verification_state": "verified",
+      "evidence_reference": "HighLevel Social Planner connection readback 2026-08-26; profileId"
+    },
+    "social_planner_gbp_oauth": {
+      "id": "6a8f4eddb22f84a729e92308",
+      "verification_state": "verified",
+      "evidence_reference": "HighLevel Social Planner connection readback 2026-08-26; oauthId"
+    },
+    "native_instagram_account": {
+      "id": "REQUIRED_UNSET",
+      "verification_state": "UNVERIFIED",
+      "evidence_reference": "REQUIRED_UNSET"
+    },
+    "social_planner_instagram_account": {
+      "id": "REQUIRED_UNSET",
+      "verification_state": "UNVERIFIED",
+      "evidence_reference": "REQUIRED_UNSET"
+    },
+    "instagram_messaging_account": {
+      "id": "REQUIRED_UNSET",
+      "verification_state": "UNVERIFIED",
+      "evidence_reference": "REQUIRED_UNSET"
+    },
+    "native_facebook_page": {
+      "id": "REQUIRED_UNSET",
+      "verification_state": "UNVERIFIED",
+      "evidence_reference": "REQUIRED_UNSET"
+    },
+    "social_planner_facebook_account": {
+      "id": "REQUIRED_UNSET",
+      "verification_state": "UNVERIFIED",
+      "evidence_reference": "REQUIRED_UNSET"
+    },
+    "facebook_messaging_page": {
+      "id": "REQUIRED_UNSET",
+      "verification_state": "UNVERIFIED",
+      "evidence_reference": "REQUIRED_UNSET"
+    },
+    "firebase_project": {
+      "id": "stone-bellisimo-dashboard",
+      "verification_state": "verified",
+      "evidence_reference": ".firebaserc default project plus authenticated read-only `firebase projects:list --json` on 2026-08-26; project ACTIVE, project number 1087968800883, hosting site stone-bellisimo-dashboard"
+    }
+  },
+  "connection_audit": {
+    "audited_at": "2026-08-26",
+    "mode": "authenticated_read_only",
+    "highlevel_business_website_observed": "http://www.stonebellisimollc.com/",
+    "highlevel_business_website_required": "https://stonebellisimollc.com",
+    "highlevel_business_website_mismatch": true,
+    "social_planner": {
+      "google_business_profile": "connected; account 6a8f4eddb22f84a729e92308_rB7WMB7KbqDC4eLCCfyX_493379912316823800; profileId 6a8f4ee3e77e79b97c114fd8; oauthId 6a8f4eddb22f84a729e92308; originId 493379912316823800; not expired; syncPosts true",
+      "instagram": "pending",
+      "facebook": "pending"
+    },
+    "gbp_optimization": "link_tagging_toolkit_built_2026-08-27 (scripts/gbp-tracked-links.mjs); profile content changes still pending owner approval and GBP access",
+    "private_integration": "not_created",
+    "growth_pipeline": "created; id hrvoCFYthFHT08tNPtfZ; readback in pipeline-ledger.json",
+    "standard_workflows": "UI-read 2026-08-27: W-10 13013c62-20f3-410e-b22f-b11c1bb37069, W-7 e68fc50d-534c-42b4-85af-196f667ceaa0, W-8 413a9700-5d79-4c97-aced-58532027feeb; all Draft with 0 total and 0 active enrolled; no trigger/action live and no sends occurred. W-10 graph is empty because prior UI edits were unsaved; W-7/W-8 are empty shells. Editor instability blocked safe reconstruction.",
+    "workflow_readback": {
+      "readback_date": "2026-08-27",
+      "W-10 · All · Consent / Opt-out Guardrail": {"id":"13013c62-20f3-410e-b22f-b11c1bb37069","status":"Draft","total_enrolled":0,"active_enrolled":0,"graph_state":"empty_unsaved_edits_did_not_persist"},
+      "W-7 · All · Staff Escalation": {"id":"e68fc50d-534c-42b4-85af-196f667ceaa0","status":"Draft","total_enrolled":0,"active_enrolled":0,"graph_state":"empty_shell"},
+      "W-8 · Firebase · Outcome Reconciliation": {"id":"413a9700-5d79-4c97-aced-58532027feeb","status":"Draft","total_enrolled":0,"active_enrolled":0,"graph_state":"empty_shell"},
+      "customer_facing_actions_live":false,
+      "sends_occurred":false,
+      "safe_reconstruction":"blocked_by_editor_instability"
+    },
+    "custom_fields": {
+      "created_count": 27,
+      "field_ledger": "field-ledger.json",
+      "tag_ledger": "tag-ledger.json",
+      "tag_count": 10
+    },
+    "notes": "Supersedes the earlier read-only audit where later live state differs. GBP Social Planner connection is verified. Meta remains pending. HighLevel business website still differs from canonical: observed http/www versus required https/non-www.",
+    "attribution": "provisioned_and_readback_verified_2026-08-27; 27 custom fields, 10 tags; see change-sheet-2026-08-27-attribution-fields.md"
+  },
+  "outcome_system": {
+    "canonical_system": "Firebase",
+    "operational_mirror": "HighLevel",
+    "pipeline_name": "Stone Bellisimo Growth Outcomes",
+    "stages": [
+      "New Lead",
+      "Qualified",
+      "Estimate Scheduled",
+      "Job Completed",
+      "Invoice Collected",
+      "Repeat / Review",
+      "Lost"
+    ],
+    "outcome_version": "SB_GROWTH_V1"
+  },
+  "publishing": {
+    "approval_mode": "human_required_for_90_day_pilot",
+    "client_ceiling_per_24h": 3,
+    "min_lead_time_minutes": 30,
+    "state_machine": [
+      "discovered",
+      "needs_review",
+      "approved",
+      "optimized",
+      "uploaded",
+      "scheduled",
+      "published"
+    ],
+    "default_schedule": {
+      "instagram_facebook": "Tue/Thu/Sat 12:00 America/New_York",
+      "gbp": "Tue/Fri 10:00 America/New_York"
+    },
+    "minimum_monthly_media": {
+      "content_packages": 12,
+      "usable_project_photos": 18,
+      "vertical_clips": 6,
+      "projects_where_possible": 4
+    },
+    "minimum_monthly_mix": {
+      "project_reveal": 4,
+      "process": 3,
+      "material_education": 2,
+      "local_faq": 2,
+      "testimonial_offer": 1
+    }
+  },
+  "reputation": {
+    "initial_request_delay_days": 3,
+    "reminder_delay_days": 7,
+    "maximum_reminders": 1,
+    "eligibility_stage": "Job Completed",
+    "private_feedback_gating": false,
+    "incentives": false
+  },
+  "measurement": {
+    "baseline_period": "manual prior 90 days",
+    "target_qualified_estimate_growth_percent": 20,
+    "qualified_definition": "staff confirmed service fit, service area, genuine project intent, usable contact method, and consent",
+    "utm_campaign_pattern": "sb_organic_YYYYMM",
+    "call_tracking": "off_v1",
+    "attribution_model": "first_touch_wins; managed credit requires a tagged link with an sb_organic_YYYYMM campaign; inferred traffic is never counted as managed",
+    "gbp_link_tagging": "utm_source=google&utm_medium=organic_local; placements enumerated in src/growth-attribution.mjs GBP_PLACEMENTS"
+  },
+  "hosting": {
+    "frontend_and_dashboard": "Firebase Hosting",
+    "public_url": "https://stonebellisimollc.com",
+    "verification_state": "verified",
+    "evidence_reference": "authenticated read-only firebase projects:list and repository Firebase configuration on 2026-08-26; hosting site stone-bellisimo-dashboard"
+  },
+  "integration_status": {
+    "google_business_profile": "social_planner_connected_verified_2026-08-26; publishing connection only; reviews/profile capability remains separately unverified",
+    "meta_instagram_facebook": "pending_no_connection_or_asset_readback"
+  },
+  "secret_variable_names": {
+    "highlevel_private_token": "HIGHLEVEL_PRIVATE_TOKEN",
+    "highlevel_webhook_secret": "HIGHLEVEL_WEBHOOK_SECRET"
+  },
+  "authorization_envelope": {
+    "signed": false,
+    "signed_at": "REQUIRED_UNSET",
+    "signed_by": "REQUIRED_UNSET",
+    "signature_evidence_reference": "REQUIRED_UNSET",
+    "approved_copy_version": "REQUIRED_UNSET",
+    "allowed_actions": [
+      "profile_update",
+      "draft_workflows",
+      "create_in_review_post",
+      "schedule_approved_post",
+      "draft_review_reply",
+      "send_review_request"
+    ],
+    "permitted_actions": [],
+    "live_write_action_scope": [],
+    "action_authorizations": {},
+    "rollback_owner": "REQUIRED_UNSET",
+    "rollback_rules": "REQUIRED_UNSET",
+    "live_writes_authorized": false
+  }
+}

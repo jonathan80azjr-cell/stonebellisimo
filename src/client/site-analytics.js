@@ -6,7 +6,8 @@ const STORAGE = {
   visitor: 'sb_analytics_visitor',
   session: 'sb_analytics_session',
   queue: 'sb_analytics_queue',
-  impressions: 'sb_analytics_impressions'
+  impressions: 'sb_analytics_impressions',
+  firstTouch: 'sb_analytics_first_touch'
 };
 const SESSION_TIMEOUT = 30 * 60 * 1000;
 const MAX_QUEUE = 100;
@@ -92,8 +93,36 @@ function deviceCategory() {
   return 'desktop';
 }
 
+// The session record expires after SESSION_TIMEOUT, which is correct for
+// session analytics and wrong for lead credit: a countertop buyer clicks the
+// Google Business Profile on Monday and submits the estimate form days later,
+// by which point the session-scoped campaign tags are long gone and the lead
+// looks like it arrived from nowhere. First touch is therefore kept in
+// localStorage and never overwritten — it is the acquisition event.
+function firstTouch(session) {
+  const stored = safeParse(storageGet(localStorage, STORAGE.firstTouch), null);
+  if (stored && stored.at) return stored;
+  const record = {
+    at: session.startedAt,
+    landingPage: session.landingPage,
+    referrerHost: session.referrerHost,
+    utmSource: session.utmSource,
+    utmMedium: session.utmMedium,
+    utmCampaign: session.utmCampaign,
+    utmTerm: session.utmTerm,
+    utmContent: session.utmContent
+  };
+  storageSet(localStorage, STORAGE.firstTouch, JSON.stringify(record));
+  return record;
+}
+
 function attribution() {
   const session = currentSession();
+  // A visitor whose very first arrival was untagged keeps that untagged first
+  // touch on record. Server-side credit resolution reports the difference
+  // between first and last touch rather than silently promoting the later,
+  // better-tagged visit.
+  const first = firstTouch(session);
   return {
     visitorId: visitorId(),
     sessionId: session.id,
@@ -104,7 +133,14 @@ function attribution() {
     utmCampaign: session.utmCampaign,
     utmTerm: session.utmTerm,
     utmContent: session.utmContent,
-    deviceCategory: deviceCategory()
+    deviceCategory: deviceCategory(),
+    firstTouchAt: first.at,
+    firstTouchLandingPage: first.landingPage,
+    firstTouchReferrerHost: first.referrerHost,
+    firstTouchUtmSource: first.utmSource,
+    firstTouchUtmMedium: first.utmMedium,
+    firstTouchUtmCampaign: first.utmCampaign,
+    firstTouchUtmContent: first.utmContent
   };
 }
 

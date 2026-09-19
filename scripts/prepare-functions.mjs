@@ -12,4 +12,8 @@ cpSync(resolve(repository, 'src'), resolve(output, 'src'), {
   recursive: true,
   filter: source => !source.startsWith(clientSource)
 });
+const growthConfigSource = resolve(repository, 'ops/growth-automation/stone-bellisimo/client-config.json');
+const growthConfigOutput = resolve(output, 'ops/growth-automation/stone-bellisimo/client-config.json');
+mkdirSync(dirname(growthConfigOutput), { recursive: true });
+cpSync(growthConfigSource, growthConfigOutput);
 console.info('Prepared Firebase Functions source in functions/lib.');

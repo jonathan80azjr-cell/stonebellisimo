@@ -1,13 +1,18 @@
 import { randomUUID } from 'node:crypto';
 import { FieldPath, FieldValue } from 'firebase-admin/firestore';
+import { GROWTH_CLIENT } from './growth-client-config.mjs';
+import { leadHasDesignation } from './lead-designations.mjs';
 
 const COLLECTIONS = {
   leads: 'leads',
   emailEvents: 'email_events',
   feedback: 'feedback',
+  reviewRequests: 'review_requests',
   inboundEvents: 'postmark_inbound_events',
   deliveryEvents: 'postmark_delivery_events'
 };
+
+const SALES_STATUSES = new Set(GROWTH_CLIENT.stages);
 
 function rows(snapshot) {
   return snapshot.docs.map(document => ({ ...document.data(), id: document.id }));
@@ -19,6 +24,10 @@ function newestFirst(left, right) {
 }
 
 function matchesStatus(lead, status) {
+  if (['new', 'progress_completed', 'needs_feedback', 'feedback_sent', 'feedback_received', 'email_issue'].includes(status)) {
+    return leadHasDesignation(lead, status);
+  }
+  if (SALES_STATUSES.has(status)) return lead.salesStatus === status;
   if (['new', 'in_progress', 'completed'].includes(status)) {
     return (lead.businessStatus || 'new') === status;
   }
@@ -97,14 +106,34 @@ export function createFirestoreStore(db) {
         const snapshot = await transaction.get(reference);
         if (!snapshot.exists) return null;
         const current = snapshot.data();
+        const becomingCompleted = update.businessStatus === 'completed' && current.businessStatus !== 'completed';
+        const completedAt = update.businessStatus === 'completed' ? (current.completedAt || update.updatedAt) : null;
         const saved = {
           businessStatus: update.businessStatus,
+          salesStatus: update.salesStatus || current.salesStatus || null,
+          designation: update.designation === undefined ? (current.designation || null) : update.designation,
           clientChargeCents: update.clientChargeCents,
           biteSitesShareCents: update.biteSitesShareCents,
           biteSitesRateBps: update.biteSitesRateBps,
-          completedAt: update.businessStatus === 'completed' ? (current.completedAt || update.updatedAt) : null,
+          completedAt,
+          stageTimestamps: update.salesStatus ? {
+            ...(current.stageTimestamps || {}),
+            [update.stageTimestampField]: current.stageTimestamps?.[update.stageTimestampField] || update.updatedAt
+          } : (current.stageTimestamps || {}),
+          outcomeVersion: update.outcomeVersion || current.outcomeVersion || GROWTH_CLIENT.programCode,
           updatedAt: update.updatedAt
         };
+        // A completion is the only event that starts the public review flow.
+        // Do not overwrite an existing due date on repeated admin saves.
+        if (becomingCompleted && !current.reviewRequestDueAt) {
+          saved.reviewRequestDueAt = new Date(new Date(completedAt).getTime() + GROWTH_CLIENT.reputation.initial_request_delay_days * 24 * 60 * 60 * 1000).toISOString();
+          saved.reviewRequestStatus = 'pending';
+          saved.reviewRequestAttemptCount = 0;
+          transaction.set(db.collection(COLLECTIONS.reviewRequests).doc(`${snapshot.id}_request`), {
+            id: `${snapshot.id}_request`, leadId: snapshot.id, kind: 'request', state: 'pending', dueAt: saved.reviewRequestDueAt,
+            claimedAt: null, sentAt: null, failedAt: null, leaseExpiresAt: null, createdAt: update.updatedAt, updatedAt: update.updatedAt
+          }, { merge: true });
+        }
         transaction.update(reference, saved);
         return { ...current, ...saved, id: snapshot.id };
       });
@@ -185,6 +214,202 @@ export function createFirestoreStore(db) {
       });
     },
 
+    async getDueReviewRequests(now, staleBefore, limit, maxAttempts) {
+      const snapshot = await leads.where('reviewRequestDueAt', '<=', now)
+        .orderBy('reviewRequestDueAt', 'asc').limit(Math.min(Math.max(limit * 4, limit), 200)).get();
+      return rows(snapshot)
+        .filter(lead => lead.businessStatus === 'completed')
+        .filter(lead => !lead.reviewRequestSentAt)
+        .filter(lead => !lead.reviewRequestRepliedAt)
+        .filter(lead => !lead.reviewRequestUncertainAt)
+        .filter(lead => lead.dnd !== true && !lead.optedOutAt)
+        .filter(lead => Number(lead.reviewRequestAttemptCount || 0) < maxAttempts)
+        .filter(lead => !lead.reviewRequestClaimedAt || lead.reviewRequestClaimedAt <= staleBefore)
+        .slice(0, limit);
+    },
+
+    async getDueReviewReminders(now, staleBefore, limit, maxAttempts) {
+      const snapshot = await leads.where('reviewReminderDueAt', '<=', now)
+        .orderBy('reviewReminderDueAt', 'asc').limit(Math.min(Math.max(limit * 4, limit), 200)).get();
+      return rows(snapshot)
+        .filter(lead => lead.businessStatus === 'completed' && lead.reviewRequestSentAt)
+        .filter(lead => !lead.reviewReminderSentAt && !lead.reviewRequestClickedAt && !lead.reviewRequestRepliedAt)
+        .filter(lead => !lead.reviewReminderUncertainAt)
+        .filter(lead => lead.dnd !== true && !lead.optedOutAt)
+        .filter(lead => Number(lead.reviewReminderAttemptCount || 0) < maxAttempts)
+        .filter(lead => !lead.reviewReminderClaimedAt || lead.reviewReminderClaimedAt <= staleBefore)
+        .slice(0, limit);
+    },
+
+    async claimReviewRequest(id, kind, claimedAt, staleBefore) {
+      const reference = leads.doc(id);
+      const ledgerReference = db.collection(COLLECTIONS.reviewRequests).doc(`${id}_${kind}`);
+      return db.runTransaction(async transaction => {
+        const [snapshot, ledgerSnapshot] = await Promise.all([transaction.get(reference), transaction.get(ledgerReference)]);
+        if (!snapshot.exists) return false;
+        const lead = snapshot.data();
+        const reminder = kind === 'reminder';
+        const claimedField = reminder ? 'reviewReminderClaimedAt' : 'reviewRequestClaimedAt';
+        const sentField = reminder ? 'reviewReminderSentAt' : 'reviewRequestSentAt';
+        const dueField = reminder ? 'reviewReminderDueAt' : 'reviewRequestDueAt';
+        const uncertainField = reminder ? 'reviewReminderUncertainAt' : 'reviewRequestUncertainAt';
+        const ledger = ledgerSnapshot.exists ? ledgerSnapshot.data() : {};
+        const allowed = lead.businessStatus === 'completed' && lead.dnd !== true && !lead.optedOutAt && !lead[sentField] && !lead.reviewRequestRepliedAt &&
+          (!reminder || (!lead.reviewRequestClickedAt && lead.reviewRequestSentAt)) &&
+          lead[dueField] && lead[dueField] <= claimedAt &&
+          !lead[uncertainField] && !ledger.uncertainAt &&
+          (!lead[claimedField] || lead[claimedField] <= staleBefore) &&
+          !ledger.sentAt && (!ledger.claimedAt || ledger.claimedAt <= staleBefore);
+        if (!allowed) return false;
+        transaction.update(reference, { [claimedField]: claimedAt, reviewRequestStatus: reminder ? 'reminder_sending' : 'sending', updatedAt: claimedAt });
+        transaction.set(ledgerReference, {
+          id: `${id}_${kind}`, leadId: id, kind, state: 'claimed', dueAt: lead[dueField], claimedAt,
+          leaseExpiresAt: new Date(new Date(claimedAt).getTime() + 15 * 60 * 1000).toISOString(), updatedAt: claimedAt
+        }, { merge: true });
+        return true;
+      });
+    },
+
+    // A worker can lose eligibility after its transactional claim (for example,
+    // an opt-out or reply may arrive between the claim and the fresh read).
+    // Release only this exact lease; never disturb a later claimant or a sent
+    // ledger entry.
+    async releaseReviewRequestClaim(id, kind, claimedAt, reason = 'ineligible', releasedAt = claimedAt) {
+      const reference = leads.doc(id);
+      const ledgerReference = db.collection(COLLECTIONS.reviewRequests).doc(`${id}_${kind}`);
+      return db.runTransaction(async transaction => {
+        const [snapshot, ledgerSnapshot] = await Promise.all([transaction.get(reference), transaction.get(ledgerReference)]);
+        const reminder = kind === 'reminder';
+        const claimedField = reminder ? 'reviewReminderClaimedAt' : 'reviewRequestClaimedAt';
+        const ledger = ledgerSnapshot.exists ? ledgerSnapshot.data() : null;
+        if (!ledger || ledger.claimedAt !== claimedAt || ledger.sentAt) return false;
+        const freshLead = snapshot.exists ? snapshot.data() : null;
+        // `claimedAt` identifies the lease; it is not an event time. An
+        // intervening opt-out/reply can have advanced either document since
+        // that claim, so never move canonical timestamps backwards.
+        const effectiveAt = [claimedAt, releasedAt, freshLead?.updatedAt, ledger.updatedAt]
+          .filter(value => Number.isFinite(Date.parse(value)))
+          .sort((left, right) => Date.parse(right) - Date.parse(left))[0] || releasedAt;
+        if (snapshot.exists) {
+          const lead = freshLead;
+          if (lead[claimedField] !== claimedAt) return false;
+          const update = { [claimedField]: null, updatedAt: effectiveAt };
+          // Preserve click/reply as the more informative terminal state.
+          if (!lead.reviewRequestRepliedAt && !lead.reviewRequestClickedAt) update.reviewRequestStatus = 'suppressed';
+          transaction.update(reference, update);
+        }
+        transaction.set(ledgerReference, {
+          state: 'suppressed',
+          claimedAt: null,
+          leaseExpiresAt: null,
+          suppressedAt: effectiveAt,
+          suppressionReason: String(reason || 'ineligible').slice(0, 80),
+          updatedAt: effectiveAt
+        }, { merge: true });
+        return true;
+      });
+    },
+
+    async markReviewRequestSent(id, kind, sentAt, messageId) {
+      const reminder = kind === 'reminder';
+      const leadReference = leads.doc(id);
+      const ledgerReference = db.collection(COLLECTIONS.reviewRequests).doc(`${id}_${kind}`);
+      await db.runTransaction(async transaction => {
+        const update = reminder ? {
+        reviewReminderSentAt: sentAt, reviewReminderClaimedAt: null, reviewRequestStatus: 'reminder_sent',
+        postmarkReviewReminderMessageId: messageId || null, updatedAt: sentAt
+      } : {
+        reviewRequestSentAt: sentAt, reviewRequestClaimedAt: null, reviewReminderDueAt: new Date(new Date(sentAt).getTime() + GROWTH_CLIENT.reputation.reminder_delay_days * 24 * 60 * 60 * 1000).toISOString(),
+        reviewRequestStatus: 'sent', postmarkReviewRequestMessageId: messageId || null, updatedAt: sentAt
+      };
+        transaction.update(leadReference, update);
+        transaction.set(ledgerReference, { state: 'sent', sentAt, claimedAt: null, leaseExpiresAt: null, messageId: messageId || null, updatedAt: sentAt }, { merge: true });
+        if (!reminder) {
+          transaction.set(db.collection(COLLECTIONS.reviewRequests).doc(`${id}_reminder`), {
+            id: `${id}_reminder`, leadId: id, kind: 'reminder', state: 'pending', dueAt: update.reviewReminderDueAt,
+            claimedAt: null, sentAt: null, failedAt: null, leaseExpiresAt: null, createdAt: sentAt, updatedAt: sentAt
+          }, { merge: true });
+        }
+      });
+    },
+
+    async markReviewRequestSendFailed(id, kind, failedAt, errorMessage) {
+      const reminder = kind === 'reminder';
+      const update = reminder ? {
+        reviewReminderClaimedAt: null, reviewReminderAttemptCount: FieldValue.increment(1), reviewRequestStatus: 'reminder_pending',
+        reviewReminderLastError: String(errorMessage || '').slice(0, 1000), updatedAt: failedAt
+      } : {
+        reviewRequestClaimedAt: null, reviewRequestAttemptCount: FieldValue.increment(1), reviewRequestStatus: 'pending',
+        reviewRequestLastError: String(errorMessage || '').slice(0, 1000), updatedAt: failedAt
+      };
+      const batch = db.batch();
+      batch.update(leads.doc(id), update);
+      batch.set(db.collection(COLLECTIONS.reviewRequests).doc(`${id}_${kind}`), {
+        state: 'failed', claimedAt: null, failedAt, leaseExpiresAt: null, error: String(errorMessage || '').slice(0, 1000), updatedAt: failedAt
+      }, { merge: true });
+      await batch.commit();
+    },
+
+    async markReviewRequestUncertain(id, kind, uncertainAt, errorMessage) {
+      const reminder = kind === 'reminder';
+      const update = reminder ? {
+        reviewReminderClaimedAt: null,
+        reviewReminderUncertainAt: uncertainAt,
+        reviewRequestStatus: 'reminder_uncertain',
+        reviewReminderLastError: String(errorMessage || '').slice(0, 1000),
+        updatedAt: uncertainAt
+      } : {
+        reviewRequestClaimedAt: null,
+        reviewRequestUncertainAt: uncertainAt,
+        reviewRequestStatus: 'uncertain',
+        reviewRequestLastError: String(errorMessage || '').slice(0, 1000),
+        updatedAt: uncertainAt
+      };
+      const batch = db.batch();
+      batch.update(leads.doc(id), update);
+      batch.set(db.collection(COLLECTIONS.reviewRequests).doc(`${id}_${kind}`), {
+        state: 'uncertain',
+        claimedAt: null,
+        uncertainAt,
+        leaseExpiresAt: null,
+        error: String(errorMessage || '').slice(0, 1000),
+        updatedAt: uncertainAt
+      }, { merge: true });
+      await batch.commit();
+    },
+
+    async recordReviewRequestToken(id, tokenHash, expiresAt, nonce, updatedAt) {
+      await leads.doc(id).update({ reviewRequestTokenHash: tokenHash, reviewRequestTokenExpiresAt: expiresAt, reviewRequestTokenNonce: nonce, updatedAt });
+    },
+
+    async markReviewRequestClicked(id, clickedAt) {
+      const reference = leads.doc(id);
+      const ledgerReference = db.collection(COLLECTIONS.reviewRequests).doc(`${id}_request`);
+      await db.runTransaction(async transaction => {
+        const snapshot = await transaction.get(reference);
+        if (!snapshot.exists) return;
+        const lead = snapshot.data();
+        // A customer reply is terminal for this request. A delayed browser
+        // click must not replace its status or re-open downstream handling.
+        if (lead.reviewRequestRepliedAt) return;
+        const update = { updatedAt: clickedAt };
+        if (!lead.reviewRequestClickedAt) {
+          update.reviewRequestClickedAt = clickedAt;
+          update.reviewRequestStatus = 'clicked';
+        }
+        transaction.update(reference, update);
+        transaction.set(ledgerReference, { clickedAt: lead.reviewRequestClickedAt || clickedAt, updatedAt: clickedAt }, { merge: true });
+      });
+    },
+
+    async markReviewRequestReplied(id, repliedAt) {
+      const batch = db.batch();
+      batch.update(leads.doc(id), { reviewRequestRepliedAt: repliedAt, reviewRequestStatus: 'replied', updatedAt: repliedAt });
+      batch.set(db.collection(COLLECTIONS.reviewRequests).doc(`${id}_request`), { repliedAt, updatedAt: repliedAt }, { merge: true });
+      batch.set(db.collection(COLLECTIONS.reviewRequests).doc(`${id}_reminder`), { state: 'suppressed', repliedAt, updatedAt: repliedAt }, { merge: true });
+      await batch.commit();
+    },
+
     async saveFeedback(feedback) {
       return saveFeedbackRecord(db, leads, feedback, false);
     },
@@ -201,6 +426,9 @@ export function createFirestoreStore(db) {
         leadId: event.leadId || null,
         createdAt: event.createdAt || new Date().toISOString()
       });
+      if (event.status === 'failed' && event.leadId) {
+        await leads.doc(event.leadId).set({ emailIssue: true, updatedAt: event.createdAt || new Date().toISOString() }, { merge: true });
+      }
     },
 
     async saveInboundEvent(event) {

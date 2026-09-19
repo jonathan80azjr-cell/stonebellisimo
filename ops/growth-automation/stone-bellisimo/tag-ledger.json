@@ -1,0 +1,46 @@
+{
+  "locationId": "rB7WMB7KbqDC4eLCCfyX",
+  "readbackAt": "2026-08-27T02:16:19.146Z",
+  "tags": [
+    {
+      "id": "lE6Qspj8QiMvhKqes8g2",
+      "name": "bs:client:sb"
+    },
+    {
+      "id": "bWCiVPciaO9YUeNdzusg",
+      "name": "bs:program:sb-growth-v1"
+    },
+    {
+      "id": "guy29YLQ81rJ6uDG6ufM",
+      "name": "bs:optout"
+    },
+    {
+      "id": "ZDSXCm6nWewOaRYnFzA9",
+      "name": "bs:escalated"
+    },
+    {
+      "id": "7ZbnxSqeMLGryXjLi9QO",
+      "name": "bs:urgent-language"
+    },
+    {
+      "id": "LpynApNfVrpGmH1ddPrR",
+      "name": "bs:test"
+    },
+    {
+      "id": "5tqqa0AUw372DQfGIdH1",
+      "name": "bs:managed-credit"
+    },
+    {
+      "id": "ayM6Fva1FxFWV1SlzO19",
+      "name": "bs:channel:gbp"
+    },
+    {
+      "id": "QxntalrZELJflhjw6eUd",
+      "name": "bs:channel:instagram"
+    },
+    {
+      "id": "m9YfdGqLndO39I26GwwA",
+      "name": "bs:channel:facebook"
+    }
+  ]
+}

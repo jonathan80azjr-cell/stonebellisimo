@@ -2,6 +2,7 @@ import {
   BUSINESS_INFO,
   renderCustomBrandedEmail,
   renderFeedbackRequestEmail,
+  renderFollowUpStatusEmail,
   renderImmediateConfirmationEmail
 } from './email/render.mjs';
 import {
@@ -19,6 +20,11 @@ import {
   sendAndRecordEmail,
   sha256Hex
 } from './lead-automation.mjs';
+import { GROWTH_CLIENT } from './growth-client-config.mjs';
+import {
+  LEAD_DESIGNATION_VALUES,
+  normalizeLeadDesignation
+} from './lead-designations.mjs';
 
 const ADMIN_COOKIE = 'sb_admin_session';
 const ADMIN_SESSION_SECONDS = 8 * 60 * 60;
@@ -26,6 +32,19 @@ const ADMIN_BODY_LIMIT = 64 * 1024;
 const ADMIN_SEARCH_LIMIT = 48;
 const BITE_SITES_RATE_BPS = 1000;
 const BUSINESS_STATUSES = new Set(['new', 'in_progress', 'completed']);
+const SALES_STATUSES = new Set(GROWTH_CLIENT.stages);
+const SALES_COMPATIBILITY = Object.freeze({
+  'New Lead': 'new',
+  Qualified: 'in_progress',
+  'Estimate Scheduled': 'in_progress',
+  'Job Completed': 'completed',
+  'Invoice Collected': 'completed',
+  'Repeat / Review': 'completed'
+});
+const SALES_TIMESTAMP_FIELDS = Object.freeze({
+  'New Lead': 'newLeadAt', Qualified: 'qualifiedAt', 'Estimate Scheduled': 'estimateScheduledAt',
+  'Job Completed': 'jobCompletedAt', 'Invoice Collected': 'invoiceCollectedAt', 'Repeat / Review': 'repeatReviewAt', Lost: 'lostAt'
+});
 const encoder = new TextEncoder();
 
 function escapeHtml(value = '') {
@@ -170,7 +189,19 @@ function leadListWhere(search, status) {
     params.push(like, like, like, like, like);
   }
 
-  if (status === 'needs_feedback') {
+  if (LEAD_DESIGNATION_VALUES.has(normalizeLeadDesignation(status))) {
+    const designation = normalizeLeadDesignation(status);
+    const fallback = {
+      email_issue: "designation IS NULL AND (emailIssue = 1 OR feedbackEmailLastError IS NOT NULL OR EXISTS (SELECT 1 FROM email_events e WHERE e.leadId = leads.id AND e.status = 'failed'))",
+      feedback_received: "designation IS NULL AND COALESCE(feedbackStatus, 'pending') IN ('received', 'unparsed')",
+      feedback_sent: "designation IS NULL AND feedbackEmailSentAt IS NOT NULL AND COALESCE(feedbackStatus, 'pending') NOT IN ('received', 'unparsed')",
+      progress_completed: "designation IS NULL AND COALESCE(businessStatus, 'new') = 'completed'",
+      needs_feedback: "designation IS NULL AND COALESCE(feedbackStatus, 'pending') IN ('pending', 'sending') AND feedbackEmailDueAt IS NOT NULL AND feedbackEmailSentAt IS NULL",
+      new: "designation IS NULL AND COALESCE(feedbackStatus, 'pending') NOT IN ('received', 'unparsed') AND feedbackEmailSentAt IS NULL AND feedbackEmailLastError IS NULL AND COALESCE(emailIssue, 0) = 0 AND COALESCE(businessStatus, 'new') != 'completed'"
+    }[designation];
+    where.push(`(designation = ? OR (${fallback}))`);
+    params.push(designation);
+  } else if (status === 'needs_feedback') {
     where.push("COALESCE(feedbackStatus, 'pending') IN ('pending', 'sending') AND feedbackEmailSentAt IS NULL");
   } else if (status === 'feedback_sent') {
     where.push("feedbackEmailSentAt IS NOT NULL AND COALESCE(feedbackStatus, 'pending') NOT IN ('received', 'unparsed')");
@@ -235,7 +266,7 @@ async function listLeads(request, env, options = {}) {
     SELECT
       id, customerName, firstName, lastName, email, phone, projectType, material, source, message,
       submittedAt, immediateEmailSentAt, feedbackEmailDueAt, feedbackEmailSentAt,
-      feedbackStatus, feedbackEmailAttemptCount, feedbackEmailLastError, rating,
+      feedbackStatus, feedbackEmailAttemptCount, feedbackEmailLastError, designation, rating,
       feedbackComment, feedbackReceivedAt, feedbackSource, postmarkImmediateMessageId,
       postmarkFeedbackMessageId,
       (
@@ -315,21 +346,34 @@ async function updateLeadBusiness(request, env, leadId, options = {}) {
   if (error) return json({ success: false, message: error }, status);
 
   try {
-    const businessStatus = normalizeText(body?.businessStatus, 30);
+    const hasDesignation = Object.prototype.hasOwnProperty.call(body || {}, 'designation');
+    const designation = hasDesignation ? normalizeLeadDesignation(body?.designation) : undefined;
+    if (hasDesignation && designation && !LEAD_DESIGNATION_VALUES.has(designation)) {
+      throw new Error('Choose a valid lead designation.');
+    }
+    const salesStatus = normalizeText(body?.salesStatus, 40);
+    if (salesStatus && !SALES_STATUSES.has(salesStatus)) throw new Error('Choose a valid growth outcome stage.');
+    const businessStatus = salesStatus
+      ? (SALES_COMPATIBILITY[salesStatus] || normalizeText(body?.businessStatus, 30) || 'in_progress')
+      : normalizeText(body?.businessStatus, 30);
     if (!BUSINESS_STATUSES.has(businessStatus)) throw new Error('Choose a valid lead status.');
     const clientChargeCents = currencyToCents(body?.clientCharge);
-    if (businessStatus === 'completed' && (!clientChargeCents || clientChargeCents <= 0)) {
+    if ((!salesStatus && businessStatus === 'completed' || salesStatus === 'Invoice Collected') && (!clientChargeCents || clientChargeCents <= 0)) {
       throw new Error('Enter the amount charged to the client before marking this lead completed.');
     }
 
     const updatedAt = nowIso();
     const update = {
       businessStatus,
+      salesStatus: salesStatus || null,
+      stageTimestampField: salesStatus ? SALES_TIMESTAMP_FIELDS[salesStatus] : null,
+      outcomeVersion: salesStatus ? GROWTH_CLIENT.programCode : null,
       clientChargeCents,
       biteSitesShareCents: clientChargeCents === null ? null : Math.round(clientChargeCents * BITE_SITES_RATE_BPS / 10_000),
       biteSitesRateBps: BITE_SITES_RATE_BPS,
       updatedAt
     };
+    if (hasDesignation) update.designation = designation || null;
 
     let lead;
     if (options.adminStore?.updateLeadBusiness) {
@@ -342,9 +386,9 @@ async function updateLeadBusiness(request, env, leadId, options = {}) {
       const completedAt = businessStatus === 'completed' ? (existing.completedAt || updatedAt) : null;
       await db.prepare(`
         UPDATE leads
-        SET businessStatus = ?, clientChargeCents = ?, biteSitesShareCents = ?, biteSitesRateBps = ?, completedAt = ?, updatedAt = ?
+        SET businessStatus = ?, salesStatus = ?, designation = ?, clientChargeCents = ?, biteSitesShareCents = ?, biteSitesRateBps = ?, completedAt = ?, updatedAt = ?
         WHERE id = ?
-      `).bind(businessStatus, clientChargeCents, update.biteSitesShareCents, BITE_SITES_RATE_BPS, completedAt, updatedAt, leadId).run();
+      `).bind(businessStatus, salesStatus || existing.salesStatus || null, hasDesignation ? (designation || null) : (existing.designation || null), clientChargeCents, update.biteSitesShareCents, BITE_SITES_RATE_BPS, completedAt, updatedAt, leadId).run();
       lead = { ...existing, ...update, completedAt, id: leadId };
     }
 
@@ -382,6 +426,13 @@ async function renderAdminEmail({ env, lead, body }) {
       eventType: 'admin_feedback_request',
       email: renderFeedbackRequestEmail({ lead, token, baseUrl }),
       replyTo: getFeedbackReplyTo(env, lead)
+    };
+  }
+
+  if (template === 'follow_up_status') {
+    return {
+      eventType: 'admin_follow_up_status',
+      email: renderFollowUpStatusEmail({ lead })
     };
   }
 
@@ -590,10 +641,12 @@ function adminPage() {
         <input id="search" placeholder="Search leads">
         <select id="status">
           <option value="all">All</option>
+          <option value="new">New</option>
+          <option value="progress_completed">Progress Completed</option>
           <option value="needs_feedback">Needs feedback</option>
           <option value="feedback_sent">Feedback sent</option>
           <option value="feedback_received">Feedback received</option>
-          <option value="email_failed">Email failed</option>
+          <option value="email_issue">Email issue</option>
         </select>
       </div>
       <div id="leadList" class="list"></div>
@@ -625,6 +678,7 @@ function adminPage() {
               <label for="template">Template</label>
               <select id="template">
                 <option value="custom">Custom branded message</option>
+                <option value="follow_up_status">Personalized status check</option>
                 <option value="feedback_request">Feedback request</option>
                 <option value="immediate_confirmation">Confirmation</option>
               </select>

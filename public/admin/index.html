@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/admin.css?v=2">
+  <link rel="stylesheet" href="/assets/css/admin.css?v=3">
 </head>
 <body>
   <div id="authLoading" class="auth-loading" role="status">
@@ -72,6 +72,10 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18M7 16l4-5 4 3 5-7"/></svg>
           <span>Analytics</span>
         </button>
+        <button class="side-tab" data-tab="growth" role="tab" aria-selected="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-8M22 19V3M2 19h21"/></svg>
+          <span>Growth pilot</span>
+        </button>
       </nav>
       <div class="sidebar-note">
         <span class="live-dot"></span>
@@ -95,6 +99,7 @@
       <div class="mobile-tabs" role="tablist" aria-label="Dashboard sections">
         <button class="active" data-tab="leads" role="tab" aria-selected="true">Leads</button>
         <button data-tab="analytics" role="tab" aria-selected="false">Analytics</button>
+        <button data-tab="growth" role="tab" aria-selected="false">Growth</button>
       </div>
 
       <section data-view="leads" class="view leads-view">
@@ -105,7 +110,7 @@
               <div><span class="eyebrow">Inbox</span><h2>Client inquiries</h2><p id="leadCount">Loading leads…</p></div>
               <div class="lead-filters">
                 <label class="search-box"><span class="sr-only">Search leads</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="leadSearch" type="search" placeholder="Search name, phone, project…"></label>
-                <label><span class="sr-only">Filter by status</span><select id="leadStatus"><option value="all">All leads</option><option value="new">New</option><option value="in_progress">In progress</option><option value="completed">Completed</option><option value="needs_feedback">Needs feedback</option><option value="feedback_sent">Feedback sent</option><option value="feedback_received">Feedback received</option><option value="email_failed">Email issue</option></select></label>
+                <label class="filter-control"><span>Designation</span><select id="leadStatus"><option value="all">All leads</option><optgroup label="Lead designations"><option value="new">New</option><option value="progress_completed">Progress Completed</option><option value="needs_feedback">Needs Feedback</option><option value="feedback_sent">Feedback Sent</option><option value="feedback_received">Feedback Received</option><option value="email_issue">Email Issue</option></optgroup><optgroup label="Pipeline stage"><option value="New Lead">New Lead</option><option value="Qualified">Qualified</option><option value="Estimate Scheduled">Estimate Scheduled</option><option value="Job Completed">Job Completed</option><option value="Invoice Collected">Invoice Collected</option><option value="Repeat / Review">Repeat / Review</option><option value="Lost">Lost</option></optgroup><optgroup label="Legacy status"><option value="in_progress">Legacy in progress</option><option value="completed">Legacy completed</option><option value="email_failed">Legacy email issue</option></optgroup></select></label>
               </div>
             </div>
             <div id="leadList" class="lead-list" aria-live="polite"></div>
@@ -126,13 +131,70 @@
         </div>
         <div id="analyticsContent" aria-live="polite"></div>
       </section>
+
+      <section data-view="growth" class="view growth-view" hidden>
+        <div class="growth-warning"><strong>90-day reviewed pilot</strong><span>Every post and review reply requires Jensy or Jonathan approval. Live writes stay blocked until the signed authorization and exact-account preflight pass.</span></div>
+        <div id="growthMetrics" class="metric-grid"></div>
+
+        <div class="two-column growth-top-grid">
+          <section class="panel growth-panel">
+            <div class="section-heading"><div><span class="eyebrow">Safety controls</span><h2>Kill switches</h2><p>Either owner may act independently. W-10 consent and opt-out protection remains active during L1.</p></div></div>
+            <p id="growthControlStatus" class="health-banner" data-status="pending">Loading controls…</p>
+            <div class="control-actions">
+              <button id="toggleL1" class="button primary" type="button">Toggle L1 outbound pause</button>
+              <button id="toggleL2" class="button secondary" type="button">Toggle L2 drafting</button>
+              <label>Platform for L3<select id="l3Platform"><option value="instagram">Instagram</option><option value="facebook">Facebook</option><option value="google">Google</option></select></label>
+              <button id="toggleL3" class="button secondary" type="button">Toggle L3 disconnect flag</button>
+              <label>L4 target type<select id="l4TargetType"><option value="lead">Firebase lead</option><option value="inquiry">Social inquiry</option></select></label>
+              <label>L4 target ID<input id="l4TargetId" maxlength="180" placeholder="Exact dashboard record ID"></label>
+              <button id="activateL4" class="button secondary" type="button">Suppress one contact (L4)</button>
+            </div>
+          </section>
+          <section class="panel growth-panel">
+            <div class="section-heading"><div><span class="eyebrow">Automation health</span><h2>Freshness ledger</h2><p>Connections, publishing, webhooks, reviews, and SLA checks appear here.</p></div></div>
+            <div id="growthHealth" class="health-list" aria-live="polite"></div>
+          </section>
+        </div>
+
+        <section class="panel growth-panel">
+          <div class="section-heading"><div><span class="eyebrow">Monthly content intake</span><h2>Register project media</h2><p>Upload one package at a time. Monthly target: at least 18 usable photos, 6 vertical clips, and 12 approved packages.</p></div></div>
+          <form id="contentIntakeForm" class="content-intake">
+            <label>Content month<input id="contentMonth" name="month" type="month" required></label>
+            <label>Project ID<input name="projectId" maxlength="120" placeholder="Internal project label" required></label>
+            <label>Material<input name="material" maxlength="120" placeholder="Quartz, granite…" required></label>
+            <label>Project type<input name="projectType" maxlength="120" placeholder="Kitchen countertops" required></label>
+            <label>City only<input name="city" maxlength="100" placeholder="Union City" required></label>
+            <label>Content pillar<select name="contentPillar" required><option value="project_reveal">Project reveal</option><option value="process">Fabrication / installation</option><option value="material_education">Material education</option><option value="local_faq">Local service / FAQ</option><option value="testimonial_offer">Testimonial / offer</option></select></label>
+            <label>Prior-post check<select name="priorPostStatus" required><option value="new">New media</option><option value="not_posted">Verified not posted</option><option value="approved_reuse">Owner-approved reuse</option></select></label>
+            <label>Media files<input id="contentFiles" name="files" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime" multiple required></label>
+            <label class="check-field"><input name="verticalApproved" type="checkbox"><span>I verified every selected video is a vertical clip.</span></label>
+            <label class="check-field"><input name="rightsApproved" type="checkbox" required><span>I confirm Stone Bellisimo has publishing rights.</span></label>
+            <label class="check-field"><input name="privacyCleared" type="checkbox" required><span>I confirm customer privacy is cleared.</span></label>
+            <label class="check-field"><input name="includesOffer" type="checkbox"><span>This package contains an offer.</span></label>
+            <label>Offer expiration<input name="offerExpiresAt" type="date"></label>
+            <label class="check-field"><input name="offerApproved" type="checkbox"><span>The offer is currently owner-approved.</span></label>
+            <label class="wide">Internal notes<textarea name="notes" maxlength="1000" placeholder="No street address or customer message body."></textarea></label>
+            <div class="wide form-actions"><button id="submitContent" class="button primary" type="submit">Create manifest &amp; upload</button><span id="contentUploadStatus" class="quiet"></span></div>
+          </form>
+        </section>
+
+        <section class="panel growth-panel">
+          <div class="section-heading"><div><span class="eyebrow">Approval ledger</span><h2>Content packages</h2><p>State changes are sequential and evidence is retained. API publishing begins in review, never autopilot.</p></div><label>Month<input id="growthMonthFilter" type="month"></label></div>
+          <div id="growthContentList" class="growth-card-list" aria-live="polite"></div>
+        </section>
+
+        <section class="panel growth-panel">
+          <div class="section-heading"><div><span class="eyebrow">Social routing</span><h2>Structured inquiries</h2><p>Message bodies are not stored here. First claim stops later SLA alerts; qualification is always a staff decision.</p></div></div>
+          <div id="growthInquiryList" class="growth-card-list" aria-live="polite"></div>
+        </section>
+      </section>
     </section>
   </div>
 
   <aside id="emailPanel" class="email-drawer" hidden aria-label="Email composer">
     <div class="drawer-head"><div><span class="eyebrow">Branded email</span><h2>Follow up with this lead</h2><p id="emailRecipient"></p></div><button id="closeEmail" class="close-button" type="button" aria-label="Close email composer">×</button></div>
     <div class="drawer-body">
-      <label for="emailTemplate">Template</label><select id="emailTemplate"><option value="custom">Custom branded message</option><option value="feedback_request">Feedback request</option><option value="immediate_confirmation">Confirmation</option></select>
+      <label for="emailTemplate">Template</label><select id="emailTemplate"><option value="custom">Custom branded message</option><option value="follow_up_status">Personalized status check</option><option value="feedback_request">Feedback request</option><option value="immediate_confirmation">Confirmation</option></select>
       <label for="emailSubject">Subject</label><input id="emailSubject" value="A note from Stone Bellisimo">
       <label for="emailMessage">Message</label><textarea id="emailMessage">Thank you for reaching out to Stone Bellisimo. We wanted to follow up and see if there is anything else our team can help with.</textarea>
       <div class="field-row"><label for="emailCtaLabel">Button label<input id="emailCtaLabel" placeholder="Optional"></label><label for="emailCtaUrl">Button URL<input id="emailCtaUrl" placeholder="https://stonebellisimollc.com/contact-us/"></label></div>
@@ -175,6 +237,6 @@
   </template>
 
   <div id="toast" class="toast" role="status"></div>
-  <script src="/assets/js/admin.js?v=3" defer></script>
+  <script src="/assets/js/admin.js?v=4" defer></script>
 </body>
 </html>

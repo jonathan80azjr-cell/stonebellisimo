@@ -1,10 +1,13 @@
 import {
   BUSINESS_INFO,
   renderFeedbackRequestEmail,
+  renderGoogleReviewRequestEmail,
   renderImmediateConfirmationEmail,
   renderInternalFeedbackNotificationEmail
 } from './email/render.mjs';
 import { notificationRecipients } from './admin-accounts.mjs';
+import { GROWTH_CLIENT } from './growth-client-config.mjs';
+import { resolveAttributionCredit } from './growth-attribution.mjs';
 
 export const JSON_HEADERS = {
   'content-type': 'application/json; charset=utf-8',
@@ -33,10 +36,12 @@ const CONTACT_BODY_LIMIT = 20 * 1024;
 const POSTMARK_BODY_LIMIT = 256 * 1024;
 const DEFAULT_FEEDBACK_DELAY_DAYS = 3;
 const DEFAULT_TOKEN_TTL_DAYS = 90;
+const DEFAULT_REVIEW_TOKEN_TTL_DAYS = 90;
 const DEFAULT_CONTACT_RATE_LIMIT = 8;
 const DEFAULT_FEEDBACK_BATCH_LIMIT = 25;
 const DEFAULT_FEEDBACK_MAX_ATTEMPTS = 8;
 const FEEDBACK_PREVIEW_TOKEN = 'preview-token-only-links-will-not-submit';
+const GOOGLE_REVIEW_URL = 'https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY';
 
 const encoder = new TextEncoder();
 
@@ -270,6 +275,30 @@ export async function createFeedbackToken(leadId, expiresAt, env) {
   return `${data}.${signature}`;
 }
 
+function getReviewTokenTtlDays(env) {
+  return parsePositiveInteger(getEnv(env, 'REVIEW_TOKEN_TTL_DAYS'), DEFAULT_REVIEW_TOKEN_TTL_DAYS, 7, 365);
+}
+
+export async function createReviewToken(leadId, expiresAt, nonce, env) {
+  const secret = getFeedbackTokenSecret(env);
+  const expiresEpoch = Math.floor(new Date(expiresAt).getTime() / 1000);
+  const data = `r1.${leadId}.${expiresEpoch}.${nonce}`;
+  return `${data}.${await hmacBase64Url(secret, data)}`;
+}
+
+async function verifyReviewToken(token, env) {
+  const normalized = normalizeText(token, 700);
+  const parts = normalized.split('.');
+  if (parts.length !== 5 || parts[0] !== 'r1') return { ok: false, reason: 'invalid' };
+  const [, leadId, expiresEpochRaw, nonce, signature] = parts;
+  const expiresEpoch = Number(expiresEpochRaw);
+  if (!leadId || !nonce || !Number.isInteger(expiresEpoch)) return { ok: false, reason: 'invalid' };
+  if (Date.now() > expiresEpoch * 1000) return { ok: false, reason: 'expired' };
+  const expected = await hmacBase64Url(getFeedbackTokenSecret(env), `r1.${leadId}.${expiresEpoch}.${nonce}`);
+  if (!timingSafeEqual(signature, expected)) return { ok: false, reason: 'invalid' };
+  return { ok: true, leadId, tokenHash: await sha256Hex(normalized) };
+}
+
 async function verifyFeedbackToken(token, env) {
   const normalized = normalizeText(token, 512);
   const parts = normalized.split('.');
@@ -358,7 +387,7 @@ export function createD1Store(db) {
       await db.prepare(`
         INSERT INTO leads (
           id, firstName, lastName, customerName, email, phone, projectType, material, source, message,
-          submittedAt, immediateEmailSentAt, feedbackEmailDueAt, feedbackEmailSentAt, feedbackEmailClaimedAt,
+          submittedAt, designation, immediateEmailSentAt, feedbackEmailDueAt, feedbackEmailSentAt, feedbackEmailClaimedAt,
           feedbackStatus, feedbackEmailAttemptCount, feedbackEmailLastError, rating, feedbackComment,
           feedbackReceivedAt, feedbackSource, replyTokenHash, replyTokenExpiresAt, ipHash, userAgent,
           createdAt, updatedAt
@@ -375,6 +404,7 @@ export function createD1Store(db) {
         lead.source,
         lead.message,
         lead.submittedAt,
+        lead.designation || null,
         lead.immediateEmailSentAt,
         lead.feedbackEmailDueAt,
         lead.feedbackEmailSentAt,
@@ -562,6 +592,9 @@ export function createD1Store(db) {
         event.payloadJson || null,
         event.createdAt || nowIso()
       ).run();
+      if (event.status === 'failed' && event.leadId) {
+        await db.prepare('UPDATE leads SET emailIssue = 1, updatedAt = ? WHERE id = ?').bind(event.createdAt || nowIso(), event.leadId).run();
+      }
     },
 
     async saveInboundEvent(event) {
@@ -655,17 +688,34 @@ async function sendPostmarkEmail(env, email) {
     throw new Error('POSTMARK_SERVER_TOKEN is not configured.');
   }
 
-  const response = await fetch('https://api.postmarkapp.com/email', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'accept': 'application/json',
-      'x-postmark-server-token': token
-    },
-    body: JSON.stringify(payload)
-  });
+  let response;
+  try {
+    response = await fetch('https://api.postmarkapp.com/email', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+        'x-postmark-server-token': token
+      },
+      body: JSON.stringify(payload)
+    });
+  } catch (cause) {
+    const error = new Error(`Postmark delivery outcome is uncertain: ${cause?.message || 'network failure'}`);
+    error.uncertainWrite = true;
+    throw error;
+  }
 
-  const responseText = await response.text();
+  let responseText = '';
+  try {
+    responseText = await response.text();
+  } catch (cause) {
+    if (response.ok) {
+      return { ok: true, mock: false, messageId: null, response: null };
+    }
+    const error = new Error(`Postmark delivery outcome is uncertain: ${cause?.message || 'response read failure'}`);
+    error.uncertainWrite = response.status >= 500;
+    throw error;
+  }
   let responseJson = null;
   try {
     responseJson = responseText ? JSON.parse(responseText) : null;
@@ -674,7 +724,12 @@ async function sendPostmarkEmail(env, email) {
   }
 
   if (!response.ok) {
-    throw new Error(`Postmark returned ${response.status}: ${responseText.slice(0, 500)}`);
+    const error = new Error(`Postmark returned ${response.status}: ${responseText.slice(0, 500)}`);
+    // A validation/authentication response is a definitive rejection. A 5xx
+    // can arrive after an upstream accepted the message, so retrying it would
+    // risk sending the same review request twice.
+    error.uncertainWrite = response.status >= 500;
+    throw error;
   }
 
   return {
@@ -689,37 +744,46 @@ export async function sendAndRecordEmail({ env, store, lead, eventType, email })
   const createdAt = nowIso();
   try {
     const result = await sendPostmarkEmail(env, email);
-    await store.saveEmailEvent({
-      leadId: lead?.id,
-      eventType,
-      recipient: email.to,
-      subject: email.subject,
-      status: result.mock ? 'mock_sent' : 'sent',
-      messageStream: postmarkMessageStream(env),
-      postmarkMessageId: result.messageId,
-      payloadJson: safeJsonStringify({ response: result.response || null, metadata: email.metadata || {} }),
-      createdAt
-    });
+    try {
+      await store.saveEmailEvent({
+        leadId: lead?.id,
+        eventType,
+        recipient: email.to,
+        subject: email.subject,
+        status: result.mock ? 'mock_sent' : 'sent',
+        messageStream: postmarkMessageStream(env),
+        postmarkMessageId: result.messageId,
+        payloadJson: safeJsonStringify({ response: result.response || null, metadata: email.metadata || {} }),
+        createdAt
+      });
+    } catch (recordError) {
+      // The provider already accepted the email. Failing the request here
+      // would make the scheduler retry a customer-facing message.
+      console.error('Failed to record accepted Postmark delivery:', recordError?.message || recordError);
+    }
     return result;
   } catch (error) {
-    await store.saveEmailEvent({
-      leadId: lead?.id,
-      eventType,
-      recipient: email.to,
-      subject: email.subject,
-      status: 'failed',
-      messageStream: postmarkMessageStream(env),
-      error: error?.message || 'Unknown Postmark error.',
-      payloadJson: safeJsonStringify({ metadata: email.metadata || {} }),
-      createdAt
-    });
+    try {
+      await store.saveEmailEvent({
+        leadId: lead?.id,
+        eventType,
+        recipient: email.to,
+        subject: email.subject,
+        status: error?.uncertainWrite ? 'uncertain' : 'failed',
+        messageStream: postmarkMessageStream(env),
+        error: error?.message || 'Unknown Postmark error.',
+        payloadJson: safeJsonStringify({ metadata: email.metadata || {} }),
+        createdAt
+      });
+    } catch (recordError) {
+      console.error('Failed to record Postmark delivery error:', recordError?.message || recordError);
+    }
     throw error;
   }
 }
 
 function createLeadPayload(contact, request, env) {
   const submittedAt = new Date();
-  const feedbackEmailDueAt = addDays(submittedAt, getFeedbackDelayDays(env));
   const replyTokenExpiresAt = addDays(submittedAt, getTokenTtlDays(env));
   const id = randomId('lead');
   const customerName = `${contact.firstName} ${contact.lastName}`.trim();
@@ -736,17 +800,45 @@ function createLeadPayload(contact, request, env) {
     source: contact.source || 'Website Contact Form',
     message: contact.message || '',
     submittedAt: submittedAt.toISOString(),
+    businessStatus: 'new',
+    salesStatus: 'New Lead',
+    designation: null,
+    stageTimestamps: { newLeadAt: submittedAt.toISOString() },
+    qualificationVersion: null,
+    outcomeVersion: GROWTH_CLIENT.programCode,
+    highLevelContactId: null,
+    highLevelOpportunityId: null,
+    sourcePlatform: null,
+    sourceAccountId: null,
+    sourcePostId: null,
+    sourceContentId: null,
+    consentState: 'not_requested',
+    consentVersion: null,
+    consentRecordedAt: null,
+    dnd: false,
+    optedOutAt: null,
+    firstTouch: null,
+    lastTouch: null,
     immediateEmailSentAt: null,
-    feedbackEmailDueAt: feedbackEmailDueAt.toISOString(),
+    // Legacy feedback links remain valid, but new website leads must never
+    // enter the old form-age feedback scheduler.
+    feedbackEmailDueAt: null,
     feedbackEmailSentAt: null,
     feedbackEmailClaimedAt: null,
-    feedbackStatus: 'pending',
+    feedbackStatus: 'legacy_pending',
     feedbackEmailAttemptCount: 0,
     feedbackEmailLastError: null,
     rating: null,
     feedbackComment: null,
     feedbackReceivedAt: null,
     feedbackSource: null,
+    reviewRequestDueAt: null,
+    reviewRequestSentAt: null,
+    reviewRequestClickedAt: null,
+    reviewRequestRepliedAt: null,
+    reviewReminderDueAt: null,
+    reviewReminderSentAt: null,
+    reviewRequestStatus: null,
     replyTokenHash: null,
     replyTokenExpiresAt: replyTokenExpiresAt.toISOString(),
     ipHash: null,
@@ -813,14 +905,75 @@ export async function handleContactRequest(request, env, options = {}) {
   if (rateLimitResponse) return rateLimitResponse;
 
   const { lead } = await prepareLead(contact, request, env);
-  if (attribution) lead.attribution = attribution;
+  if (attribution) {
+    lead.attribution = attribution;
+    const lastTouchInput = {
+      utmSource: attribution.utmSource,
+      utmMedium: attribution.utmMedium,
+      utmCampaign: attribution.utmCampaign,
+      utmContent: attribution.utmContent,
+      referrerHost: attribution.referrerHost
+    };
+    // Fall back to the current session only when the browser sent no persisted
+    // first touch: an older cached bundle, or a visitor whose storage was
+    // cleared. Treating that as a genuine first touch is the closest honest
+    // reading, and the resolved credit records which basis was used.
+    const hasPersistedFirstTouch = Boolean(attribution.firstTouchUtmSource || attribution.firstTouchReferrerHost || attribution.firstTouchAt);
+    const firstTouchInput = hasPersistedFirstTouch
+      ? {
+        utmSource: attribution.firstTouchUtmSource,
+        utmMedium: attribution.firstTouchUtmMedium,
+        utmCampaign: attribution.firstTouchUtmCampaign,
+        utmContent: attribution.firstTouchUtmContent,
+        referrerHost: attribution.firstTouchReferrerHost
+      }
+      : lastTouchInput;
+
+    const credit = resolveAttributionCredit({ firstTouch: firstTouchInput, lastTouch: lastTouchInput });
+    const firstTouchAt = hasPersistedFirstTouch && attribution.firstTouchAt
+      ? new Date(attribution.firstTouchAt).toISOString()
+      : lead.submittedAt;
+    const firstTouchLandingPage = (hasPersistedFirstTouch && attribution.firstTouchLandingPage) || attribution.landingPage || '/';
+    lead.attributionCredit = {
+      channel: credit.creditedChannel,
+      placement: credit.creditedPlacement,
+      campaign: credit.creditedCampaign,
+      managed: credit.managed,
+      confidence: credit.confidence,
+      basis: credit.creditBasis,
+      evidence: credit.evidence,
+      firstTouchChannel: credit.firstTouchChannel,
+      lastTouchChannel: credit.lastTouchChannel
+    };
+    lead.firstTouch = {
+      platform: credit.firstTouchChannel,
+      contentId: firstTouchInput.utmContent || null,
+      campaign: firstTouchInput.utmCampaign || null,
+      medium: firstTouchInput.utmMedium || null,
+      landingPage: firstTouchLandingPage,
+      at: firstTouchAt
+    };
+    lead.lastTouch = {
+      platform: credit.lastTouchChannel,
+      contentId: attribution.utmContent || null,
+      campaign: attribution.utmCampaign || null,
+      medium: attribution.utmMedium || null,
+      landingPage: attribution.landingPage || '/',
+      at: lead.submittedAt
+    };
+    // `sourcePlatform` stays the managed-channel vocabulary the growth store
+    // already understands, so an inferred Google visit never masquerades as a
+    // tagged one downstream.
+    lead.sourcePlatform = credit.managed ? credit.creditedChannel : null;
+    lead.sourceContentId = credit.creditedPlacement || null;
+  }
   const createWithAnalytics = options.createLeadWithAnalytics && attribution
     ? options.createLeadWithAnalytics
     : null;
   if (!createWithAnalytics) await store.createLead(lead);
 
   if (createWithAnalytics) {
-    await createWithAnalytics(lead, {
+    const created = await createWithAnalytics(lead, {
       id: `conversion_${lead.id}`,
       ...attribution,
       pagePath: attribution.landingPage || '/',
@@ -829,6 +982,7 @@ export async function handleContactRequest(request, env, options = {}) {
       ctaLabel: 'Estimate form submission',
       placement: normalizeText(contact.source || 'website', 120)
     });
+    if (created?.leadId) lead.id = created.leadId;
   }
 
   const confirmationEmail = renderImmediateConfirmationEmail({ lead });
@@ -884,6 +1038,12 @@ export function getFeedbackReplyTo(env, lead) {
   const tokenRef = String(lead.replyTokenHash || '').slice(0, 24);
   const domain = getFeedbackReplyDomain(env);
   return `feedback+${lead.id}.${tokenRef}@${domain}`;
+}
+
+export function getReviewReplyTo(env, lead) {
+  const tokenRef = String(lead.reviewRequestTokenHash || '').slice(0, 24);
+  const domain = getFeedbackReplyDomain(env);
+  return `review+${lead.id}.${tokenRef}@${domain}`;
 }
 
 async function getLeadForFeedbackToken(token, env, store) {
@@ -1217,13 +1377,14 @@ function parseLeadReference(payload) {
     }
   }
 
-  const pattern = /feedback\+([a-zA-Z0-9_-]+(?:-[a-zA-Z0-9_-]+)*)\.([a-f0-9]{12,64})@|^([a-zA-Z0-9_-]+(?:-[a-zA-Z0-9_-]+)*)\.([a-f0-9]{12,64})$/i;
+  const pattern = /(feedback|review)\+([a-zA-Z0-9_-]+(?:-[a-zA-Z0-9_-]+)*)\.([a-f0-9]{12,64})@|^([a-zA-Z0-9_-]+(?:-[a-zA-Z0-9_-]+)*)\.([a-f0-9]{12,64})$/i;
   for (const candidate of candidates) {
     const match = String(candidate).match(pattern);
     if (match) {
       return {
-        leadId: match[1] || match[3],
-        tokenRef: (match[2] || match[4]).toLowerCase(),
+        type: match[1] || 'feedback',
+        leadId: match[2] || match[4],
+        tokenRef: (match[3] || match[5]).toLowerCase(),
         mailboxHash
       };
     }
@@ -1294,12 +1455,14 @@ export async function handlePostmarkInboundRequest(request, env, options = {}) {
   }
 
   const lead = await store.getLeadById(reference.leadId);
-  if (!lead || !String(lead.replyTokenHash || '').toLowerCase().startsWith(reference.tokenRef)) {
+  const tokenHash = reference.type === 'review' ? lead?.reviewRequestTokenHash : lead?.replyTokenHash;
+  const tokenExpiresAt = reference.type === 'review' ? lead?.reviewRequestTokenExpiresAt : lead?.replyTokenExpiresAt;
+  if (!lead || !String(tokenHash || '').toLowerCase().startsWith(reference.tokenRef)) {
     await store.saveInboundEvent({ ...inboundBase, leadId: reference.leadId, status: 'invalid_reference' });
     return json({ success: true, message: 'Inbound message acknowledged.' });
   }
 
-  if (lead.replyTokenExpiresAt && Date.now() > new Date(lead.replyTokenExpiresAt).getTime()) {
+  if (tokenExpiresAt && Date.now() > new Date(tokenExpiresAt).getTime()) {
     await store.saveInboundEvent({ ...inboundBase, leadId: lead.id, status: 'expired_reference' });
     return json({ success: true, message: 'Inbound message acknowledged.' });
   }
@@ -1321,6 +1484,7 @@ export async function handlePostmarkInboundRequest(request, env, options = {}) {
       })
     };
     const saved = await store.saveFeedback(feedback);
+    if (store.markReviewRequestReplied) await store.markReviewRequestReplied(lead.id, receivedAt);
     await store.saveInboundEvent({ ...inboundBase, leadId: lead.id, rating: parsed.rating, status: saved.accepted ? 'parsed' : 'duplicate' });
     if (saved.accepted) await notifyBusinessOfFeedback({ env, store, lead, feedback, request });
     return json({ success: true, message: 'Feedback reply received.' });
@@ -1339,9 +1503,47 @@ export async function handlePostmarkInboundRequest(request, env, options = {}) {
     })
   };
   const saved = await store.saveUnparsedFeedback(feedback);
+  // An email reply is a response to the review invitation even when it does
+  // not contain a parseable rating. It must suppress the one reminder.
+  if (store.markReviewRequestReplied) await store.markReviewRequestReplied(lead.id, receivedAt);
   await store.saveInboundEvent({ ...inboundBase, leadId: lead.id, status: saved.accepted ? 'unparsed' : 'duplicate' });
   if (saved.accepted) await notifyBusinessOfFeedback({ env, store, lead, feedback, request });
   return json({ success: true, message: 'Feedback reply received for review.' });
+}
+
+function googleReviewUrl(env) {
+  const candidate = getEnv(env, 'GOOGLE_REVIEW_URL', GOOGLE_REVIEW_URL);
+  try {
+    const parsed = new URL(candidate);
+    if (parsed.protocol === 'https:' && /(^|\.)google\.com$/.test(parsed.hostname)) return parsed.toString();
+  } catch { /* use the verified default */ }
+  return GOOGLE_REVIEW_URL;
+}
+
+function reviewRedirectUrl(env, token) {
+  const origin = getEnv(env, 'PUBLIC_SITE_URL', BUSINESS_INFO.website);
+  const url = new URL('/api/review/redirect', origin);
+  url.searchParams.set('token', token);
+  return url.toString();
+}
+
+// The application router exposes this handler at /api/review/redirect. The
+// signature identifies the lead without putting any customer information into
+// the link, and a click is never treated as proof a Google review was posted.
+export async function handleGoogleReviewRedirectRequest(request, env, options = {}) {
+  if (request.method !== 'GET') return methodNotAllowed(['GET']);
+  const token = new URL(request.url).searchParams.get('token') || '';
+  const store = getStore(env, options);
+  const verification = await verifyReviewToken(token, env);
+  const lead = verification.ok ? await store.getLeadById(verification.leadId) : null;
+  if (!verification.ok || !lead || !timingSafeEqual(lead.reviewRequestTokenHash || '', verification.tokenHash) ||
+    lead.businessStatus !== 'completed' || !lead.reviewRequestSentAt) {
+    return json({ success: false, message: 'Invalid review link.' }, 404);
+  }
+  if (!lead.reviewRequestClickedAt && !lead.reviewRequestRepliedAt && store.markReviewRequestClicked) {
+    await store.markReviewRequestClicked(lead.id, nowIso());
+  }
+  return new Response(null, { status: 302, headers: { location: googleReviewUrl(env), 'cache-control': 'no-store' } });
 }
 
 export async function handlePostmarkWebhookRequest(request, env, options = {}) {
@@ -1375,62 +1577,98 @@ export async function handlePostmarkWebhookRequest(request, env, options = {}) {
 }
 
 export async function processDueFeedbackEmails(env, options = {}) {
+  if (options.outboundPaused === true) {
+    return { checked: 0, sent: 0, skipped: 0, failed: 0, paused: true };
+  }
   const store = getStore(env, options);
   const current = nowIso();
   const staleBefore = new Date(Date.now() - 15 * 60 * 1000).toISOString();
   const limit = parsePositiveInteger(getEnv(env, 'FEEDBACK_BATCH_LIMIT'), DEFAULT_FEEDBACK_BATCH_LIMIT, 1, 100);
   const maxAttempts = parsePositiveInteger(getEnv(env, 'FEEDBACK_MAX_ATTEMPTS'), DEFAULT_FEEDBACK_MAX_ATTEMPTS, 1, 25);
-  const dueLeads = await store.getDueFeedbackLeads(current, staleBefore, limit, maxAttempts);
+  // Retains its exported name for the existing scheduled function while the
+  // behavior is now the completion-based Google review flow.
+  const initial = store.getDueReviewRequests ? await store.getDueReviewRequests(current, staleBefore, limit, maxAttempts) : [];
+  const remaining = Math.max(0, limit - initial.length);
+  const reminders = remaining && store.getDueReviewReminders
+    ? await store.getDueReviewReminders(current, staleBefore, remaining, maxAttempts)
+    : [];
+  const dueLeads = [...initial.map(lead => ({ lead, kind: 'request' })), ...reminders.map(lead => ({ lead, kind: 'reminder' }))];
   const summary = { checked: dueLeads.length, sent: 0, skipped: 0, failed: 0 };
 
-  for (const lead of dueLeads) {
-    const claimed = await store.claimFeedbackLead(lead.id, current, staleBefore);
+  for (const item of dueLeads) {
+    const { lead, kind } = item;
+    const claimed = await store.claimReviewRequest(lead.id, kind, current, staleBefore);
     if (!claimed) {
       summary.skipped += 1;
       continue;
     }
 
+    let deliveryAccepted = false;
     try {
       const freshLead = await store.getLeadById(lead.id);
-      if (!freshLead || ['received', 'unparsed'].includes(freshLead.feedbackStatus) || freshLead.feedbackEmailSentAt) {
+      if (!freshLead || freshLead.businessStatus !== 'completed' || freshLead.dnd === true || freshLead.optedOutAt || freshLead.reviewRequestRepliedAt ||
+        (kind === 'request' ? freshLead.reviewRequestSentAt : freshLead.reviewReminderSentAt) ||
+        (kind === 'reminder' && freshLead.reviewRequestClickedAt)) {
+        if (store.releaseReviewRequestClaim) {
+          await store.releaseReviewRequestClaim(lead.id, kind, current, !freshLead ? 'lead_missing' : 'fresh_read_suppressed', nowIso());
+        }
         summary.skipped += 1;
         continue;
       }
 
-      const token = await createFeedbackToken(freshLead.id, freshLead.replyTokenExpiresAt, env);
-      const tokenHash = await sha256Hex(token);
-      if (!freshLead.replyTokenHash || !timingSafeEqual(freshLead.replyTokenHash, tokenHash)) {
-        throw new Error('Feedback token hash mismatch.');
+      let token;
+      if (kind === 'request') {
+        const expiresAt = addDays(new Date(), getReviewTokenTtlDays(env)).toISOString();
+        const nonce = randomId('review').replace(/^review_/, '');
+        token = await createReviewToken(freshLead.id, expiresAt, nonce, env);
+        const tokenHash = await sha256Hex(token);
+        await store.recordReviewRequestToken(freshLead.id, tokenHash, expiresAt, nonce, current);
+        Object.assign(freshLead, { reviewRequestTokenHash: tokenHash, reviewRequestTokenExpiresAt: expiresAt, reviewRequestTokenNonce: nonce });
+      } else {
+        if (!freshLead.reviewRequestTokenHash || !freshLead.reviewRequestTokenExpiresAt || !freshLead.reviewRequestTokenNonce) {
+          throw new Error('Review token is missing.');
+        }
+        token = await createReviewToken(freshLead.id, freshLead.reviewRequestTokenExpiresAt, freshLead.reviewRequestTokenNonce, env);
+        if (!timingSafeEqual(freshLead.reviewRequestTokenHash, await sha256Hex(token))) throw new Error('Review token hash mismatch.');
       }
 
-      const feedbackEmail = renderFeedbackRequestEmail({
+      const feedbackEmail = renderGoogleReviewRequestEmail({
         lead: freshLead,
-        token,
-        baseUrl: getEnv(env, 'PUBLIC_SITE_URL', BUSINESS_INFO.website)
+        reviewUrl: reviewRedirectUrl(env, token),
+        reminder: kind === 'reminder'
       });
-      const replyTo = getFeedbackReplyTo(env, freshLead);
+      const replyTo = getReviewReplyTo(env, freshLead);
       const result = await sendAndRecordEmail({
         env,
         store,
         lead: freshLead,
-        eventType: 'feedback_request',
+        eventType: kind === 'reminder' ? 'google_review_reminder' : 'google_review_request',
         email: {
           ...feedbackEmail,
           to: freshLead.email,
           replyTo,
           metadata: {
             lead_id: freshLead.id,
-            email_type: 'feedback_request'
+            email_type: kind === 'reminder' ? 'google_review_reminder' : 'google_review_request'
           }
         }
       });
 
-      await store.markFeedbackSent(freshLead.id, nowIso(), result.messageId);
+      // Once Postmark accepts the message, any later persistence failure is
+      // uncertain from the customer's perspective. Quarantine it rather than
+      // retrying and risking a duplicate review invitation.
+      deliveryAccepted = true;
+      await store.markReviewRequestSent(freshLead.id, kind, nowIso(), result.messageId);
       summary.sent += 1;
     } catch (error) {
       summary.failed += 1;
-      await store.markFeedbackSendFailed(lead.id, nowIso(), error?.message || 'Feedback email failed.');
-      console.error('Feedback email failed:', lead.id, error?.message || error);
+      if ((deliveryAccepted || error?.uncertainWrite) && store.markReviewRequestUncertain) {
+        summary.uncertain = Number(summary.uncertain || 0) + 1;
+        await store.markReviewRequestUncertain(lead.id, kind, nowIso(), error?.message || 'Google review delivery outcome is uncertain.');
+      } else {
+        await store.markReviewRequestSendFailed(lead.id, kind, nowIso(), error?.message || 'Google review email failed.');
+      }
+      console.error('Google review email failed:', lead.id, error?.message || error);
     }
   }
 

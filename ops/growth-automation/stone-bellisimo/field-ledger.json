@@ -1,0 +1,271 @@
+{
+  "locationId": "rB7WMB7KbqDC4eLCCfyX",
+  "readbackAt": "2026-08-27T02:16:19.146Z",
+  "fields": [
+    {
+      "id": "5hAjgg0QAsYWEYJYUb3y",
+      "name": "BS Managed Client",
+      "fieldKey": "contact.bs_managed_client",
+      "dataType": "TEXT",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "TIFdbGSth41QNrhB1lvH",
+      "name": "BS Managed Program",
+      "fieldKey": "contact.bs_managed_program",
+      "dataType": "SINGLE_OPTIONS",
+      "model": "contact",
+      "picklistOptions": [
+        "SB_GROWTH_V1"
+      ]
+    },
+    {
+      "id": "wz2KUwKiTdUqlsfQJx1U",
+      "name": "BS Optout Status",
+      "fieldKey": "contact.bs_optout_status",
+      "dataType": "SINGLE_OPTIONS",
+      "model": "contact",
+      "picklistOptions": [
+        "opted_out",
+        "active"
+      ]
+    },
+    {
+      "id": "gQlWOYM287fhnIZ809fV",
+      "name": "BS Optout At",
+      "fieldKey": "contact.bs_optout_at",
+      "dataType": "DATE",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "AxexxRUBHmmTCkT8sT8U",
+      "name": "BS Optout Channel",
+      "fieldKey": "contact.bs_optout_channel",
+      "dataType": "TEXT",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "KsRMcHW83wyfp8kuH7Wq",
+      "name": "BS Optout Source",
+      "fieldKey": "contact.bs_optout_source",
+      "dataType": "SINGLE_OPTIONS",
+      "model": "contact",
+      "picklistOptions": [
+        "keyword",
+        "platform_signal",
+        "staff",
+        "form"
+      ]
+    },
+    {
+      "id": "J7VU06h55yO6tx1PzWWr",
+      "name": "BS Escalation Reason",
+      "fieldKey": "contact.bs_escalation_reason",
+      "dataType": "SINGLE_OPTIONS",
+      "model": "contact",
+      "picklistOptions": [
+        "urgent_language",
+        "human_requested",
+        "uncertain",
+        "complaint",
+        "pricing",
+        "turn_cap",
+        "window_risk"
+      ]
+    },
+    {
+      "id": "D8usy8eVrB9IxGNrueN8",
+      "name": "BS Escalated At",
+      "fieldKey": "contact.bs_escalated_at",
+      "dataType": "DATE",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "nI2sCTpnBZHXvVyz94Yp",
+      "name": "BS Escalation Channel",
+      "fieldKey": "contact.bs_escalation_channel",
+      "dataType": "TEXT",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "Bv8u5JgIP1oLiR1mVQKY",
+      "name": "BS Assigned User",
+      "fieldKey": "contact.bs_assigned_user",
+      "dataType": "TEXT",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "LjI5Q6Fu2XrHEG3j57UI",
+      "name": "BS Staff Response At",
+      "fieldKey": "contact.bs_staff_response_at",
+      "dataType": "DATE",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "rlNpL0VLKuMpBP0UEsqq",
+      "name": "BS Firebase Lead ID",
+      "fieldKey": "contact.bs_firebase_lead_id",
+      "dataType": "TEXT",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "wIz6wMOY35pbuUVw2P0m",
+      "name": "BS HighLevel Contact ID",
+      "fieldKey": "contact.bs_highlevel_contact_id",
+      "dataType": "TEXT",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "X7jL5cnn7riE6O1wGWV0",
+      "name": "BS Outcome Version",
+      "fieldKey": "contact.bs_outcome_version",
+      "dataType": "TEXT",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "LokNl2hFgdaOj8ZUq3oF",
+      "name": "BS Opportunity ID",
+      "fieldKey": "opportunity.bs_opportunity_id",
+      "dataType": "TEXT",
+      "model": "opportunity",
+      "picklistOptions": []
+    },
+    {
+      "id": "l0qipv2XQEijznDLXLB1",
+      "name": "BS Estimate Scheduled At",
+      "fieldKey": "opportunity.bs_estimate_scheduled_at",
+      "dataType": "DATE",
+      "model": "opportunity",
+      "picklistOptions": []
+    },
+    {
+      "id": "LbMxz66RiKivE9MKVlLb",
+      "name": "BS Job Completed At",
+      "fieldKey": "opportunity.bs_job_completed_at",
+      "dataType": "DATE",
+      "model": "opportunity",
+      "picklistOptions": []
+    },
+    {
+      "id": "O2v6Wp6EJR8rEeKyK1wC",
+      "name": "BS Invoice Collected At",
+      "fieldKey": "opportunity.bs_invoice_collected_at",
+      "dataType": "DATE",
+      "model": "opportunity",
+      "picklistOptions": []
+    },
+    {
+      "id": "dhnB9nlN4uVvWqJrMBOF",
+      "name": "BS Source Platform",
+      "fieldKey": "contact.bs_source_platform",
+      "dataType": "SINGLE_OPTIONS",
+      "model": "contact",
+      "picklistOptions": [
+        "gbp",
+        "instagram",
+        "facebook",
+        "organic_search",
+        "referral",
+        "direct",
+        "unknown"
+      ]
+    },
+    {
+      "id": "vD7ZijGJJLOTdnP47bOD",
+      "name": "BS Source Content ID",
+      "fieldKey": "contact.bs_source_content_id",
+      "dataType": "TEXT",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "2fpIThHA1qHQPZMwSmGJ",
+      "name": "BS Source Campaign",
+      "fieldKey": "contact.bs_source_campaign",
+      "dataType": "TEXT",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "gl9FIOXpUDqTh0stzH0v",
+      "name": "BS Attribution Confidence",
+      "fieldKey": "contact.bs_attribution_confidence",
+      "dataType": "SINGLE_OPTIONS",
+      "model": "contact",
+      "picklistOptions": [
+        "tagged",
+        "inferred",
+        "unknown"
+      ]
+    },
+    {
+      "id": "5qfW2O93LLzpPi5v6Bp2",
+      "name": "BS Managed Credit",
+      "fieldKey": "contact.bs_managed_credit",
+      "dataType": "SINGLE_OPTIONS",
+      "model": "contact",
+      "picklistOptions": [
+        "managed",
+        "unmanaged"
+      ]
+    },
+    {
+      "id": "D2D2IVpXwnOAWyCqLWxM",
+      "name": "BS First Touch At",
+      "fieldKey": "contact.bs_first_touch_at",
+      "dataType": "DATE",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "plUzRpyMZwaBxbYlVQ6k",
+      "name": "BS First Touch Source",
+      "fieldKey": "contact.bs_first_touch_source",
+      "dataType": "SINGLE_OPTIONS",
+      "model": "contact",
+      "picklistOptions": [
+        "gbp",
+        "instagram",
+        "facebook",
+        "organic_search",
+        "referral",
+        "direct",
+        "unknown"
+      ]
+    },
+    {
+      "id": "jVjtugu8fEboZ89H27CG",
+      "name": "BS Last Touch At",
+      "fieldKey": "contact.bs_last_touch_at",
+      "dataType": "DATE",
+      "model": "contact",
+      "picklistOptions": []
+    },
+    {
+      "id": "gaBZHhqkUyBodZ2cZD6z",
+      "name": "BS Last Touch Source",
+      "fieldKey": "contact.bs_last_touch_source",
+      "dataType": "SINGLE_OPTIONS",
+      "model": "contact",
+      "picklistOptions": [
+        "gbp",
+        "instagram",
+        "facebook",
+        "organic_search",
+        "referral",
+        "direct",
+        "unknown"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "locationId": "rB7WMB7KbqDC4eLCCfyX",
+  "readbackAt": "2026-08-27T02:16:19.146Z",
+  "pipeline": {
+    "id": "hrvoCFYthFHT08tNPtfZ",
+    "name": "Stone Bellisimo Growth Outcomes",
+    "showInFunnel": true,
+    "showInPieChart": true,
+    "useOpportunityProbability": false,
+    "dateAdded": "2026-08-26T20:56:46.791Z",
+    "dateUpdated": "2026-08-26T20:56:46.791Z",
+    "stages": [
+      {
+        "id": "72943d67-39df-47d7-9375-829438472cd2",
+        "name": "New Lead",
+        "showInFunnel": true,
+        "showInPieChart": false,
+        "position": 1,
+        "stageWinProbability": 12.5
+      },
+      {
+        "id": "97df5237-0d75-4bbd-8a7a-ad03386a04a5",
+        "name": "Qualified",
+        "showInFunnel": true,
+        "showInPieChart": false,
+        "position": 2,
+        "stageWinProbability": 25
+      },
+      {
+        "id": "53977f54-6a77-468e-a962-a340a67db0a8",
+        "name": "Estimate Scheduled",
+        "showInFunnel": true,
+        "showInPieChart": false,
+        "position": 3,
+        "stageWinProbability": 37.5
+      },
+      {
+        "id": "4b71089c-7ed1-4f25-bac2-42fa8487933b",
+        "name": "Job Completed",
+        "showInFunnel": true,
+        "showInPieChart": false,
+        "position": 4,
+        "stageWinProbability": 50
+      },
+      {
+        "id": "a63159ff-5f4e-43b1-bc67-0d322dc5cf65",
+        "name": "Invoice Collected",
+        "showInFunnel": true,
+        "showInPieChart": false,
+        "position": 5,
+        "stageWinProbability": 62.5
+      },
+      {
+        "id": "ca3b2a20-55f4-4a90-924b-c03b6d2d6666",
+        "name": "Repeat / Review",
+        "showInFunnel": true,
+        "showInPieChart": false,
+        "position": 6,
+        "stageWinProbability": 75
+      },
+      {
+        "id": "2603c54b-1718-4ccc-b59e-4a65cae6aaae",
+        "name": "Lost",
+        "showInFunnel": false,
+        "showInPieChart": false,
+        "position": 7,
+        "stageWinProbability": 87.5
+      }
+    ],
+    "locationId": "rB7WMB7KbqDC4eLCCfyX",
+    "position": "ZzKiwKQ"
+  }
+}

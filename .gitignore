@@ -35,3 +35,6 @@ STONE BELLISIMO WEBSITE EMAILS*.csv
 
 # One-off operational notes (DNS cutover, etc.) — public data, just not site source.
 dns-firebase-cutover.txt
+
+# Rendered brand video assets (large binaries; regenerate on demand).
+brand-assets/

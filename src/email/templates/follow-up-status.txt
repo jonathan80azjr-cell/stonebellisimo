@@ -1,0 +1,15 @@
+Hi {{customer_name}},
+
+I’m following up on your {{project_type}} inquiry{{material_phrase}}. We wanted to check in because we are not sure whether your project has already moved forward.
+
+When you have a moment, would you reply with whichever is closest?
+
+Still interested — I would like to continue.
+Already completed — the project is taken care of.
+No longer needed — plans changed.
+Need help — please have someone reach out.
+
+A short reply is perfect, and there is no pressure either way. Thank you for keeping us posted.
+
+Thank you,
+Stone Bellisimo

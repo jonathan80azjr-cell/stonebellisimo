@@ -3,6 +3,7 @@ import { initializeApp, getApps } from 'firebase-admin/app';
 import { getAppCheck } from 'firebase-admin/app-check';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
+import { getStorage } from 'firebase-admin/storage';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { onRequest } from 'firebase-functions/v2/https';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
@@ -12,6 +13,7 @@ import { onSchedule } from 'firebase-functions/v2/scheduler';
 import {
   handleContactRequest,
   handleFeedbackRequest,
+  handleGoogleReviewRedirectRequest,
   handlePostmarkInboundRequest,
   handlePostmarkWebhookRequest,
   json,
@@ -21,6 +23,12 @@ import {
 import { handleAdminRequest } from './src/admin-dashboard.mjs';
 import { handleGoogleReviewsRequest } from './src/google-reviews.mjs';
 import { createFirestoreStore } from './src/firebase-store.mjs';
+import { createGrowthStore } from './src/growth-store.mjs';
+import { handleGrowthAdminRequest, isGrowthOwnerEmail } from './src/growth-admin.mjs';
+import { handleHighLevelEvents } from './src/growth-integration.mjs';
+import { processGrowthSla, sendGrowthOwnerAlert } from './src/growth-notifications.mjs';
+import { processPublishingQueue } from './src/growth-publishing.mjs';
+import { GROWTH_CLIENT } from './src/growth-client-config.mjs';
 import {
   handleAdminAnalytics,
   aggregateAnalyticsEvent,
@@ -54,7 +62,7 @@ import {
   summarizeLeadWindow
 } from './src/admin-notifications.mjs';
 
-const SECRET_NAMES = [
+const BASE_SECRET_NAMES = [
   'SB_PROXY_SECRET',
   'POSTMARK_SERVER_TOKEN',
   'FEEDBACK_TOKEN_SECRET',
@@ -63,8 +71,15 @@ const SECRET_NAMES = [
   'GOOGLE_MAPS_API_KEY',
   'GOOGLE_MAPS_BROWSER_API_KEY'
 ];
+const SECRET_NAMES = [...BASE_SECRET_NAMES, 'HIGHLEVEL_PRIVATE_TOKEN', 'HIGHLEVEL_WEBHOOK_SECRET'];
 const SECRETS = Object.fromEntries(SECRET_NAMES.map(name => [name, defineSecret(name)]));
-const SECRET_PARAMETERS = Object.values(SECRETS);
+const BASE_SECRET_PARAMETERS = BASE_SECRET_NAMES.map(name => SECRETS[name]);
+const SITE_API_SECRET_NAMES = [...BASE_SECRET_NAMES];
+const SITE_API_SECRET_PARAMETERS = SITE_API_SECRET_NAMES.map(name => SECRETS[name]);
+const HIGHLEVEL_WEBHOOK_SECRET_NAMES = ['HIGHLEVEL_WEBHOOK_SECRET'];
+const HIGHLEVEL_WEBHOOK_SECRET_PARAMETERS = HIGHLEVEL_WEBHOOK_SECRET_NAMES.map(name => SECRETS[name]);
+const PUBLISHING_SECRET_NAMES = ['HIGHLEVEL_PRIVATE_TOKEN'];
+const PUBLISHING_SECRET_PARAMETERS = PUBLISHING_SECRET_NAMES.map(name => SECRETS[name]);
 
 // The runtime service account is a deploy-time option resolved during the CLI's
 // code-analysis phase, not at container runtime. A plain process.env read here
@@ -82,6 +97,8 @@ if (!getApps().length) initializeApp();
 const db = getFirestore();
 db.settings({ ignoreUndefinedProperties: true });
 const store = createFirestoreStore(db);
+const growthStore = createGrowthStore(db);
+const growthBucket = getStorage().bucket();
 
 setGlobalOptions({
   region: 'us-east1',
@@ -98,7 +115,7 @@ function secretValue(name) {
   }
 }
 
-function runtimeEnv() {
+function runtimeEnv(secretNames = BASE_SECRET_NAMES) {
   return {
     ...process.env,
     ENVIRONMENT: process.env.ENVIRONMENT || 'production',
@@ -113,7 +130,7 @@ function runtimeEnv() {
     GOOGLE_REVIEWS_LIMIT: process.env.GOOGLE_REVIEWS_LIMIT || '5',
     GOOGLE_REVIEWS_CACHE_SECONDS: process.env.GOOGLE_REVIEWS_CACHE_SECONDS || '900',
     SEARCH_CONSOLE_SITE_URL: process.env.SEARCH_CONSOLE_SITE_URL || 'sc-domain:stonebellisimollc.com',
-    ...Object.fromEntries(SECRET_NAMES.map(name => [name, secretValue(name)]))
+    ...Object.fromEntries(secretNames.map(name => [name, secretValue(name)]))
   };
 }
 
@@ -219,7 +236,7 @@ function firebaseClientConfig(env) {
 }
 
 async function routeRequest(request) {
-  const env = runtimeEnv();
+  const env = runtimeEnv(SITE_API_SECRET_NAMES);
   const url = new URL(request.url);
 
   if (url.pathname === '/api/firebase-config') return json({ success: true, ...firebaseClientConfig(env) });
@@ -232,6 +249,16 @@ async function routeRequest(request) {
     }
     if (url.pathname === '/api/admin/analytics') return handleAdminAnalytics(request, db);
     if (url.pathname === '/api/admin/search-console') return handleAdminSearchConsole(request, db, env);
+    if (url.pathname.startsWith('/api/admin/growth/')) {
+      if (!isGrowthOwnerEmail(admin.token.email)) {
+        return json({ success: false, message: `Growth pilot controls are restricted to ${GROWTH_CLIENT.ownerNames.join(' and ')}.` }, 403);
+      }
+      return handleGrowthAdminRequest(request, {
+        growthStore,
+        bucket: growthBucket,
+        actor: admin.token.email || admin.token.uid || 'firebase-admin'
+      });
+    }
     return handleAdminRequest(request, env, { firebaseAuthorized: true, store, adminStore: store });
   }
 
@@ -264,13 +291,14 @@ async function routeRequest(request) {
     });
   }
   if (url.pathname === '/feedback') return handleFeedbackRequest(request, env, { store });
+  if (url.pathname === '/api/review/redirect') return handleGoogleReviewRedirectRequest(request, env, { store });
   if (url.pathname === '/api/postmark/inbound') return handlePostmarkInboundRequest(request, env, { store });
   if (url.pathname === '/api/postmark/webhook') return handlePostmarkWebhookRequest(request, env, { store });
   if (url.pathname === '/api/performance') return new Response(null, { status: 204, headers: SECURITY_HEADERS });
   return json({ success: false, message: 'Endpoint not found.' }, 404);
 }
 
-export const siteApi = onRequest({ secrets: SECRET_PARAMETERS }, async (request, response) => {
+export const siteApi = onRequest({ secrets: SITE_API_SECRET_PARAMETERS }, async (request, response) => {
   try {
     const fetchRequest = toFetchRequest(request);
     const proxyError = requireProxy(fetchRequest);
@@ -278,6 +306,20 @@ export const siteApi = onRequest({ secrets: SECRET_PARAMETERS }, async (request,
     await sendFetchResponse(response, result);
   } catch (error) {
     console.error(JSON.stringify({ message: 'Firebase API request failed', error: error?.message || String(error) }));
+    await sendFetchResponse(response, json({ success: false, message: 'An internal error occurred.' }, 500));
+  }
+});
+
+export const highLevelEventsApi = onRequest({ secrets: HIGHLEVEL_WEBHOOK_SECRET_PARAMETERS }, async (request, response) => {
+  try {
+    const fetchRequest = toFetchRequest(request);
+    await sendFetchResponse(response, await handleHighLevelEvents(
+      fetchRequest,
+      runtimeEnv(HIGHLEVEL_WEBHOOK_SECRET_NAMES),
+      { growthStore }
+    ));
+  } catch (error) {
+    console.error(JSON.stringify({ message: 'HighLevel webhook failed', error: error?.message || String(error) }));
     await sendFetchResponse(response, json({ success: false, message: 'An internal error occurred.' }, 500));
   }
 });
@@ -312,7 +354,7 @@ const HOUR_MS = 60 * 60 * 1000;
 
 export const notifyNewLead = onDocumentCreated({
   document: 'leads/{leadId}',
-  secrets: SECRET_PARAMETERS
+  secrets: BASE_SECRET_PARAMETERS
 }, async event => {
   const data = event.data?.data();
   if (!data) return;
@@ -333,9 +375,24 @@ export const notifyNewLead = onDocumentCreated({
   });
 });
 
+export const notifySocialInquiry = onDocumentCreated({
+  document: 'social_inquiries/{inquiryId}',
+  secrets: BASE_SECRET_PARAMETERS
+}, async event => {
+  const data = event.data?.data();
+  if (!data) return;
+  if (!await claimNotificationSlot(db, `social_inquiry:${event.params.inquiryId}`, COOLDOWNS.perDocument, Date.now())) return;
+  await sendGrowthOwnerAlert({
+    env: runtimeEnv(),
+    store,
+    inquiry: { ...data, id: event.params.inquiryId },
+    milestone: 'new'
+  });
+});
+
 export const notifyUnansweredReply = onDocumentCreated({
   document: 'postmark_inbound_events/{eventId}',
-  secrets: SECRET_PARAMETERS
+  secrets: BASE_SECRET_PARAMETERS
 }, async event => {
   const data = event.data?.data();
   // Replies that matched a lead already notified through the feedback path.
@@ -354,7 +411,7 @@ export const notifyUnansweredReply = onDocumentCreated({
 
 export const notifyDeliveryProblem = onDocumentCreated({
   document: 'postmark_delivery_events/{eventId}',
-  secrets: SECRET_PARAMETERS
+  secrets: BASE_SECRET_PARAMETERS
 }, async event => {
   const data = event.data?.data();
   if (!data || !isDeliveryProblem(data)) return;
@@ -372,7 +429,7 @@ export const notifyDeliveryProblem = onDocumentCreated({
 
 export const notifyEmailFailure = onDocumentCreated({
   document: 'email_events/{eventId}',
-  secrets: SECRET_PARAMETERS
+  secrets: BASE_SECRET_PARAMETERS
 }, async event => {
   const data = event.data?.data();
   if (!data || data.status !== 'failed') return;
@@ -394,8 +451,8 @@ export const notifyEmailFailure = onDocumentCreated({
 // only check that treats silence itself as the symptom.
 export const leadWatchdogSchedule = onSchedule({
   schedule: '0 9 * * *',
-  timeZone: 'America/New_York',
-  secrets: SECRET_PARAMETERS
+  timeZone: GROWTH_CLIENT.timezone,
+  secrets: BASE_SECRET_PARAMETERS
 }, async () => {
   const env = runtimeEnv();
   const hours = Number(env.NO_LEADS_ALERT_HOURS || 72);
@@ -414,8 +471,8 @@ export const leadWatchdogSchedule = onSchedule({
 
 export const weeklyDigestSchedule = onSchedule({
   schedule: '0 8 * * 1',
-  timeZone: 'America/New_York',
-  secrets: SECRET_PARAMETERS
+  timeZone: GROWTH_CLIENT.timezone,
+  secrets: BASE_SECRET_PARAMETERS
 }, async () => {
   const env = runtimeEnv();
   const until = new Date();
@@ -435,19 +492,51 @@ export const weeklyDigestSchedule = onSchedule({
 
 export const processFeedbackSchedule = onSchedule({
   schedule: '0 * * * *',
-  timeZone: 'America/New_York',
-  secrets: SECRET_PARAMETERS
+  timeZone: GROWTH_CLIENT.timezone,
+  secrets: BASE_SECRET_PARAMETERS
 }, async event => {
-  const result = await processDueFeedbackEmails(runtimeEnv(), { store });
+  const controls = await growthStore.getControls();
+  const result = await processDueFeedbackEmails(runtimeEnv(), { store, outboundPaused: controls.outboundPaused !== false });
+  try {
+    await growthStore.setHealth('reviews', {
+      status: result.paused ? 'paused' : result.uncertain || result.failed ? 'attention' : 'healthy',
+      message: result.paused
+        ? 'Review outreach is paused by the L1 outbound kill switch.'
+        : `Checked ${result.checked}; sent ${result.sent}; failed ${result.failed}; uncertain ${result.uncertain || 0}.`,
+      lastSuccessAt: result.paused || result.uncertain || result.failed ? null : new Date().toISOString(),
+      lastRunAt: new Date().toISOString()
+    });
+  } catch (healthError) {
+    console.error('Review automation health write failed:', healthError?.message || healthError);
+  }
   console.info(JSON.stringify({ message: 'Feedback schedule processed', scheduleTime: event.scheduleTime, ...result }));
+});
+
+export const socialInquirySlaSchedule = onSchedule({
+  schedule: 'every 5 minutes',
+  timeZone: GROWTH_CLIENT.timezone,
+  secrets: BASE_SECRET_PARAMETERS
+}, async event => {
+  const result = await processGrowthSla(runtimeEnv(), { growthStore, emailStore: store });
+  console.info(JSON.stringify({ message: 'Social inquiry SLA processed', scheduleTime: event.scheduleTime, ...result }));
+});
+
+export const socialPublishingSchedule = onSchedule({
+  schedule: 'every 15 minutes',
+  timeZone: GROWTH_CLIENT.timezone,
+  memory: '512MiB',
+  secrets: PUBLISHING_SECRET_PARAMETERS
+}, async event => {
+  const result = await processPublishingQueue(runtimeEnv(PUBLISHING_SECRET_NAMES), { growthStore, bucket: growthBucket });
+  console.info(JSON.stringify({ message: 'Social publishing reconciliation processed', scheduleTime: event.scheduleTime, ...result }));
 });
 
 export const importSearchConsoleSchedule = onSchedule({
   schedule: '15 5 * * *',
-  timeZone: 'America/New_York',
+  timeZone: GROWTH_CLIENT.timezone,
   // Needed to send the failure alert; the import itself uses the runtime
   // service account's Application Default Credentials.
-  secrets: SECRET_PARAMETERS
+  secrets: BASE_SECRET_PARAMETERS
 }, async event => {
   const env = runtimeEnv();
   try {

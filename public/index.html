@@ -233,6 +233,17 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 .review-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:var(--ink);font-size:14px;font-weight:600;text-decoration:none;border-radius:100px;padding:14px 24px;white-space:nowrap;transition:transform .15s,background .2s}
 .review-btn:hover{background:var(--gold-lt);transform:scale(1.02)}
 .review-btn-mark{width:21px;height:21px;border-radius:50%;background:conic-gradient(from -45deg,#4285f4 0 25%,#34a853 0 50%,#fbbc05 0 75%,#ea4335 0 100%);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700}
+.pref-source{margin-top:16px;background:#fff;border:1px solid rgba(179,145,88,.28);border-radius:22px;padding:28px 34px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:24px;box-shadow:var(--shadow-soft);position:relative;overflow:hidden}
+.pref-source::before{content:'';position:absolute;top:0;right:0;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,var(--gold-pale) 0%,transparent 70%);transform:translate(60px,-60px);pointer-events:none}
+.pref-source-mark{position:relative;z-index:1;width:54px;height:54px;border-radius:50%;background:#fff;border:1px solid rgba(179,145,88,.25);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(176,141,88,.16);flex-shrink:0}
+.pref-source-mark svg{width:26px;height:26px;display:block}
+.pref-source-copy{position:relative;z-index:1}
+.pref-source-kicker{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.pref-source h3{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--ink);letter-spacing:-.015em;line-height:1.15;margin-bottom:6px}
+.pref-source p{font-size:13.5px;font-weight:300;color:var(--muted);line-height:1.65;max-width:560px}
+.pref-source-btn{position:relative;z-index:1;display:inline-flex;align-items:center;gap:9px;background:var(--ink);color:#fff;font-size:13.5px;font-weight:600;text-decoration:none;border-radius:100px;padding:13px 24px;white-space:nowrap;transition:transform .15s,background .2s}
+.pref-source-btn:hover{background:var(--gold);transform:scale(1.02)}
+.pref-source-btn svg{width:14px;height:14px;flex-shrink:0}
 
 /* PERKS */
 .perks{background:var(--sand)}
@@ -463,7 +474,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 
 /* RESPONSIVE */
 @media(max-width:1024px){.story-grid{grid-template-columns:1fr;gap:52px}.mat-modal{grid-template-columns:1fr}.story-imgs{max-width:520px}.contact-grid{grid-template-columns:1fr;gap:36px;max-width:720px}.map-embed iframe{min-height:360px}.areas-layout{grid-template-columns:1fr}.radius-card{min-height:420px}}
-@media(max-width:860px){.prod-grid{grid-template-columns:1fr 1fr}.prod-card-lg{grid-column:span 2}.perks-grid{grid-template-columns:1fr}.perk:first-child{grid-column:span 1}.process-steps{grid-template-columns:1fr 1fr;gap:36px}.process-steps::before{display:none}.trust-w{grid-template-columns:1fr 1fr}.nl{display:none}.n-ham{display:flex}.reviews-grid{grid-template-columns:1fr}.review-ask{grid-template-columns:1fr;padding:30px 26px}.review-ask-action{justify-self:start}.insta-grid{grid-template-columns:repeat(3,1fr)}.wz-opts{grid-template-columns:repeat(2,1fr)}.wz-row{grid-template-columns:1fr}.areas-layout{gap:36px}}
+@media(max-width:860px){.prod-grid{grid-template-columns:1fr 1fr}.prod-card-lg{grid-column:span 2}.perks-grid{grid-template-columns:1fr}.perk:first-child{grid-column:span 1}.process-steps{grid-template-columns:1fr 1fr;gap:36px}.process-steps::before{display:none}.trust-w{grid-template-columns:1fr 1fr}.nl{display:none}.n-ham{display:flex}.reviews-grid{grid-template-columns:1fr}.review-ask{grid-template-columns:1fr;padding:30px 26px}.review-ask-action{justify-self:start}.pref-source{grid-template-columns:1fr;padding:28px 26px;gap:16px}.pref-source-btn{justify-self:start}.insta-grid{grid-template-columns:repeat(3,1fr)}.wz-opts{grid-template-columns:repeat(2,1fr)}.wz-row{grid-template-columns:1fr}.areas-layout{gap:36px}}
 @media(max-width:600px){.s{padding:80px 20px}.prod-grid{grid-template-columns:1fr}.prod-card-lg{grid-column:span 1;aspect-ratio:4/3}.story-imgs{grid-template-columns:1fr}.story-img-main{aspect-ratio:3/2;grid-row:auto}.story-img-sm{display:none}.gallery{padding:80px 0}.g-img{width:300px;height:220px}.foot-top,.foot-bottom{flex-direction:column;align-items:flex-start}#chat-panel{width:calc(100vw - 56px);right:28px}.insta-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 <script type="application/ld+json">
@@ -1131,6 +1142,17 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <div class="review-ask-action">
         <a class="review-btn" href="https://search.google.com/local/writereview?placeid=ChIJVbaFyYZXwokRgfG3kFqd5MY" target="_blank" rel="noopener"><span class="review-btn-mark">G</span>Write a Google Review</a>
       </div>
+    </div>
+    <div class="pref-source r3">
+      <div class="pref-source-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" role="img"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      </div>
+      <div class="pref-source-copy">
+        <div class="pref-source-kicker">New on Google Search</div>
+        <h3>Make us your preferred source.</h3>
+        <p>One tap tells Google to show you more of Stone Bellisimo — new projects, materials, and updates highlighted right in your Search results.</p>
+      </div>
+      <a class="pref-source-btn" href="https://www.google.com/preferences/source?q=stonebellisimollc.com" target="_blank" rel="noopener" data-analytics-id="google-preferred-source" data-analytics-type="preferred_source" data-analytics-placement="homepage-reviews">Add on Google<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
   </div>
 </section>
@@ -1800,6 +1822,6 @@ if(chatBubble)chatBubble.addEventListener('click',toggleChat);
 if(chatClose)chatClose.addEventListener('click',toggleChat);
 </script>
 <script src="./components/google-map.js?v=3" defer></script>
-<script src="./performance.js?v=4" defer></script>
+<script src="./performance.js?v=5" defer></script>
 </body>
 </html>

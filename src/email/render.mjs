@@ -1,7 +1,7 @@
 export const BUSINESS_INFO = {
   name: 'Stone Bellisimo LLC',
   website: 'https://stonebellisimollc.com',
-  logoUrl: 'https://stonebellisimollc.com/assets/img/logo-280.png',
+  logoUrl: 'https://stonebellisimollc.com/assets/img/logo-mono.png',
   officePhone: '201.553.1919',
   officePhoneHref: '+12015531919',
   bellaPhone: '551.292.8353',
@@ -126,7 +126,7 @@ function emailShell({ preheader, eyebrow, title, bodyHtml }) {
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;border-collapse:collapse;background:#ffffff;border:1px solid ${COLORS.border};border-radius:16px;overflow:hidden;">
           <tr>
             <td style="padding:30px 34px 22px;background:${COLORS.ink};">
-              <img src="${BUSINESS_INFO.logoUrl}" width="140" alt="Stone Bellisimo LLC" style="display:block;width:140px;height:auto;filter:brightness(0) invert(1);">
+              <img src="${BUSINESS_INFO.logoUrl}" width="140" alt="Stone Bellisimo LLC" style="display:block;width:140px;height:auto;">
               <div style="margin-top:22px;font:700 11px Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:${COLORS.gold};">${escapeHtml(eyebrow)}</div>
               <h1 style="margin:10px 0 0;font:400 34px/1.08 Georgia,serif;color:#ffffff;">${escapeHtml(title)}</h1>
             </td>
@@ -266,6 +266,80 @@ export function renderFeedbackRequestEmail({ lead, token, baseUrl }) {
       bodyHtml
     }),
     text
+  };
+}
+
+export function renderFollowUpStatusEmail({ lead = {} }) {
+  const customerName = lead.customerName || `${lead.firstName || ''} ${lead.lastName || ''}`.trim() || 'there';
+  const projectLabel = lead.projectType && lead.projectType !== 'Not specified' ? lead.projectType : 'your project';
+  const materialLabel = lead.material && lead.material !== 'Not specified' ? lead.material : '';
+  const subject = 'A quick question about your Stone Bellisimo project';
+  const bodyHtml = `
+    <p style="margin:0 0 16px;font:400 16px/1.75 Arial,sans-serif;color:${COLORS.ink};">Hi ${escapeHtml(customerName)},</p>
+    <p style="margin:0 0 16px;font:400 15px/1.75 Arial,sans-serif;color:${COLORS.muted};">I’m following up on your ${escapeHtml(projectLabel)} inquiry${materialLabel ? ` about ${escapeHtml(materialLabel)}` : ''}. We wanted to check in because we are not sure whether your project has already moved forward.</p>
+    <p style="margin:0 0 16px;font:400 15px/1.75 Arial,sans-serif;color:${COLORS.muted};">When you have a moment, would you reply with whichever is closest?</p>
+    <div style="margin:0 0 22px;padding:20px 22px;border-radius:14px;background:${COLORS.goldPale};border:1px solid ${COLORS.border};font:400 15px/1.8 Arial,sans-serif;color:${COLORS.ink};">
+      <div><strong>Still interested</strong> — I would like to continue.</div>
+      <div><strong>Already completed</strong> — the project is taken care of.</div>
+      <div><strong>No longer needed</strong> — plans changed.</div>
+      <div><strong>Need help</strong> — please have someone reach out.</div>
+    </div>
+    <p style="margin:0;font:400 15px/1.75 Arial,sans-serif;color:${COLORS.muted};">A short reply is perfect, and there is no pressure either way. Thank you for keeping us posted.</p>
+    ${contactGridHtml()}
+  `;
+  const text = [
+    `Hi ${customerName},`, '',
+    `I’m following up on your ${projectLabel} inquiry${materialLabel ? ` about ${materialLabel}` : ''}. We wanted to check in because we are not sure whether your project has already moved forward.`, '',
+    'When you have a moment, would you reply with whichever is closest?',
+    'Still interested — I would like to continue.',
+    'Already completed — the project is taken care of.',
+    'No longer needed — plans changed.',
+    'Need help — please have someone reach out.', '',
+    'A short reply is perfect, and there is no pressure either way. Thank you for keeping us posted.', '',
+    'Thank you,', BUSINESS_INFO.name, '',
+    `Office: ${BUSINESS_INFO.officePhone}`,
+    `Bella AI Voice Agent: ${BUSINESS_INFO.bellaPhone}`,
+    `Email: ${BUSINESS_INFO.email}`,
+    `Showroom: ${BUSINESS_INFO.showroom}`
+  ].join('\n');
+  return {
+    subject,
+    html: emailShell({ preheader: 'A quick, no-pressure check-in from Stone Bellisimo.', eyebrow: 'A quick check-in', title: subject, bodyHtml }),
+    text
+  };
+}
+
+// This is deliberately separate from the legacy private-feedback message above.
+// Every completed customer receives the identical Google review invitation; there
+// is no rating collection, segmentation, or incentive in this path.
+export function renderGoogleReviewRequestEmail({ lead, reviewUrl, reminder = false }) {
+  const customerName = lead.customerName || `${lead.firstName || ''} ${lead.lastName || ''}`.trim() || 'there';
+  const subject = reminder
+    ? 'A quick reminder to share your Stone Bellisimo experience'
+    : 'Would you share your Stone Bellisimo experience on Google?';
+  const intro = reminder
+    ? 'We wanted to send one brief reminder in case you still wish to share an honest review of your completed project.'
+    : 'Thank you for choosing Stone Bellisimo for your completed project. If you have a moment, would you share an honest review on Google?';
+  const bodyHtml = `
+    <p style="margin:0 0 16px;font:400 16px/1.75 Arial,sans-serif;color:${COLORS.ink};">Hi ${escapeHtml(customerName)},</p>
+    <p style="margin:0 0 22px;font:400 15px/1.75 Arial,sans-serif;color:${COLORS.muted};">${escapeHtml(intro)}</p>
+    <p style="margin:0 0 22px;"><a href="${escapeHtml(reviewUrl)}" style="display:inline-block;border-radius:999px;background:${COLORS.gold};color:#ffffff;font:700 14px Arial,sans-serif;text-decoration:none;padding:14px 22px;">Write an honest Google review</a></p>
+    <p style="margin:0;font:400 15px/1.75 Arial,sans-serif;color:${COLORS.muted};">Your feedback helps neighbors understand what it is like to work with our family-owned stone shop. Thank you for your time.</p>
+    ${contactGridHtml()}
+  `;
+  return {
+    subject,
+    html: emailShell({
+      preheader: 'Share an honest review of your completed Stone Bellisimo project.',
+      eyebrow: reminder ? 'One quick reminder' : 'Thank you',
+      title: subject,
+      bodyHtml
+    }),
+    text: [
+      `Hi ${customerName},`, '', intro, '',
+      `Write an honest Google review: ${reviewUrl}`, '',
+      'Thank you,', BUSINESS_INFO.name
+    ].join('\n')
   };
 }
 

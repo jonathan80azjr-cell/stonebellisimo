@@ -31,6 +31,14 @@
         { "fieldPath": "date", "order": "ASCENDING" },
         { "fieldPath": "branded", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "social_content",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "month", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

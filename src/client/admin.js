@@ -12,7 +12,20 @@ import {
 } from 'firebase/auth';
 
 const $ = id => document.getElementById(id);
-const state = { auth: null, user: null, leads: [], selected: null, nextCursor: null, leadTotal: 0, rangeDays: 30, trafficClass: 'production' };
+const LEAD_DESIGNATIONS = Object.freeze([
+  ['', 'Auto-detected'],
+  ['new', 'New'],
+  ['progress_completed', 'Progress Completed'],
+  ['needs_feedback', 'Needs Feedback'],
+  ['feedback_sent', 'Feedback Sent'],
+  ['feedback_received', 'Feedback Received'],
+  ['email_issue', 'Email Issue']
+]);
+const state = {
+  auth: null, user: null, leads: [], selected: null, nextCursor: null, leadTotal: 0,
+  rangeDays: 30, trafficClass: 'production', growthLoaded: false, growthContent: [],
+  growthInquiries: [], growthHealth: [], growthControls: null, growthConfig: null
+};
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
@@ -32,12 +45,35 @@ function moneyFromCents(value) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(value) / 100);
 }
 
+function leadDesignation(lead) {
+  const explicit = String(lead.designation || '').toLowerCase();
+  if (LEAD_DESIGNATIONS.some(([value]) => value && value === explicit)) return explicit;
+  if (lead.feedbackEmailLastError || lead.emailIssue) return 'email_issue';
+  if (['received', 'unparsed'].includes(lead.feedbackStatus)) return 'feedback_received';
+  if (lead.feedbackEmailSentAt) return 'feedback_sent';
+  if (lead.businessStatus === 'completed') return 'progress_completed';
+  if (['pending', 'sending'].includes(lead.feedbackStatus) && lead.feedbackEmailDueAt && !lead.feedbackEmailSentAt) return 'needs_feedback';
+  return 'new';
+}
+
+function leadDesignationLabel(value) {
+  return LEAD_DESIGNATIONS.find(([key]) => key === value)?.[1] || 'New';
+}
+
+function leadMatchesFilter(lead, filter) {
+  if (filter === 'all') return true;
+  if (['new', 'progress_completed', 'needs_feedback', 'feedback_sent', 'feedback_received', 'email_issue'].includes(filter)) return leadDesignation(lead) === filter;
+  return [lead.businessStatus, lead.salesStatus].includes(filter) || (filter === 'email_failed' && Boolean(lead.feedbackEmailLastError));
+}
+
 async function api(path, options = {}) {
   if (!state.user) throw new Error('Sign in is required.');
   const token = await state.user.getIdToken();
+  const headers = { authorization: `Bearer ${token}`, ...(options.headers || {}) };
+  if (!(options.body instanceof FormData) && !headers['content-type']) headers['content-type'] = 'application/json';
   const response = await fetch(path, {
     ...options,
-    headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json', ...(options.headers || {}) }
+    headers
   });
   const data = await response.json().catch(() => ({ success: false, message: 'The server returned an invalid response.' }));
   if (!response.ok || data.success === false) {
@@ -67,19 +103,21 @@ function showView(name) {
     tab.classList.toggle('active', active);
     tab.setAttribute('aria-selected', String(active));
   });
-  $('pageHeading').textContent = name === 'leads' ? 'Leads & follow-up' : 'Website analytics';
-  $('pageEyebrow').textContent = name === 'leads' ? 'Client pipeline' : 'Engagement & lead intent';
+  const headings = {
+    leads: ['Leads & follow-up', 'Client pipeline'],
+    analytics: ['Website analytics', 'Engagement & lead intent'],
+    growth: ['Google & social growth', 'Reviewed automation pilot']
+  };
+  $('pageHeading').textContent = headings[name]?.[0] || 'Dashboard';
+  $('pageEyebrow').textContent = headings[name]?.[1] || 'Stone Bellisimo';
   if (name === 'analytics' && !$('analyticsContent').dataset.loaded) loadAnalytics();
+  if (name === 'growth' && !state.growthLoaded) loadGrowth();
 }
 
 function leadStatus(lead) {
-  if (lead.businessStatus === 'completed') return ['Completed', 'success'];
-  if (lead.businessStatus === 'in_progress') return ['In progress', 'warm'];
-  if (['received', 'unparsed'].includes(lead.feedbackStatus)) return ['Feedback received', 'success'];
-  if (lead.feedbackEmailLastError) return ['Email issue', 'danger'];
-  if (lead.feedbackEmailSentAt) return ['Feedback requested', 'warm'];
-  if (lead.immediateEmailSentAt) return ['Confirmation sent', 'success'];
-  return ['New lead', 'neutral'];
+  const designation = leadDesignation(lead);
+  const tone = designation === 'email_issue' ? 'danger' : ['progress_completed', 'feedback_received'].includes(designation) ? 'success' : ['needs_feedback', 'feedback_sent'].includes(designation) ? 'warm' : 'neutral';
+  return [leadDesignationLabel(designation), tone];
 }
 
 function renderLeadList(append = false) {
@@ -119,15 +157,15 @@ async function loadLeads({ append = false } = {}) {
 }
 
 function renderLeadStats(total) {
-  const inProgress = state.leads.filter(lead => lead.businessStatus === 'in_progress').length;
-  const completed = state.leads.filter(lead => lead.businessStatus === 'completed').length;
+  const qualified = state.leads.filter(lead => ['Qualified', 'Estimate Scheduled', 'Job Completed', 'Invoice Collected', 'Repeat / Review'].includes(lead.salesStatus)).length;
+  const completed = state.leads.filter(lead => ['Job Completed', 'Invoice Collected', 'Repeat / Review'].includes(lead.salesStatus) || (!lead.salesStatus && lead.businessStatus === 'completed')).length;
   const biteSitesShare = state.leads
     .filter(lead => lead.businessStatus === 'completed')
     .reduce((sum, lead) => sum + Number(lead.biteSitesShareCents || 0), 0);
   $('leadStats').innerHTML = [
     ['Total leads', total, 'All captured inquiries'],
-    ['In progress', inProgress, 'Among the leads showing'],
-    ['Completed', completed, 'Among the leads showing'],
+    ['Qualified', qualified, 'Staff-confirmed among those showing'],
+    ['Jobs completed', completed, 'Completion-based review trigger'],
     ['Bite Sites share', moneyFromCents(biteSitesShare), '10% of completed charges showing']
   ].map(([label, value, caption]) => `<article class="metric-card"><span>${label}</span><strong>${typeof value === 'string' ? escapeHtml(value) : number(value)}</strong><small>${caption}</small></article>`).join('');
 }
@@ -153,6 +191,9 @@ function detailRows(lead) {
   return [
     ['Email', lead.email], ['Phone', lead.phone], ['Submitted', formatDate(lead.submittedAt)],
     ['Project', lead.projectType], ['Material', lead.material], ['Source', lead.source],
+    ['Source platform', lead.sourcePlatform], ['Source content', lead.sourceContentId],
+    ['Consent', lead.consentState ? `${lead.consentState}${lead.consentVersion ? ` · ${lead.consentVersion}` : ''}` : 'Not recorded'],
+    ['HighLevel contact', lead.highLevelContactId], ['HighLevel opportunity', lead.highLevelOpportunityId],
     ['Confirmation', lead.immediateEmailSentAt ? formatDate(lead.immediateEmailSentAt) : 'Not sent'],
     ['Feedback due', formatDate(lead.feedbackEmailDueAt)],
     ['Feedback status', lead.feedbackStatus || 'Pending'], ['Message', lead.message]
@@ -182,10 +223,10 @@ async function saveBusinessUpdate(detail) {
   try {
     const data = await api(`/api/admin/leads/${encodeURIComponent(state.selected)}`, {
       method: 'PATCH',
-      body: JSON.stringify({ businessStatus: $('businessStatus').value, clientCharge: $('clientCharge').value })
+      body: JSON.stringify({ salesStatus: $('salesStatus').value, designation: $('leadDesignation').value, businessStatus: detail.lead.businessStatus || 'new', clientCharge: $('clientCharge').value })
     });
     detail.lead = data.lead;
-    if (['new', 'in_progress', 'completed'].includes($('leadStatus').value) && $('leadStatus').value !== data.lead.businessStatus) {
+    if (!leadMatchesFilter(data.lead, $('leadStatus').value)) {
       $('leadStatus').value = 'all';
     }
     await loadLeads();
@@ -208,7 +249,7 @@ function renderLeadDetail(data) {
     ...(data.inboundEvents || []).map(item => ({ title: `Inbound reply · ${item.status || 'received'}`, date: item.receivedAt, text: item.subject || item.fromEmail }))
   ].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
   $('leadDetail').innerHTML = `<div class="detail-head"><div><span class="eyebrow">Lead profile</span><h2>${escapeHtml(lead.customerName || 'Unnamed lead')}</h2><span class="status-pill ${tone}">${status}</span></div><div class="detail-actions">${lead.phone ? `<a class="icon-button" href="tel:${escapeHtml(lead.phone)}">Call</a>` : ''}<button class="icon-button" id="composeEmail" type="button">Follow up</button></div></div>
-    <section class="subsection business-panel"><div class="section-heading"><div><span class="eyebrow">Project outcome</span><h3>Lead status &amp; revenue</h3><p>Record the project stage and client charge. Bite Sites is calculated automatically at 10%.</p></div></div><div class="business-fields"><label>Status<select id="businessStatus"><option value="new" ${(lead.businessStatus || 'new') === 'new' ? 'selected' : ''}>New</option><option value="in_progress" ${lead.businessStatus === 'in_progress' ? 'selected' : ''}>In progress</option><option value="completed" ${lead.businessStatus === 'completed' ? 'selected' : ''}>Completed</option></select></label><label>Amount charged to client<div class="currency-input"><span>$</span><input id="clientCharge" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" value="${escapeHtml(chargeInputValue(lead.clientChargeCents))}"></div></label><div class="share-card"><span>Bite Sites · 10%</span><strong id="biteSitesSharePreview">${escapeHtml(moneyFromCents(lead.biteSitesShareCents))}</strong></div></div><div class="business-actions"><button id="saveBusiness" class="button primary" type="button">Save project update</button><span id="businessSaveStatus">${lead.completedAt ? `Completed ${escapeHtml(formatDate(lead.completedAt))}` : ''}</span></div></section>
+    <section class="subsection business-panel"><div class="section-heading"><div><span class="eyebrow">Project outcome</span><h3>Qualified pipeline &amp; revenue</h3><p>Staff can assign a targeting designation independently from the sales stage. Job Completed starts the honest Google review request; Invoice Collected requires the client charge.</p></div></div><div class="business-fields"><label>Lead designation<select id="leadDesignation">${LEAD_DESIGNATIONS.map(([value, label]) => `<option value="${value}" ${value === (lead.designation || '') ? 'selected' : ''}>${label}</option>`).join('')}</select></label><label>Growth outcome<select id="salesStatus"><option value="New Lead" ${lead.salesStatus === 'New Lead' ? 'selected' : ''}>New Lead</option><option value="Qualified" ${lead.salesStatus === 'Qualified' ? 'selected' : ''}>Qualified</option><option value="Estimate Scheduled" ${lead.salesStatus === 'Estimate Scheduled' ? 'selected' : ''}>Estimate Scheduled</option><option value="Job Completed" ${lead.salesStatus === 'Job Completed' ? 'selected' : ''}>Job Completed</option><option value="Invoice Collected" ${lead.salesStatus === 'Invoice Collected' ? 'selected' : ''}>Invoice Collected</option><option value="Repeat / Review" ${lead.salesStatus === 'Repeat / Review' ? 'selected' : ''}>Repeat / Review</option><option value="Lost" ${lead.salesStatus === 'Lost' ? 'selected' : ''}>Lost</option><option value="" ${!lead.salesStatus ? 'selected' : ''}>Unclassified legacy record</option></select></label><label>Amount charged to client<div class="currency-input"><span>$</span><input id="clientCharge" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" value="${escapeHtml(chargeInputValue(lead.clientChargeCents))}"></div></label><div class="share-card"><span>Bite Sites · 10%</span><strong id="biteSitesSharePreview">${escapeHtml(moneyFromCents(lead.biteSitesShareCents))}</strong></div></div><div class="business-actions"><button id="saveBusiness" class="button primary" type="button">Save project update</button><span id="businessSaveStatus">${lead.completedAt ? `Completed ${escapeHtml(formatDate(lead.completedAt))}` : ''}</span></div></section>
     <dl class="detail-grid">${detailRows(lead).map(([label, value]) => `<div class="detail-item ${label === 'Message' ? 'wide' : ''}"><dt>${label}</dt><dd>${escapeHtml(value || '—')}</dd></div>`).join('')}</dl>
     <section class="subsection"><div class="section-heading"><div><span class="eyebrow">Customer voice</span><h3>Feedback</h3></div></div>${(data.feedback || []).length ? `<div class="timeline">${data.feedback.map(item => `<article><span class="timeline-dot"></span><div><strong>${item.rating ? `${item.rating}/5` : 'Unrated'} · ${escapeHtml(item.source || 'Feedback')}</strong><time>${escapeHtml(formatDate(item.receivedAt))}</time><p>${escapeHtml(item.comment || 'No written comment.')}</p></div></article>`).join('')}</div>` : '<p class="quiet">No feedback has been received yet.</p>'}</section>
     <section class="subsection"><div class="section-heading"><div><span class="eyebrow">Communication</span><h3>Email history</h3></div></div>${eventRows.length ? `<div class="timeline">${eventRows.map(item => `<article><span class="timeline-dot"></span><div><strong>${escapeHtml(item.title)}</strong><time>${escapeHtml(formatDate(item.date))}</time><p>${escapeHtml(item.text || 'No additional details.')}</p></div></article>`).join('')}</div>` : '<p class="quiet">No email events recorded.</p>'}</section>`;
@@ -436,6 +477,277 @@ function bindAnalyticsControls() {
   });
 }
 
+const CONTENT_NEXT_STATUS = {
+  discovered: 'needs_review',
+  needs_review: 'approved',
+  approved: 'optimized',
+  optimized: 'uploaded'
+};
+
+const CONTENT_STATUS_LABEL = {
+  discovered: 'Send to review',
+  needs_review: 'Approve package',
+    approved: 'Confirm optimized media',
+  optimized: 'Mark upload-ready'
+};
+
+function currentMonth() {
+  const timezone = state.growthConfig?.timezone || 'America/New_York';
+  const parts = new Intl.DateTimeFormat('en-US', { timeZone: timezone, year: 'numeric', month: '2-digit' })
+    .formatToParts(new Date());
+  const year = parts.find(part => part.type === 'year')?.value;
+  const month = parts.find(part => part.type === 'month')?.value;
+  return `${year}-${month}`;
+}
+
+function dateTimeInputValue(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const offset = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+}
+
+function renderGrowthMetrics() {
+  const minimums = state.growthConfig?.publishing?.minimumMonthlyMedia || {
+    content_packages: 12, usable_project_photos: 18, vertical_clips: 6
+  };
+  const assets = state.growthContent.flatMap(item => item.assets || []);
+  const photos = assets.filter(asset => String(asset.mimeType).startsWith('image/')).length;
+  const clips = assets.filter(asset => String(asset.mimeType).startsWith('video/') && asset.verticalApproved === true).length;
+  const published = state.growthContent.filter(item => item.status === 'published').length;
+  const unclaimed = state.growthInquiries.filter(item => !item.claimedAt && item.status === 'open').length;
+  $('growthMetrics').innerHTML = [
+    ['Monthly packages', `${state.growthContent.length}/${minimums.content_packages}`, 'Rights-cleared content manifests'],
+    ['Usable photos', `${photos}/${minimums.usable_project_photos}`, 'Rights and privacy recorded'],
+    ['Vertical clips', `${clips}/${minimums.vertical_clips}`, 'Video files in this intake'],
+    ['Published', published, `${unclaimed} unclaimed social inquiries`]
+  ].map(([label, value, caption]) => `<article class="metric-card"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong><small>${escapeHtml(caption)}</small></article>`).join('');
+}
+
+function renderGrowthControls() {
+  const controls = state.growthControls || { outboundPaused: true, draftingDisabled: false, disconnectedPlatforms: [] };
+  const disconnected = controls.disconnectedPlatforms || [];
+  const banner = $('growthControlStatus');
+  banner.dataset.status = controls.outboundPaused ? 'stale' : 'healthy';
+  banner.textContent = `L1 outbound ${controls.outboundPaused ? 'PAUSED' : 'enabled'} · L2 drafting ${controls.draftingDisabled ? 'disabled' : 'enabled'} · L3 disconnected: ${disconnected.length ? disconnected.join(', ') : 'none'}.`;
+  $('toggleL1').textContent = controls.outboundPaused ? 'Release L1 pause' : 'Activate L1 pause';
+  $('toggleL2').textContent = controls.draftingDisabled ? 'Release L2 drafting block' : 'Activate L2 drafting block';
+  const platform = $('l3Platform').value;
+  $('toggleL3').textContent = disconnected.includes(platform) ? `Reconnect ${platform} flag` : `Disconnect ${platform} flag`;
+}
+
+function renderGrowthHealth() {
+  $('growthHealth').innerHTML = state.growthHealth.length
+    ? state.growthHealth.map(item => `<div class="health-row"><strong>${escapeHtml(item.component || item.id)}</strong><span class="${item.status === 'healthy' ? 'healthy' : 'failed'}">${escapeHtml(item.status || 'unknown')}</span><span>${escapeHtml(item.message || `Updated ${formatDate(item.updatedAt)}`)}</span></div>`).join('')
+    : '<p class="quiet">No live health signals yet. This is expected while authorization and account IDs remain blocked.</p>';
+}
+
+function renderChannelPackage(content, channel) {
+  const channelPackage = content.channelPackages?.[channel] || {};
+  return `<details class="channel-package" data-content-id="${escapeHtml(content.id)}" data-channel="${channel}">
+    <summary>${channel} · ${escapeHtml(channelPackage.remoteStatus || channelPackage.status || 'not prepared')}</summary>
+    <label>Caption<textarea data-package-caption maxlength="4000" placeholder="Channel-specific, owner-reviewed copy">${escapeHtml(channelPackage.caption || '')}</textarea></label>
+    <label>Post type<select data-package-type><option value="post" ${channelPackage.postType !== 'reel' && channelPackage.postType !== 'story' ? 'selected' : ''}>Post</option><option value="reel" ${channelPackage.postType === 'reel' ? 'selected' : ''}>Reel</option><option value="story" ${channelPackage.postType === 'story' ? 'selected' : ''}>Story</option></select></label>
+    <label>Schedule<input data-package-schedule type="datetime-local" value="${escapeHtml(dateTimeInputValue(channelPackage.scheduledAt))}"></label>
+    <label>Tracked landing URL<input data-package-url type="url" value="${escapeHtml(channelPackage.trackedUrl || '')}" placeholder="https://…?utm_source=${channel}&utm_medium=${channel === 'google' ? 'organic_local' : 'organic_social'}&…"></label>
+    <small>Remote account and post IDs are written only by exact-account reconciliation.</small>
+    <button class="button secondary" data-save-package type="button">Save &amp; approve package</button>
+  </details>`;
+}
+
+function renderGrowthContent() {
+  const container = $('growthContentList');
+  if (!state.growthContent.length) {
+    container.innerHTML = '<div class="empty-state"><h3>No packages for this month</h3><p>Create the first project-media manifest above.</p></div>';
+    return;
+  }
+  container.innerHTML = state.growthContent.map(content => {
+    const next = CONTENT_NEXT_STATUS[content.status];
+    const approval = content.approvalEvidence?.actor ? `Approved by ${content.approvalEvidence.actor}` : 'Approval not recorded';
+    return `<article class="growth-card">
+      <div class="growth-card-head"><div><h3>${escapeHtml(content.projectType || 'Project package')} · ${escapeHtml(content.material || 'Material')}</h3><p>${escapeHtml(content.city || 'City not set')} · ${escapeHtml(content.projectId || content.id)}</p></div><span class="status-pill ${content.status === 'published' ? 'success' : 'warm'}">${escapeHtml(content.status)}</span></div>
+      <div class="growth-card-meta"><span>${escapeHtml(content.contentPillar)}</span><span>${number((content.assets || []).length)} assets</span><span>${content.rightsApproved ? 'rights approved' : 'rights blocked'}</span><span>${content.privacyCleared ? 'privacy cleared' : 'privacy blocked'}</span><span>${escapeHtml(approval)}</span></div>
+      <div class="growth-card-actions">
+        ${next ? `<button class="button ${next === 'approved' ? 'primary' : 'secondary'}" data-transition-content="${escapeHtml(content.id)}" data-next-status="${next}" type="button">${CONTENT_STATUS_LABEL[content.status]}</button>` : ''}
+        <div class="channel-packages">${['instagram', 'facebook', 'google'].map(channel => renderChannelPackage(content, channel)).join('')}</div>
+      </div>
+    </article>`;
+  }).join('');
+  container.querySelectorAll('[data-transition-content]').forEach(button => button.addEventListener('click', () => transitionGrowthContent(button)));
+  container.querySelectorAll('[data-save-package]').forEach(button => button.addEventListener('click', () => saveChannelPackage(button.closest('[data-channel]'))));
+}
+
+function renderGrowthInquiries() {
+  const container = $('growthInquiryList');
+  if (!state.growthInquiries.length) {
+    container.innerHTML = '<div class="empty-state"><h3>No structured inquiries</h3><p>Signed, exact-account Instagram and Facebook events will appear here without message bodies.</p></div>';
+    return;
+  }
+  container.innerHTML = state.growthInquiries.map(inquiry => {
+    const urgent = ['complaint', 'safety_urgent'].includes(inquiry.category);
+    return `<article class="growth-card ${urgent ? 'inquiry-urgent' : ''}">
+      <div class="growth-card-head"><div><h3>${escapeHtml(inquiry.platform)} · ${escapeHtml(inquiry.category)}</h3><p>${escapeHtml([inquiry.projectType, inquiry.material, inquiry.city, inquiry.postalCode].filter(Boolean).join(' · ') || 'No structured project details yet')}</p></div><span class="status-pill ${inquiry.status === 'qualified' ? 'success' : 'warm'}">${escapeHtml(inquiry.status)}</span></div>
+      <div class="growth-card-meta"><span>received ${escapeHtml(formatDate(inquiry.createdAt))}</span><span>${inquiry.claimedAt ? `claimed by ${escapeHtml(inquiry.claimedBy)}` : 'unclaimed'}</span><span>consent: ${escapeHtml(inquiry.consentState || 'not requested')}</span><span>content: ${escapeHtml(inquiry.contentId || 'untracked')}</span></div>
+      <div class="growth-card-actions">
+        ${!inquiry.claimedAt ? `<button class="button primary" data-claim-inquiry="${escapeHtml(inquiry.id)}" type="button">Claim conversation</button>` : ''}
+        ${inquiry.status !== 'qualified' && inquiry.claimedAt ? `<button class="button secondary" data-qualify-inquiry="${escapeHtml(inquiry.id)}" type="button">Confirm qualification</button>` : ''}
+      </div>
+    </article>`;
+  }).join('');
+  container.querySelectorAll('[data-claim-inquiry]').forEach(button => button.addEventListener('click', () => claimGrowthInquiry(button.dataset.claimInquiry)));
+  container.querySelectorAll('[data-qualify-inquiry]').forEach(button => button.addEventListener('click', () => qualifyGrowthInquiry(button.dataset.qualifyInquiry)));
+}
+
+async function loadGrowth() {
+  setLoading($('growthContentList'), 'Loading content manifests…');
+  setLoading($('growthInquiryList'), 'Loading social inquiries…');
+  const month = $('growthMonthFilter').value || currentMonth();
+  $('growthMonthFilter').value = month;
+  $('contentMonth').value = $('contentMonth').value || month;
+  try {
+    const [content, inquiries, health, controls, config] = await Promise.all([
+      api(`/api/admin/growth/content?month=${encodeURIComponent(month)}`),
+      api('/api/admin/growth/inquiries?limit=100'),
+      api('/api/admin/growth/health'),
+      api('/api/admin/growth/controls'),
+      api('/api/admin/growth/config')
+    ]);
+    state.growthContent = content.content || [];
+    state.growthInquiries = inquiries.inquiries || [];
+    state.growthHealth = health.health || [];
+    state.growthControls = controls.controls || null;
+    state.growthConfig = config.config || null;
+    state.growthLoaded = true;
+    renderGrowthMetrics();
+    renderGrowthControls();
+    renderGrowthHealth();
+    renderGrowthContent();
+    renderGrowthInquiries();
+  } catch (error) {
+    $('growthContentList').innerHTML = `<div class="error-state"><h3>Growth pilot data could not load</h3><p>${escapeHtml(error.message)}</p></div>`;
+    $('growthInquiryList').innerHTML = '';
+  }
+}
+
+async function submitContentIntake(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const files = [...$('contentFiles').files];
+  if (!files.length) return showToast('Choose at least one media file.', 'bad');
+  const data = new FormData(form);
+  if (files.some(file => String(file.type).startsWith('video/')) && data.get('verticalApproved') !== 'on') {
+    return showToast('Verify that every selected video is vertical before uploading.', 'bad');
+  }
+  const payload = {
+    month: data.get('month'), projectId: data.get('projectId'), material: data.get('material'),
+    projectType: data.get('projectType'), city: data.get('city'), contentPillar: data.get('contentPillar'),
+    priorPostStatus: data.get('priorPostStatus'), rightsApproved: data.get('rightsApproved') === 'on',
+    privacyCleared: data.get('privacyCleared') === 'on', includesOffer: data.get('includesOffer') === 'on',
+    offerApproved: data.get('offerApproved') === 'on', offerExpiresAt: data.get('offerExpiresAt') || null,
+    notes: data.get('notes')
+  };
+  $('submitContent').disabled = true;
+  try {
+    $('contentUploadStatus').textContent = 'Creating manifest…';
+    const created = await api('/api/admin/growth/content', { method: 'POST', body: JSON.stringify(payload) });
+    for (let index = 0; index < files.length; index += 1) {
+      $('contentUploadStatus').textContent = `Uploading ${index + 1} of ${files.length}…`;
+      const upload = new FormData();
+      upload.set('file', files[index]);
+      if (String(files[index].type).startsWith('video/')) upload.set('verticalApproved', 'true');
+      await api(`/api/admin/growth/content/${encodeURIComponent(created.content.id)}/assets`, { method: 'POST', body: upload });
+    }
+    form.reset();
+    $('contentMonth').value = $('growthMonthFilter').value || currentMonth();
+    showToast('Content manifest and private assets recorded.');
+    await loadGrowth();
+  } catch (error) {
+    showToast(error.message, 'bad');
+  } finally {
+    $('submitContent').disabled = false;
+    $('contentUploadStatus').textContent = '';
+  }
+}
+
+async function transitionGrowthContent(button) {
+  const next = button.dataset.nextStatus;
+  const message = next === 'approved'
+    ? 'Approve this package? This records your rights, privacy, prior-post, and offer decision.'
+    : `Move this package to ${next}?`;
+  if (!confirm(message)) return;
+  button.disabled = true;
+  try {
+    await api(`/api/admin/growth/content/${encodeURIComponent(button.dataset.transitionContent)}/transition`, {
+      method: 'PATCH', body: JSON.stringify({
+        status: next,
+        note: next === 'optimized' ? 'Media format and channel readiness confirmed in Firebase admin dashboard.' : 'Approved in Firebase admin dashboard.',
+        optimizationConfirmed: next === 'optimized',
+        specId: next === 'optimized' ? 'sb-social-media-v1' : null
+      })
+    });
+    await loadGrowth();
+  } catch (error) { showToast(error.message, 'bad'); }
+  finally { button.disabled = false; }
+}
+
+async function saveChannelPackage(container) {
+  const caption = container.querySelector('[data-package-caption]').value.trim();
+  const scheduledAt = container.querySelector('[data-package-schedule]').value;
+  const postType = container.querySelector('[data-package-type]').value;
+  const trackedUrl = container.querySelector('[data-package-url]').value.trim();
+  if (!caption || !scheduledAt) return showToast('Add a caption and schedule before saving a channel package.', 'bad');
+  if (!confirm(`Approve this exact ${container.dataset.channel} caption, media package, post type, tracked link, and schedule?`)) return;
+  const button = container.querySelector('[data-save-package]');
+  button.disabled = true;
+  try {
+    await api(`/api/admin/growth/content/${encodeURIComponent(container.dataset.contentId)}/packages/${container.dataset.channel}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ caption, captionVersion: 'v1', postType, trackedUrl, scheduledAt: new Date(scheduledAt).toISOString(), approve: true })
+    });
+    showToast(`${container.dataset.channel} review package saved.`);
+    await loadGrowth();
+  } catch (error) { showToast(error.message, 'bad'); }
+  finally { button.disabled = false; }
+}
+
+async function claimGrowthInquiry(id) {
+  try {
+    await api(`/api/admin/growth/inquiries/${encodeURIComponent(id)}/claim`, { method: 'POST', body: '{}' });
+    showToast('Conversation claimed. Later SLA alerts are stopped.');
+    await loadGrowth();
+  } catch (error) { showToast(error.message, 'bad'); }
+}
+
+async function qualifyGrowthInquiry(id) {
+  const inquiry = state.growthInquiries.find(item => item.id === id);
+  const handoffOwner = state.growthConfig?.salesHandoffOwner || 'the sales owner';
+  if (!inquiry || !confirm(`Confirm service fit, service area, genuine project intent, a usable contact method, and consent? This assigns the lead to ${handoffOwner}.`)) return;
+  try {
+    await api(`/api/admin/growth/inquiries/${encodeURIComponent(id)}/qualify`, {
+      method: 'POST',
+      body: JSON.stringify({
+        serviceFit: true, serviceAreaFit: true, genuineProjectIntent: true,
+        usableContactMethod: inquiry.usableContactMethod || 'platform_dm',
+        consentState: inquiry.consentState,
+        consentVersion: inquiry.consentVersion,
+        version: state.growthConfig?.programCode
+      })
+    });
+    showToast(`Inquiry marked qualified and assigned to ${handoffOwner}.`);
+    await loadGrowth();
+  } catch (error) { showToast(error.message, 'bad'); }
+}
+
+async function setGrowthControl(level, input = {}) {
+  if (!confirm(`Apply ${level} kill-switch change? This action is recorded with your administrator identity.`)) return;
+  try {
+    await api('/api/admin/growth/controls', { method: 'PATCH', body: JSON.stringify({ level, ...input }) });
+    await loadGrowth();
+    showToast(`${level} control updated.`);
+  } catch (error) { showToast(error.message, 'bad'); }
+}
+
 // Signing in is not the same as being an administrator: the account also needs
 // the admin custom claim the Auth blocking functions grant to the allowlist.
 async function adminClaimState(user) {
@@ -530,6 +842,21 @@ $('emailTemplate').addEventListener('change', () => { updateComposer(); previewE
 $('previewEmail').addEventListener('click', previewEmail);
 $('sendEmail').addEventListener('click', sendEmail);
 $('closeEmail').addEventListener('click', () => $('emailPanel').hidden = true);
+$('contentIntakeForm').addEventListener('submit', submitContentIntake);
+$('growthMonthFilter').addEventListener('change', () => { state.growthLoaded = false; loadGrowth(); });
+$('toggleL1').addEventListener('click', () => setGrowthControl('L1', { active: !state.growthControls?.outboundPaused }));
+$('toggleL2').addEventListener('click', () => setGrowthControl('L2', { active: !state.growthControls?.draftingDisabled }));
+$('toggleL3').addEventListener('click', () => {
+  const platform = $('l3Platform').value;
+  const active = !(state.growthControls?.disconnectedPlatforms || []).includes(platform);
+  setGrowthControl('L3', { platform, active });
+});
+$('activateL4').addEventListener('click', () => {
+  const targetId = $('l4TargetId').value.trim();
+  if (!targetId) return showToast('Enter the exact Firebase lead or social inquiry ID.', 'bad');
+  setGrowthControl('L4', { targetType: $('l4TargetType').value, targetId, active: true });
+});
+$('l3Platform').addEventListener('change', renderGrowthControls);
 updateComposer();
 renderEmptyLead();
 initialize();

@@ -231,7 +231,8 @@ test('sending an alert never throws and records one event for the group', async 
   assert.equal(saved[0].eventType, NOTIFICATION_TYPES.newLead);
   assert.equal(saved[0].recipient, ADMIN_EMAILS.join(', '));
 
-  // A Postmark outage is logged, not thrown, so the trigger still completes.
+  // Once Postmark accepts the alert, an audit-store outage must not turn it
+  // into a retryable send and duplicate the owner notification.
   const failing = { saveEmailEvent: async () => { throw new Error('firestore down'); } };
   const failed = await sendAdminNotification({
     env,
@@ -239,7 +240,7 @@ test('sending an alert never throws and records one event for the group', async 
     type: NOTIFICATION_TYPES.newLead,
     alert: buildNewLeadAlert({ id: 'lead_1' }, env)
   });
-  assert.equal(failed.sent, false);
+  assert.equal(failed.sent, true);
 
   // With nobody to tell, sending is skipped rather than attempted.
   const muted = await sendAdminNotification({

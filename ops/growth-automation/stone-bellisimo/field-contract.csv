@@ -1,0 +1,60 @@
+field_group,creation_name,expected_key,type,object,populated_by,sensitivity,ad_platform_export,retention,write_mode,options,notes
+program,BS Managed Client,contact.bs_managed_client,TEXT,contact,all workflows,none,no,life_of_record,write_once,SB,constant client code
+program,BS Managed Program,contact.bs_managed_program,SINGLE_OPTIONS,contact,all workflows,none,no,life_of_record,write_once,SB_GROWTH_V1,constant program
+source,BS Source Platform,contact.bs_source_platform,SINGLE_OPTIONS,contact,intake/bridge,none,no,life_of_record,write_once,google|instagram|facebook|website|phone|other,first source
+source,BS Source Account,contact.bs_source_account,TEXT,contact,intake/bridge,identifier,no,life_of_record,write_once,,exact source asset
+source,BS Paid or Organic,contact.bs_paid_or_organic,SINGLE_OPTIONS,contact,intake/bridge,none,no,life_of_record,overwrite,organic|paid|unknown,no paid v1
+source,BS Source Type,contact.bs_source_type,SINGLE_OPTIONS,contact,intake/bridge,none,no,life_of_record,write_once,organic_comment|inbound_dm|website_form|profile_cta|call,trigger class
+source,BS Source History,contact.bs_source_history,LARGE_TEXT,contact,dedupe,behavioral,no,24_months,append_only,,append only
+source,BS Trigger Type,contact.bs_trigger_type,SINGLE_OPTIONS,contact,intake/bridge,none,no,life_of_record,write_once,comment_to_dm|inbound_dm|comment_public_reply|tagged_link|inbound_call,precise trigger
+post,BS Source Post ID,contact.bs_source_post_id,TEXT,contact,social intake,none,no,life_of_record,write_once,,remote post id
+post,BS Source Post URL,contact.bs_source_post_url,TEXT,contact,social intake,none,no,life_of_record,write_once,,review traceability
+post,BS Source Content ID,contact.bs_source_content_id,TEXT,contact,social intake,none,no,life_of_record,write_once,,social_content manifest ID
+post,BS Comment Keyword,contact.bs_comment_keyword,SINGLE_OPTIONS,contact,social intake,none,no,life_of_record,overwrite,REQUIRED_UNSET,approved keywords only
+first_touch,BS First Touch Source,contact.bs_first_touch_source,TEXT,contact,intake/bridge,none,no,life_of_record,write_once,,guarded by First Touch At
+first_touch,BS First Touch Medium,contact.bs_first_touch_medium,TEXT,contact,intake/bridge,none,no,life_of_record,write_once,,UTM medium
+first_touch,BS First Touch Campaign,contact.bs_first_touch_campaign,TEXT,contact,intake/bridge,none,no,life_of_record,write_once,,UTM campaign
+first_touch,BS First Touch Content,contact.bs_first_touch_content,TEXT,contact,intake/bridge,none,no,life_of_record,write_once,,UTM content
+first_touch,BS First Touch Term,contact.bs_first_touch_term,TEXT,contact,intake/bridge,none,no,life_of_record,write_once,,UTM term
+first_touch,BS First Touch Landing Page,contact.bs_first_touch_landing_page,TEXT,contact,intake/bridge,behavioral,no,24_months,write_once,,landing URL
+first_touch,BS First Touch Referrer,contact.bs_first_touch_referrer,TEXT,contact,intake/bridge,behavioral,no,24_months,write_once,,first touch only
+first_touch,BS First Touch At,contact.bs_first_touch_at,DATE,contact,intake/bridge,none,no,life_of_record,write_once,,write-once guard
+last_touch,BS Last Touch Source,contact.bs_last_touch_source,TEXT,contact,intake/bridge,none,no,life_of_record,overwrite,,latest source
+last_touch,BS Last Touch Medium,contact.bs_last_touch_medium,TEXT,contact,intake/bridge,none,no,life_of_record,overwrite,,latest medium
+last_touch,BS Last Touch Campaign,contact.bs_last_touch_campaign,TEXT,contact,intake/bridge,none,no,life_of_record,overwrite,,latest campaign
+last_touch,BS Last Touch Content,contact.bs_last_touch_content,TEXT,contact,intake/bridge,none,no,life_of_record,overwrite,,latest content
+last_touch,BS Last Touch Term,contact.bs_last_touch_term,TEXT,contact,intake/bridge,none,no,life_of_record,overwrite,,latest term
+last_touch,BS Last Touch Landing Page,contact.bs_last_touch_landing_page,TEXT,contact,intake/bridge,behavioral,no,24_months,overwrite,,no last-touch referrer
+last_touch,BS Last Touch At,contact.bs_last_touch_at,DATE,contact,intake/bridge,none,no,life_of_record,overwrite,,latest timestamp
+consent,BS Consent Status,contact.bs_consent_status,SINGLE_OPTIONS,contact,consent step,none,no,life_of_record,overwrite,granted|declined|not_asked,retention requires granted
+consent,BS Consent At,contact.bs_consent_at,DATE,contact,consent step,none,no,life_of_record,overwrite,,consent audit
+consent,BS Consent Channel,contact.bs_consent_channel,TEXT,contact,consent step,none,no,life_of_record,overwrite,,consent audit
+consent,BS Consent Text Version,contact.bs_consent_text_version,TEXT,contact,consent step,none,no,life_of_record,overwrite,,versioned wording
+optout,BS Optout Status,contact.bs_optout_status,SINGLE_OPTIONS,contact,W-10,none,no,life_of_record,overwrite,opted_out|active,read before write
+optout,BS Optout At,contact.bs_optout_at,DATE,contact,W-10,none,no,life_of_record,write_once,,preserve original
+optout,BS Optout Channel,contact.bs_optout_channel,TEXT,contact,W-10,none,no,life_of_record,write_once,,preserve original
+optout,BS Optout Source,contact.bs_optout_source,SINGLE_OPTIONS,contact,W-10,none,no,life_of_record,write_once,keyword|platform_signal|staff|form,preserve original
+intent,BS Intent,contact.bs_intent,SINGLE_OPTIONS,contact,W-2/W-3,none,no,life_of_record,overwrite,estimate|material_question|showroom_hours|service_area|compliment|existing_customer_issue|complaint|spam|urgent,classifier result
+intent,BS Intent Captured At,contact.bs_intent_captured_at,DATE,contact,W-2/W-3,none,no,life_of_record,overwrite,,classifier time
+intent,BS Service Type,contact.bs_service_type,SINGLE_OPTIONS,contact,W-2/W-3,none,no,24_months,overwrite,REQUIRED_UNSET,approved service list only
+intent,BS Material Interest,contact.bs_material_interest,SINGLE_OPTIONS,contact,W-2/W-3,none,no,24_months,overwrite,quartz|granite|marble|quartzite|porcelain|unknown,no price field
+intent,BS Project City Or ZIP,contact.bs_project_city_or_zip,TEXT,contact,W-2/W-3,identifier,no,24_months,overwrite,,never full street address
+intent,BS Project Timeframe,contact.bs_project_timeframe,SINGLE_OPTIONS,contact,W-2/W-3,behavioral,no,24_months,overwrite,REQUIRED_UNSET,no availability promise
+intent,BS Qualification Status,contact.bs_qualification_status,SINGLE_OPTIONS,contact,staff only,none,no,life_of_record,overwrite,unqualified|pending_staff|qualified,never infer from automation
+intent,BS Qualified At,contact.bs_qualified_at,DATE,contact,staff only,none,no,life_of_record,overwrite,,staff confirmation only
+escalation,BS Escalation Reason,contact.bs_escalation_reason,SINGLE_OPTIONS,contact,W-7,none,no,life_of_record,overwrite,urgent_language|human_requested|uncertain|complaint|pricing|turn_cap|window_risk,routing reason
+escalation,BS Escalated At,contact.bs_escalated_at,DATE,contact,W-7,none,no,life_of_record,overwrite,,routing timestamp
+escalation,BS Escalation Channel,contact.bs_escalation_channel,TEXT,contact,W-7,none,no,life_of_record,overwrite,,routing channel
+escalation,BS Assigned User,contact.bs_assigned_user,TEXT,contact,W-7,none,no,life_of_record,overwrite,,enabled user ID
+escalation,BS Staff Response At,contact.bs_staff_response_at,DATE,contact,staff action,none,no,life_of_record,write_once,,human SLA only
+messaging,BS Messaging Window Status,contact.bs_messaging_window_status,SINGLE_OPTIONS,contact,W-1/W-2/W-3,none,no,24_months,overwrite,open|expiring|expired|unknown,window control
+dedupe,BS Dedupe Match Method,contact.bs_dedupe_match_method,SINGLE_OPTIONS,contact,intake,none,no,life_of_record,overwrite,platform_identity|phone|email|created|manual_review,first-hit rule
+dedupe,BS Platform Identity,contact.bs_platform_identity,TEXT,contact,intake,identifier,no,24_months,write_once,,platform scoped identity
+bridge,BS Firebase Lead ID,contact.bs_firebase_lead_id,TEXT,contact,W-8/bridge,identifier,no,life_of_record,write_once,,canonical lead ID
+bridge,BS HighLevel Contact ID,contact.bs_highlevel_contact_id,TEXT,contact,W-8/bridge,identifier,no,life_of_record,overwrite,,mirror ID
+outcome,BS Outcome Version,contact.bs_outcome_version,TEXT,contact,W-8,none,no,life_of_record,overwrite,,Firebase outcome version
+outcome,BS Opportunity ID,opportunity.bs_opportunity_id,TEXT,opportunity,W-8,identifier,no,life_of_record,write_once,,HighLevel opportunity ID
+outcome,BS Estimate Scheduled At,opportunity.bs_estimate_scheduled_at,DATE,opportunity,W-8,none,no,life_of_record,overwrite,,Firebase event only
+outcome,BS Job Completed At,opportunity.bs_job_completed_at,DATE,opportunity,W-8,none,no,life_of_record,overwrite,,Firebase event only
+outcome,BS Invoice Collected At,opportunity.bs_invoice_collected_at,DATE,opportunity,W-8,none,no,life_of_record,overwrite,,Firebase event only
+outcome,BS Review Requested At,opportunity.bs_review_requested_at,DATE,opportunity,reputation,none,no,life_of_record,overwrite,,completion-gated request
