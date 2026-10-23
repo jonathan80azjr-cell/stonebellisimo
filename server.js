@@ -421,11 +421,20 @@ function localLeadMatchesSearch(lead, search) {
 }
 
 const localAdminStore = {
+  async getLeadStats() {
+    const [{ summarizeLeadOutcomes }, data] = await Promise.all([
+      import('./src/lead-outcomes.mjs'),
+      readLocalData()
+    ]);
+    return summarizeLeadOutcomes(data.leads);
+  },
+
   async listLeads({ search = '', status = 'all', limit = 25, offset = 0 } = {}) {
+    const { PROJECT_OUTCOMES, projectOutcome } = await import('./src/lead-outcomes.mjs');
     const data = await readLocalData();
     const filtered = data.leads
       .filter(lead => localLeadMatchesSearch(lead, search))
-      .filter(lead => localLeadMatchesStatus(lead, status))
+      .filter(lead => PROJECT_OUTCOMES.includes(status) ? projectOutcome(lead) === status : localLeadMatchesStatus(lead, status))
       .sort((a, b) => String(b.submittedAt || '').localeCompare(String(a.submittedAt || '')));
 
     return {

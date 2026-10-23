@@ -41,6 +41,60 @@ try {
   await page.locator('#signIn').click();
   await page.getByRole('heading', { name: 'Leads & follow-up' }).waitFor();
   await page.locator('.lead-row', { hasText: 'Browser Test Client' }).waitFor();
+  await page.locator('.lead-row', { hasText: 'Browser Test Client' }).click();
+  await page.locator('#salesStatus').waitFor();
+  assert.deepEqual(await page.locator('#salesStatus option:not([disabled])').allTextContents(), ['Estimate Scheduled', 'Job Completed', 'Invoice Collected']);
+  assert.equal(await page.locator('#leadDesignation').count(), 0);
+  assert.equal(await page.locator('#salesStatus').inputValue(), '');
+  await page.locator('#saveBusiness').click();
+  await page.getByText('Choose a growth outcome before saving.', { exact: true }).waitFor();
+
+  const metric = label => page.locator('#leadStats .metric-card').filter({ has: page.locator('span', { hasText: new RegExp(`^${label}$`) }) }).locator('strong');
+  const initialQualified = Number((await metric('Qualified').textContent()).replace(/,/g, ''));
+  const initialCompleted = Number((await metric('Jobs completed').textContent()).replace(/,/g, ''));
+  const initialShare = Number((await metric('Bite Sites share').textContent()).replace(/[$,]/g, ''));
+  async function saveOutcome(outcome) {
+    await page.locator('#salesStatus').selectOption(outcome);
+    const saved = page.waitForResponse(response => response.request().method() === 'PATCH' && response.url().endsWith('/api/admin/leads/browser_lead'));
+    const refreshed = page.waitForResponse(response => response.request().method() === 'GET' && response.url().includes('/api/admin/leads?'));
+    await page.locator('#saveBusiness').click();
+    assert.equal((await saved).status(), 200);
+    await refreshed;
+    await page.waitForFunction(() => !document.getElementById('saveBusiness')?.disabled);
+  }
+  await saveOutcome('Estimate Scheduled');
+  assert.equal(await metric('Qualified').textContent(), String(initialQualified + 1));
+  assert.equal(await metric('Jobs completed').textContent(), String(initialCompleted));
+  assert.equal((await db.collection('leads').doc('browser_lead').get()).data().designation, null);
+
+  await saveOutcome('Job Completed');
+  assert.equal(await metric('Qualified').textContent(), String(initialQualified + 1));
+  assert.equal(await metric('Jobs completed').textContent(), String(initialCompleted + 1));
+
+  await page.locator('#salesStatus').selectOption('Invoice Collected');
+  await page.locator('#saveBusiness').click();
+  await page.getByText('Enter the amount charged to the client before marking this lead completed.', { exact: true }).first().waitFor();
+  assert.equal((await db.collection('leads').doc('browser_lead').get()).data().salesStatus, 'Job Completed');
+  assert.equal(await metric('Jobs completed').textContent(), String(initialCompleted + 1));
+
+  await page.locator('#clientCharge').fill('12345.67');
+  await saveOutcome('Invoice Collected');
+  await saveOutcome('Invoice Collected');
+  assert.equal(await metric('Qualified').textContent(), String(initialQualified + 1));
+  assert.equal(await metric('Jobs completed').textContent(), String(initialCompleted + 1));
+  assert.equal(Number((await metric('Bite Sites share').textContent()).replace(/[$,]/g, '')), initialShare + 1234.57);
+
+  const cards = await page.locator('#leadStats').innerText();
+  await page.locator('#leadStatus').selectOption('Estimate Scheduled');
+  await page.locator('#leadList .empty-state').waitFor();
+  assert.equal(await page.locator('#leadStats').innerText(), cards, 'filters must not change the dashboard totals');
+  await page.locator('#leadStatus').selectOption('all');
+  await page.locator('#salesStatus').waitFor();
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.locator('#salesStatus').waitFor();
+  assert.equal(await page.locator('#salesStatus').inputValue(), 'Invoice Collected');
+  assert.equal(await page.locator('#leadStats').innerText(), cards);
+  if (process.env.SB_SMOKE_SCREENSHOT) await page.screenshot({ path: process.env.SB_SMOKE_SCREENSHOT, fullPage: true });
   await page.locator('[data-tab="analytics"]').first().click();
   await page.getByRole('heading', { name: 'Website analytics' }).waitFor();
   await page.getByRole('heading', { name: 'CTA impressions, clicks & CTR' }).waitFor();

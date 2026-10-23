@@ -27,5 +27,5 @@ input,select,textarea{width:100%;border:1px solid var(--line);border-radius:3px;
 .filter-control span{display:block;margin:0 0 5px;color:var(--muted);font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 .lead-filters{grid-template-columns:minmax(0,1fr) 175px}
 .search-box{align-self:end}
-.business-fields{grid-template-columns:repeat(4,minmax(0,1fr))}
+.business-fields{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media(max-width:680px){.lead-filters{grid-template-columns:1fr}.business-fields{grid-template-columns:1fr}}
