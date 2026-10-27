@@ -11,6 +11,7 @@ import {
   signOut
 } from 'firebase/auth';
 import { PROJECT_OUTCOMES, projectOutcome, summarizeLeadOutcomes } from '../lead-outcomes.mjs';
+import { createMarketingWorkspace } from './marketing.js';
 
 const $ = id => document.getElementById(id);
 const state = {
@@ -82,11 +83,13 @@ function showView(name) {
   const headings = {
     leads: ['Leads & follow-up', 'Client pipeline'],
     analytics: ['Website analytics', 'Engagement & lead intent'],
+    marketing: ['Campaigns & market research', 'A measured path to more jobs'],
     growth: ['Google & social growth', 'Reviewed automation pilot']
   };
   $('pageHeading').textContent = headings[name]?.[0] || 'Dashboard';
   $('pageEyebrow').textContent = headings[name]?.[1] || 'Stone Bellisimo';
   if (name === 'analytics' && !$('analyticsContent').dataset.loaded) loadAnalytics();
+  if (name === 'marketing') marketing.load();
   if (name === 'growth' && !state.growthLoaded) loadGrowth();
 }
 
@@ -218,6 +221,7 @@ async function saveBusinessUpdate(detail) {
     }
     state.leads = state.leads.map(lead => lead.id === leadId ? data.lead : lead);
     detail.lead = data.lead;
+    marketing.invalidate();
     renderLeadStats();
     renderLeadList();
     if (state.selected === leadId && !leadMatchesFilter(data.lead, $('leadStatus').value)) {
@@ -253,6 +257,12 @@ function renderLeadDetail(data) {
   });
   $('clientCharge').addEventListener('input', previewBiteSitesShare);
   $('saveBusiness').addEventListener('click', () => saveBusinessUpdate(data));
+  const marketingButton = document.createElement('button');
+  marketingButton.type = 'button';
+  marketingButton.className = 'button text-button marketing-lead-button';
+  marketingButton.textContent = 'Edit project area & marketing source';
+  marketingButton.addEventListener('click', () => marketing.editLead(lead));
+  $('leadDetail').append(marketingButton);
 }
 
 function composerPayload() {
@@ -786,6 +796,7 @@ async function initialize() {
         return;
       }
       state.user = user;
+      if (!user) marketing.reset();
       $('authLoading').hidden = true;
       $('loginView').hidden = Boolean(user);
       $('dashboard').hidden = !user;
@@ -802,6 +813,12 @@ async function initialize() {
     $('signInGoogle').disabled = true;
   }
 }
+
+const marketing = createMarketingWorkspace({
+  api,
+  toast: showToast,
+  onLeadUpdated: async id => { await loadLeads(); if (id) await selectLead(id); }
+});
 
 $('signInGoogle').addEventListener('click', async () => {
   $('loginError').textContent = '';

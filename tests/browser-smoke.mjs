@@ -124,8 +124,12 @@ try {
   await page.locator('#wzLast').fill('Lead');
   await page.locator('#wzPhone').fill('2015550123');
   await page.locator('#wzEmail').fill('browser.lead@example.com');
+  await page.locator('#wzZip').fill('07087');
+  await page.locator('#wzDiscovery').selectOption('google');
   await page.locator('#wz5submit').click();
   await page.getByRole('heading', { name: 'Request sent!' }).waitFor();
+  assert.equal(submittedPayload.postalCode, '07087');
+  assert.equal(submittedPayload.discoverySource, 'google');
   assert.ok(submittedPayload.attribution.visitorId);
   assert.ok(submittedPayload.attribution.sessionId);
   assert.equal(submittedPayload.attribution.utmSource, 'browser');

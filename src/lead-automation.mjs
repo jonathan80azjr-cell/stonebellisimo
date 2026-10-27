@@ -114,6 +114,8 @@ export function validateContact(body) {
     projectType: normalizeText(body?.projectType, FIELD_LIMITS.projectType),
     material: normalizeText(body?.material, FIELD_LIMITS.material),
     source: normalizeText(body?.source, FIELD_LIMITS.source),
+    postalCode: /^\d{5}(?:-\d{4})?$/.test(String(body?.postalCode || '').trim()) ? String(body.postalCode).trim() : '',
+    discoverySource: ['google', 'facebook', 'instagram', 'referral', 'lead_provider', 'showroom', 'other'].includes(body?.discoverySource) ? body.discoverySource : '',
     message: normalizeText(stripSubmissionMetadata(body?.message), FIELD_LIMITS.message, { preserveLines: true })
   };
 
@@ -798,6 +800,8 @@ function createLeadPayload(contact, request, env) {
     projectType: contact.projectType || 'Not specified',
     material: contact.material || 'Not specified',
     source: contact.source || 'Website Contact Form',
+    postalCode: contact.postalCode || null,
+    discoverySource: contact.discoverySource || null,
     message: contact.message || '',
     submittedAt: submittedAt.toISOString(),
     businessStatus: 'new',
