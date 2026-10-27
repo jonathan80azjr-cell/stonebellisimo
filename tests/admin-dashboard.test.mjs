@@ -10,6 +10,41 @@ function updateRequest(body) {
   });
 }
 
+test('lead lists return dashboard totals independently of search, filter and pagination', async () => {
+  const stats = { total: 503, qualified: 3, completed: 2, biteSitesShareCents: 148_457 };
+  const response = await handleAdminRequest(
+    new Request('https://example.com/api/admin/leads?search=Kitchen&status=Estimate%20Scheduled&limit=1'),
+    {},
+    { firebaseAuthorized: true, adminStore: {
+      async listLeads(params) {
+        assert.equal(params.search, 'Kitchen');
+        assert.equal(params.status, 'Estimate Scheduled');
+        return { count: 1, leads: [{ id: 'booked', salesStatus: 'Estimate Scheduled' }] };
+      },
+      async getLeadStats() { return stats; }
+    } }
+  );
+  const result = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(result.count, 1);
+  assert.deepEqual(result.stats, stats);
+});
+
+test('booking an estimate automatically sets project status and clears a manual designation', async () => {
+  let saved;
+  const response = await handleAdminRequest(
+    updateRequest({ salesStatus: 'Estimate Scheduled', designation: null, clientCharge: '' }),
+    {},
+    { firebaseAuthorized: true, adminStore: {
+      async updateLeadBusiness(id, update) { saved = { id, ...update }; return saved; }
+    } }
+  );
+  assert.equal(response.status, 200);
+  assert.equal(saved.businessStatus, 'in_progress');
+  assert.equal(saved.stageTimestampField, 'estimateScheduledAt');
+  assert.equal(saved.designation, null);
+});
+
 test('completed lead updates calculate and store the Bite Sites 10% share in cents', async () => {
   let saved;
   const adminStore = {

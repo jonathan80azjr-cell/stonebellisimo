@@ -21,6 +21,7 @@ import {
   sha256Hex
 } from './lead-automation.mjs';
 import { GROWTH_CLIENT } from './growth-client-config.mjs';
+import { summarizeLeadOutcomes } from './lead-outcomes.mjs';
 import {
   LEAD_DESIGNATION_VALUES,
   normalizeLeadDesignation
@@ -242,11 +243,15 @@ function readLeadListParams(request) {
 async function listLeads(request, env, options = {}) {
   const params = readLeadListParams(request);
   if (options.adminStore?.listLeads) {
-    const result = await options.adminStore.listLeads(params);
+    const [result, stats] = await Promise.all([
+      options.adminStore.listLeads(params),
+      options.adminStore.getLeadStats?.()
+    ]);
     return json({
       success: true,
       count: result.count,
       leads: result.leads,
+      stats: stats || null,
       nextCursor: result.nextCursor || null
     });
   }
@@ -268,7 +273,7 @@ async function listLeads(request, env, options = {}) {
       submittedAt, immediateEmailSentAt, feedbackEmailDueAt, feedbackEmailSentAt,
       feedbackStatus, feedbackEmailAttemptCount, feedbackEmailLastError, designation, rating,
       feedbackComment, feedbackReceivedAt, feedbackSource, postmarkImmediateMessageId,
-      postmarkFeedbackMessageId,
+      postmarkFeedbackMessageId, salesStatus, businessStatus, clientChargeCents, biteSitesShareCents,
       (
         SELECT eventType || '|' || status || '|' || COALESCE(createdAt, '')
         FROM email_events
@@ -289,9 +294,11 @@ async function listLeads(request, env, options = {}) {
     LIMIT ? OFFSET ?
   `).bind(...where.params, limit, offset).all();
 
+  const allLeads = await db.prepare('SELECT salesStatus, businessStatus, biteSitesShareCents FROM leads').all();
   return json({
     success: true,
     count: Number(countRow?.count || 0),
+    stats: summarizeLeadOutcomes(allLeads.results || []),
     leads: result.results || []
   });
 }

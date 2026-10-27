@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { FieldPath, FieldValue } from 'firebase-admin/firestore';
 import { GROWTH_CLIENT } from './growth-client-config.mjs';
 import { leadHasDesignation } from './lead-designations.mjs';
+import { PROJECT_OUTCOMES, projectOutcome, summarizeLeadOutcomes } from './lead-outcomes.mjs';
 
 const COLLECTIONS = {
   leads: 'leads',
@@ -27,6 +28,7 @@ function matchesStatus(lead, status) {
   if (['new', 'progress_completed', 'needs_feedback', 'feedback_sent', 'feedback_received', 'email_issue'].includes(status)) {
     return leadHasDesignation(lead, status);
   }
+  if (PROJECT_OUTCOMES.includes(status)) return projectOutcome(lead) === status;
   if (SALES_STATUSES.has(status)) return lead.salesStatus === status;
   if (['new', 'in_progress', 'completed'].includes(status)) {
     return (lead.businessStatus || 'new') === status;
@@ -451,6 +453,20 @@ export function createFirestoreStore(db) {
         receivedAt: event.receivedAt || new Date().toISOString(),
         createdAt: event.createdAt || new Date().toISOString()
       });
+    },
+
+    async getLeadStats() {
+      const totals = summarizeLeadOutcomes([]);
+      let cursor = null;
+      for (;;) {
+        let query = leads.orderBy(FieldPath.documentId()).select('salesStatus', 'businessStatus', 'stageTimestamps', 'biteSitesShareCents').limit(500);
+        if (cursor) query = query.startAfter(cursor);
+        const page = await query.get();
+        summarizeLeadOutcomes(rows(page), totals);
+        if (page.size < 500) break;
+        cursor = page.docs.at(-1);
+      }
+      return totals;
     },
 
     async listLeads({ search = '', status = 'all', limit = 25, cursor = '' } = {}) {

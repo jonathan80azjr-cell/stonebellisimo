@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/admin.css?v=3">
+  <link rel="stylesheet" href="/assets/css/admin.css?v=6">
 </head>
 <body>
   <div id="authLoading" class="auth-loading" role="status">
@@ -72,6 +72,10 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18M7 16l4-5 4 3 5-7"/></svg>
           <span>Analytics</span>
         </button>
+        <button class="side-tab" data-tab="marketing" role="tab" aria-selected="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l12-7v14L7 12m0 0 2 8h4l-3-7M3 9v6"/></svg>
+          <span>Campaigns &amp; research</span>
+        </button>
         <button class="side-tab" data-tab="growth" role="tab" aria-selected="false">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-8M22 19V3M2 19h21"/></svg>
           <span>Growth pilot</span>
@@ -99,6 +103,7 @@
       <div class="mobile-tabs" role="tablist" aria-label="Dashboard sections">
         <button class="active" data-tab="leads" role="tab" aria-selected="true">Leads</button>
         <button data-tab="analytics" role="tab" aria-selected="false">Analytics</button>
+        <button data-tab="marketing" role="tab" aria-selected="false">Campaigns</button>
         <button data-tab="growth" role="tab" aria-selected="false">Growth</button>
       </div>
 
@@ -110,7 +115,7 @@
               <div><span class="eyebrow">Inbox</span><h2>Client inquiries</h2><p id="leadCount">Loading leads…</p></div>
               <div class="lead-filters">
                 <label class="search-box"><span class="sr-only">Search leads</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="leadSearch" type="search" placeholder="Search name, phone, project…"></label>
-                <label class="filter-control"><span>Designation</span><select id="leadStatus"><option value="all">All leads</option><optgroup label="Lead designations"><option value="new">New</option><option value="progress_completed">Progress Completed</option><option value="needs_feedback">Needs Feedback</option><option value="feedback_sent">Feedback Sent</option><option value="feedback_received">Feedback Received</option><option value="email_issue">Email Issue</option></optgroup><optgroup label="Pipeline stage"><option value="New Lead">New Lead</option><option value="Qualified">Qualified</option><option value="Estimate Scheduled">Estimate Scheduled</option><option value="Job Completed">Job Completed</option><option value="Invoice Collected">Invoice Collected</option><option value="Repeat / Review">Repeat / Review</option><option value="Lost">Lost</option></optgroup><optgroup label="Legacy status"><option value="in_progress">Legacy in progress</option><option value="completed">Legacy completed</option><option value="email_failed">Legacy email issue</option></optgroup></select></label>
+                <label class="filter-control"><span>Growth outcome</span><select id="leadStatus"><option value="all">All leads</option><option value="Estimate Scheduled">Estimate Scheduled</option><option value="Job Completed">Job Completed</option><option value="Invoice Collected">Invoice Collected</option></select></label>
               </div>
             </div>
             <div id="leadList" class="lead-list" aria-live="polite"></div>
@@ -130,6 +135,12 @@
           <div class="range-control" aria-label="Traffic class"><button data-traffic="production" class="active" type="button">Business traffic</button><button data-traffic="all" type="button">Include QA tests</button></div>
         </div>
         <div id="analyticsContent" aria-live="polite"></div>
+      </section>
+
+      <section data-view="marketing" class="view marketing-view" hidden>
+        <div class="marketing-toolbar"><div><span class="eyebrow">Measure the work that wins work</span><h2>One clear plan. Real project outcomes.</h2><p>Research your sources and service areas, plan a focused campaign, and follow the results through to collected invoices.</p></div><div class="marketing-tools"><label>Lead cohort<select id="marketingRange"><option value="30">Last 30 days</option><option value="90" selected>Last 90 days</option><option value="180">Last 180 days</option><option value="365">Last year</option></select></label><button id="refreshMarketing" class="button secondary" type="button">Refresh research</button><button id="exportMarketing" class="button text-button" type="button">Download report</button></div></div>
+        <div class="marketing-tabs" role="tablist" aria-label="Campaign workspace"><button data-marketing-tab="research" class="active" role="tab" aria-selected="true">Market research</button><button data-marketing-tab="campaigns" role="tab" aria-selected="false">Campaign planner</button></div>
+        <div id="marketingContent" aria-live="polite"></div>
       </section>
 
       <section data-view="growth" class="view growth-view" hidden>
@@ -237,6 +248,6 @@
   </template>
 
   <div id="toast" class="toast" role="status"></div>
-  <script src="/assets/js/admin.js?v=4" defer></script>
+  <script src="/assets/js/admin.js?v=6" defer></script>
 </body>
 </html>

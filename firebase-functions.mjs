@@ -21,6 +21,7 @@ import {
   SECURITY_HEADERS
 } from './src/lead-automation.mjs';
 import { handleAdminRequest } from './src/admin-dashboard.mjs';
+import { handleMarketingRequest, refreshMarketingSnapshot } from './src/marketing-admin.mjs';
 import { handleGoogleReviewsRequest } from './src/google-reviews.mjs';
 import { createFirestoreStore } from './src/firebase-store.mjs';
 import { createGrowthStore } from './src/growth-store.mjs';
@@ -249,6 +250,7 @@ async function routeRequest(request) {
     }
     if (url.pathname === '/api/admin/analytics') return handleAdminAnalytics(request, db);
     if (url.pathname === '/api/admin/search-console') return handleAdminSearchConsole(request, db, env);
+    if (url.pathname.startsWith('/api/admin/marketing/')) return handleMarketingRequest(request, db, { actor: admin.token.email || admin.token.uid });
     if (url.pathname.startsWith('/api/admin/growth/')) {
       if (!isGrowthOwnerEmail(admin.token.email)) {
         return json({ success: false, message: `Growth pilot controls are restricted to ${GROWTH_CLIENT.ownerNames.join(' and ')}.` }, 403);
@@ -297,6 +299,10 @@ async function routeRequest(request) {
   if (url.pathname === '/api/performance') return new Response(null, { status: 204, headers: SECURITY_HEADERS });
   return json({ success: false, message: 'Endpoint not found.' }, 404);
 }
+
+export const marketingResearchSchedule = onSchedule({ schedule: '0 8 * * *', timeZone: 'America/New_York', retryCount: 2 }, async () => {
+  await refreshMarketingSnapshot(db);
+});
 
 export const siteApi = onRequest({ secrets: SITE_API_SECRET_PARAMETERS }, async (request, response) => {
   try {

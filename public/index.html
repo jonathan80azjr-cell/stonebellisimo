@@ -476,6 +476,8 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 @media(max-width:1024px){.story-grid{grid-template-columns:1fr;gap:52px}.mat-modal{grid-template-columns:1fr}.story-imgs{max-width:520px}.contact-grid{grid-template-columns:1fr;gap:36px;max-width:720px}.map-embed iframe{min-height:360px}.areas-layout{grid-template-columns:1fr}.radius-card{min-height:420px}}
 @media(max-width:860px){.prod-grid{grid-template-columns:1fr 1fr}.prod-card-lg{grid-column:span 2}.perks-grid{grid-template-columns:1fr}.perk:first-child{grid-column:span 1}.process-steps{grid-template-columns:1fr 1fr;gap:36px}.process-steps::before{display:none}.trust-w{grid-template-columns:1fr 1fr}.nl{display:none}.n-ham{display:flex}.reviews-grid{grid-template-columns:1fr}.review-ask{grid-template-columns:1fr;padding:30px 26px}.review-ask-action{justify-self:start}.pref-source{grid-template-columns:1fr;padding:28px 26px;gap:16px}.pref-source-btn{justify-self:start}.insta-grid{grid-template-columns:repeat(3,1fr)}.wz-opts{grid-template-columns:repeat(2,1fr)}.wz-row{grid-template-columns:1fr}.areas-layout{gap:36px}}
 @media(max-width:600px){.s{padding:80px 20px}.prod-grid{grid-template-columns:1fr}.prod-card-lg{grid-column:span 1;aspect-ratio:4/3}.story-imgs{grid-template-columns:1fr}.story-img-main{aspect-ratio:3/2;grid-row:auto}.story-img-sm{display:none}.gallery{padding:80px 0}.g-img{width:300px;height:220px}.foot-top,.foot-bottom{flex-direction:column;align-items:flex-start}#chat-panel{width:calc(100vw - 56px);right:28px}.insta-grid{grid-template-columns:repeat(2,1fr)}}
+
+
 </style>
 <script type="application/ld+json">
 {
@@ -939,6 +941,10 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
         <div class="wz-fg">
           <label for="wzAddr">Your Address / City (optional - for scheduling)</label>
           <input type="text" id="wzAddr" placeholder="e.g. Union City, NJ" autocomplete="street-address">
+          </div>
+        <div class="wz-row">
+            <div class="wz-fg"><label for="wzZip">Project ZIP (optional)</label><input id="wzZip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" pattern="[0-9]{5}(-[0-9]{4})?" placeholder="e.g. 07087"></div>
+            <div class="wz-fg"><label for="wzDiscovery">How did you find us? (optional)</label><select id="wzDiscovery"><option value="">Select a source</option><option value="google">Google</option><option value="facebook">Facebook</option><option value="instagram">Instagram</option><option value="referral">A recommendation</option><option value="lead_provider">A paid lead service</option><option value="showroom">Showroom / walk-in</option><option value="other">Other</option></select></div>
         </div>
         <div class="wz-fg">
           <label for="wzNote">Anything else we should know? (optional)</label>
@@ -1730,6 +1736,8 @@ async function submitWizard(){
     lastName: l.value.trim(),
     email: e.value.trim(),
     phone: p.value.trim(),
+    postalCode: document.getElementById('wzZip').value.trim(),
+    discoverySource: document.getElementById('wzDiscovery').value,
     projectType: getProjectValue() || 'Not specified',
     material: wzData.material || 'Not specified',
     message: projectSummaryStr,
