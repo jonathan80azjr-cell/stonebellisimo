@@ -1,0 +1,15 @@
+{
+  "name": "stone-bellisimo-voice-agent",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.2.0",
+    "ws": "^8.18.3"
+  }
+}

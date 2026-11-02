@@ -126,6 +126,8 @@ try {
   await page.locator('#wzEmail').fill('browser.lead@example.com');
   await page.locator('#wzZip').fill('07087');
   await page.locator('#wzDiscovery').selectOption('google');
+  await page.locator('#wzContactMethod').selectOption('call');
+  await page.locator('#wzPhoneContactConsent').check();
   await page.locator('#wz5submit').click();
   await page.getByRole('heading', { name: 'Request sent!' }).waitFor();
   assert.equal(submittedPayload.postalCode, '07087');
@@ -134,6 +136,9 @@ try {
   assert.ok(submittedPayload.attribution.sessionId);
   assert.equal(submittedPayload.attribution.utmSource, 'browser');
   assert.equal(submittedPayload.attribution.utmCampaign, 'dashboard-test');
+  assert.equal(submittedPayload.preferredContactMethod, 'call');
+  assert.equal(submittedPayload.aiCallConsent, true);
+  assert.ok(submittedPayload.contactTimezone);
 
   await page.unroute('**/api/contact');
   await page.route('**/api/analytics/events', route => route.abort());

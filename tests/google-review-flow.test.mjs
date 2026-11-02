@@ -9,6 +9,7 @@ import {
 } from '../src/lead-automation.mjs';
 import { createFirestoreStore } from '../src/firebase-store.mjs';
 import { renderGoogleReviewRequestEmail } from '../src/email/render.mjs';
+import { nextPermittedCallTime } from '../src/twilio-automation.mjs';
 
 const env = { FEEDBACK_TOKEN_SECRET: 'review-flow-test-secret', POSTMARK_MOCK_MODE: 'true', PUBLIC_SITE_URL: 'https://stonebellisimollc.com' };
 
@@ -37,6 +38,7 @@ function transactionDb(seed = {}) {
 
 test('new contact leads do not enter the legacy form-age feedback scheduler', async () => {
   let created;
+  const callbackAt = nextPermittedCallTime(new Date(Date.now() + 60 * 60 * 1000), 'America/New_York').toISOString();
   const store = {
     countRecentByIpHash: async () => 0,
     createLead: async lead => { created = lead; },
@@ -45,7 +47,11 @@ test('new contact leads do not enter the legacy form-age feedback scheduler', as
   };
   const response = await handleContactRequest(new Request('https://stonebellisimollc.com/api/contact', {
     method: 'POST', headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ firstName: 'Ada', lastName: 'Stone', email: 'ada@example.com', phone: '2015550101' })
+    body: JSON.stringify({
+      firstName: 'Ada', lastName: 'Stone', email: 'ada@example.com', phone: '2015550101',
+      preferredContactMethod: 'scheduled_call', aiCallConsent: true,
+      preferredCallbackAt: callbackAt, preferredCallbackTimezone: 'America/New_York'
+    })
   }), env, { store });
   assert.equal(response.status, 200);
   assert.equal(created.feedbackEmailDueAt, null);
@@ -53,6 +59,13 @@ test('new contact leads do not enter the legacy form-age feedback scheduler', as
   assert.equal(created.salesStatus, 'New Lead');
   assert.equal(created.businessStatus, 'new');
   assert.equal(created.stageTimestamps.newLeadAt, created.submittedAt);
+  assert.equal(created.preferredContactMethod, 'scheduled_call');
+  assert.equal(created.phoneE164, '+12015550101');
+  assert.equal(created.aiCallConsent, true);
+  assert.equal(created.phoneContactConsent, true);
+  assert.equal(created.aiCallConsentTextVersion, 'ai_call_transcript_v1');
+  assert.equal(created.preferredCallbackAt, callbackAt);
+  assert.equal(created.preferredCallbackTimezone, 'America/New_York');
 });
 
 test('controlled organic attribution is promoted into canonical lead fields', async () => {
@@ -70,7 +83,7 @@ test('controlled organic attribution is promoted into canonical lead fields', as
   };
   const response = await handleContactRequest(new Request('https://stonebellisimollc.com/api/contact', {
     method: 'POST', headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ firstName: 'Ada', lastName: 'Stone', email: 'ada@example.com', phone: '2015550101', attribution })
+    body: JSON.stringify({ firstName: 'Ada', lastName: 'Stone', email: 'ada@example.com', phone: '2015550101', preferredContactMethod: 'email', attribution })
   }), env, { store, sanitizeAttribution: value => value });
   assert.equal(response.status, 200);
   assert.equal(created.sourcePlatform, 'instagram');
@@ -100,7 +113,7 @@ test('a Google Business Profile click days earlier still earns the lead credit',
   };
   const response = await handleContactRequest(new Request('https://stonebellisimollc.com/api/contact', {
     method: 'POST', headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ firstName: 'Bea', lastName: 'Stone', email: 'bea@example.com', phone: '2015550102', attribution })
+    body: JSON.stringify({ firstName: 'Bea', lastName: 'Stone', email: 'bea@example.com', phone: '2015550102', preferredContactMethod: 'email', attribution })
   }), env, { store, sanitizeAttribution: value => value });
   assert.equal(response.status, 200);
   assert.equal(created.sourcePlatform, 'gbp');

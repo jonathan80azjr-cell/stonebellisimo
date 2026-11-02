@@ -12,6 +12,9 @@ export const ADMIN_EVENT_PREFIX = 'admin_';
 
 export const NOTIFICATION_TYPES = Object.freeze({
   newLead: 'admin_new_lead',
+  aiCallTranscript: 'admin_ai_call_transcript',
+  inboundSms: 'admin_inbound_sms',
+  twilioFollowupFailure: 'admin_twilio_followup_failure',
   customerReply: 'admin_customer_reply',
   deliveryProblem: 'admin_delivery_problem',
   emailFailure: 'admin_email_failure',
@@ -50,12 +53,12 @@ function dashboardUrl(env) {
   return `${siteUrl(env)}/admin/`;
 }
 
-function formatDateTime(value) {
+function formatDateTime(value, timeZone = 'America/New_York') {
   if (!value) return '';
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return String(value);
   return date.toLocaleString('en-US', {
-    timeZone: 'America/New_York',
+    timeZone,
     dateStyle: 'medium',
     timeStyle: 'short'
   });
@@ -85,8 +88,14 @@ export async function claimNotificationSlot(db, key, cooldownMs, nowMs) {
   }
 }
 
-export async function sendAdminNotification({ env, store, type, alert, lead = null, replyTo = '', metadata = {} }) {
-  const recipients = notificationRecipients(env);
+export async function sendAdminNotification({ env, store, type, alert, lead = null, replyTo = '', metadata = {}, additionalRecipients = [] }) {
+  const notificationsEnabled = String(env?.ADMIN_NOTIFICATIONS_ENABLED ?? 'true').toLowerCase() !== 'false';
+  const recipients = notificationsEnabled
+    ? [...new Set([
+      ...notificationRecipients(env),
+      ...additionalRecipients.map(value => String(value || '').trim().toLowerCase()).filter(Boolean)
+    ])]
+    : [];
   if (!recipients.length) {
     console.info(JSON.stringify({ message: 'Admin notification skipped: no recipients', type }));
     return { sent: false, reason: 'no_recipients' };
@@ -120,15 +129,28 @@ export function buildNewLeadAlert(lead = {}, env = {}) {
   const name = lead.customerName || `${lead.firstName || ''} ${lead.lastName || ''}`.trim() || 'A new visitor';
   const attribution = lead.attribution || {};
   const campaign = [attribution.utmSource, attribution.utmMedium, attribution.utmCampaign].filter(Boolean).join(' / ');
+  const contactMethod = {
+    call: 'Call as soon as possible',
+    text: 'Text',
+    scheduled_call: 'Call at requested time',
+    email: 'Email only'
+  }[lead.preferredContactMethod] || 'Not specified';
+  const callbackTime = lead.preferredCallbackAt
+    ? formatDateTime(lead.preferredCallbackAt, lead.preferredCallbackTimezone || 'America/New_York')
+    : '';
+  const phoneContactAllowed = Boolean(lead.phoneContactConsent);
 
   return renderInternalAlertEmail({
     eyebrow: 'New lead',
     title: `New lead: ${name}`,
-    intro: `${name} just submitted the ${lead.source || 'website'} form. Reply to this email to answer them directly.`,
+    intro: `${name} just submitted the ${lead.source || 'website'} form. Requested follow-up: ${contactMethod}. Reply to this email to answer them directly.`,
     rows: [
       ['Name', name],
       ['Phone', lead.phone],
       ['Email', lead.email],
+      ['Requested follow-up', contactMethod],
+      ['Phone contact consent', phoneContactAllowed ? 'Granted for this inquiry' : 'Not granted'],
+      ['Requested callback time', callbackTime],
       ['Project type', lead.projectType],
       ['Material', lead.material],
       ['Message', lead.message],
@@ -138,9 +160,76 @@ export function buildNewLeadAlert(lead = {}, env = {}) {
       ['Referrer', attribution.referrerHost],
       ['Device', attribution.deviceCategory && attribution.deviceCategory !== 'unknown' ? attribution.deviceCategory : '']
     ],
-    ctaLabel: lead.phone ? `Call ${lead.phone}` : 'Open dashboard',
-    ctaUrl: lead.phone ? `tel:${String(lead.phone).replace(/[^0-9+]/g, '')}` : dashboardUrl(env),
-    note: `Lead ${lead.id || ''} - open the dashboard at ${dashboardUrl(env)} for full history.`
+    ctaLabel: phoneContactAllowed && lead.phone && lead.preferredContactMethod === 'text'
+      ? `Text ${lead.phone}`
+      : phoneContactAllowed && lead.phone
+        ? `Call ${lead.phone}`
+        : 'Open dashboard',
+    ctaUrl: phoneContactAllowed && lead.phone
+      ? `${lead.preferredContactMethod === 'text' ? 'sms' : 'tel'}:${String(lead.phone).replace(/[^0-9+]/g, '')}`
+      : dashboardUrl(env),
+    note: `Lead ${lead.id || ''} - requested callback times are not confirmed until staff confirms. Open the dashboard at ${dashboardUrl(env)} for full history.`
+  });
+}
+
+export function buildLeadCallTranscriptAlert(lead = {}, env = {}) {
+  const transcript = String(lead.aiCallTranscript || '').slice(0, 12_000);
+  return renderInternalAlertEmail({
+    eyebrow: 'AI call completed',
+    title: `Call notes: ${lead.customerName || lead.phone || 'New lead'}`,
+    intro: 'The consented AI-assisted call has ended. The transcript is included below; open the lead dashboard for the complete transcript and history.',
+    rows: [
+      ['Lead', lead.customerName],
+      ['Phone', lead.phone],
+      ['Project', lead.projectType],
+      ['Call outcome', lead.aiCallStatus],
+      ['Requested callback', lead.preferredCallbackAt ? formatDateTime(lead.preferredCallbackAt, lead.preferredCallbackTimezone || 'America/New_York') : ''],
+      ['Transcript', transcript || 'No transcript text was captured.']
+    ],
+    ctaLabel: 'Open lead dashboard',
+    ctaUrl: dashboardUrl(env),
+    note: `Lead ${lead.id || ''}. Transcript storage follows the recorded consent version ${lead.aiCallTranscriptConsentVersion || 'not recorded'}.`
+  });
+}
+
+export function buildInboundSmsAlert(event = {}, env = {}) {
+  return renderInternalAlertEmail({
+    eyebrow: 'Customer text',
+    title: `Text from ${event.from || 'a customer'}`,
+    intro: event.leadId
+      ? 'A customer replied to Stone Bellisimo’s follow-up text.'
+      : 'An inbound text could not be matched to a recent lead.',
+    rows: [
+      ['From', event.from],
+      ['Lead ID', event.leadId],
+      ['Message', event.body],
+      ['Received', formatDateTime(event.receivedAt)]
+    ],
+    ctaLabel: 'Open lead dashboard',
+    ctaUrl: dashboardUrl(env),
+    note: 'Reply STOP to opt out. This alert does not send an automated reply.'
+  });
+}
+
+export function buildTwilioFollowupFailureAlert(lead = {}, env = {}) {
+  const status = lead.aiCallStatus === 'uncertain' || lead.smsStatus === 'uncertain' ? 'uncertain' : 'failed';
+  return renderInternalAlertEmail({
+    eyebrow: 'Lead follow-up needs attention',
+    tone: 'urgent',
+    title: `Twilio ${lead.preferredContactMethod === 'text' ? 'text' : 'call'} ${status}`,
+    intro: 'The automated follow-up could not be confirmed. Check the lead and Twilio call/message logs before trying again; an uncertain result is not retried automatically to avoid duplicate contact.',
+    rows: [
+      ['Lead', lead.customerName],
+      ['Phone', lead.phone],
+      ['Contact preference', lead.preferredContactMethod],
+      ['Call status', lead.aiCallStatus],
+      ['Text status', lead.smsStatus],
+      ['Provider error', lead.aiCallStatusLastError || lead.smsStatusLastError],
+      ['Requested callback', lead.preferredCallbackAt ? formatDateTime(lead.preferredCallbackAt, lead.preferredCallbackTimezone || 'America/New_York') : '']
+    ],
+    ctaLabel: 'Open lead dashboard',
+    ctaUrl: dashboardUrl(env),
+    note: `Lead ${lead.id || ''}. Verify consent and the provider result before attempting another call or message.`
   });
 }
 

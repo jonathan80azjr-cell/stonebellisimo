@@ -23,7 +23,10 @@ Staff alerts run on Firebase only, as Firestore triggers and scheduled functions
 
 | Alert | Trigger | Rate limit |
 | --- | --- | --- |
-| New lead | `leads/{leadId}` created | Once per lead; `trafficClass: test` submissions are skipped |
+| New lead | `leads/{leadId}` created | Once per lead; `trafficClass: test` submissions are skipped; sent to the admin allowlist and `BUSINESS_NOTIFICATION_EMAIL` |
+| AI-call transcript | Consented Twilio call transcript saved to `leads/{leadId}` | Once per call; sent to the admin allowlist and `BUSINESS_NOTIFICATION_EMAIL` |
+| Inbound SMS | `twilio_sms_events/{messageSid}` created | Once per Twilio message; opt-outs are recorded and not alerted as ordinary replies |
+| Twilio follow-up failure | Call/text status changes to a failed, unanswered, or uncertain state | Once per failure state; uncertain provider writes are never retried automatically |
 | Unanswered reply | `postmark_inbound_events/{eventId}` created with status `unmatched`, `invalid_reference`, or `expired_reference` | Once per event |
 | Delivery problem | `postmark_delivery_events/{eventId}` created for a hard bounce, spam complaint, or unsubscribe | Once per event |
 | Email send failure | `email_events/{eventId}` created with status `failed` | One per hour |
@@ -48,7 +51,9 @@ Replies that *do* match a lead already notify through the feedback path, which i
 
 Recipients default to the admin allowlist in `src/admin-accounts.mjs` plus anything in `SB_ADMIN_EMAILS`, so whoever can sign in to the dashboard gets the alerts.
 
-`BUSINESS_NOTIFICATION_EMAIL` previously received the feedback notification on its own and is no longer read by any code path. It is still defined in the env files as documentation of the old routing; delete it once the notification list is confirmed in production. `BUSINESS_REPLY_TO_EMAIL` is unaffected and still sets the reply address on customer confirmation emails.
+`BUSINESS_NOTIFICATION_EMAIL` is an additional recipient for new-lead alerts; it defaults to `cesaryunda@hotmail.com` in the Firebase runtime. `BUSINESS_REPLY_TO_EMAIL` still sets the reply address on customer confirmation emails.
+
+New website leads include their selected follow-up method, choice-specific phone consent, and any requested callback time in the new-lead alert. Twilio call/text sending is implemented but remains disabled until its consent version and provider settings are explicitly approved; see [HIGH_SPEED_TO_LEAD.md](./HIGH_SPEED_TO_LEAD.md) for deployment gates.
 
 ## D1 Setup
 

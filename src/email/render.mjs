@@ -152,8 +152,25 @@ export function renderImmediateConfirmationEmail({ lead }) {
   const customerName = lead.customerName || `${lead.firstName || ''} ${lead.lastName || ''}`.trim() || 'there';
   const subject = 'We received your Stone Bellisimo request';
   const message = customerVisibleMessage(lead.message);
+  const phoneConsentGranted = lead.phoneContactConsent === true;
+  const callbackTime = lead.preferredCallbackAt
+    ? new Date(lead.preferredCallbackAt).toLocaleString('en-US', {
+      timeZone: lead.preferredCallbackTimezone || 'America/New_York',
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    })
+    : '';
+  const followUpMessage = phoneConsentGranted && lead.preferredContactMethod === 'call'
+    ? 'You asked for a phone call. The team has been notified and will follow up as soon as available.'
+    : phoneConsentGranted && lead.preferredContactMethod === 'text'
+      ? 'You asked for a text. The team has been notified and will follow up using that preference.'
+      : phoneConsentGranted && lead.preferredContactMethod === 'scheduled_call'
+        ? `You requested a call for ${callbackTime} (${lead.preferredCallbackTimezone}). This is a request, not a confirmed appointment; a team member will contact you to confirm the time.`
+        : lead.preferredContactMethod === 'email'
+          ? 'You asked for email-only follow-up. Our team will respond by email.'
+          : 'Our team has received your request and will review it shortly.';
   const bodyHtml = `
-    <p style="margin:0 0 16px;font:400 16px/1.75 Arial,sans-serif;color:${COLORS.ink};">Hi ${escapeHtml(customerName)}, thank you for reaching out to Stone Bellisimo. We received your project request and our team will review it shortly. Cesar, Cristian, or Bella may contact you to help schedule your free estimate and answer any questions.</p>
+    <p style="margin:0 0 16px;font:400 16px/1.75 Arial,sans-serif;color:${COLORS.ink};">Hi ${escapeHtml(customerName)}, thank you for reaching out to Stone Bellisimo. We received your project request. ${escapeHtml(followUpMessage)}</p>
     <p style="margin:0;font:400 15px/1.75 Arial,sans-serif;color:${COLORS.muted};">We are a family-owned stone fabrication team specializing in quartz, granite, marble, quartzite, porcelain, and custom countertop work throughout Union City and nearby New Jersey communities.</p>
     ${summaryRows(lead)}
     <div style="margin-top:26px;padding:22px;border-radius:14px;background:${COLORS.goldPale};border:1px solid ${COLORS.border};">
@@ -166,7 +183,7 @@ export function renderImmediateConfirmationEmail({ lead }) {
   const text = [
     `Hi ${customerName},`,
     '',
-    'Thank you for reaching out to Stone Bellisimo. We received your project request and our team will review it shortly. Cesar, Cristian, or Bella may contact you to help schedule your free estimate and answer any questions.',
+    `Thank you for reaching out to Stone Bellisimo. We received your project request. ${followUpMessage}`,
     '',
     'Project summary:',
     lead.projectType ? `Project type: ${lead.projectType}` : '',

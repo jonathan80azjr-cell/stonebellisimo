@@ -6,7 +6,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { onRequest } from 'firebase-functions/v2/https';
-import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { onDocumentCreated, onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { beforeUserCreated, beforeUserSignedIn, HttpsError } from 'firebase-functions/v2/identity';
 import { defineSecret, defineString } from 'firebase-functions/params';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
@@ -29,6 +29,14 @@ import { handleGrowthAdminRequest, isGrowthOwnerEmail } from './src/growth-admin
 import { handleHighLevelEvents } from './src/growth-integration.mjs';
 import { processGrowthSla, sendGrowthOwnerAlert } from './src/growth-notifications.mjs';
 import { processPublishingQueue } from './src/growth-publishing.mjs';
+import {
+  enqueueLeadFollowup,
+  handleTwilioCallStatusWebhook,
+  handleTwilioInboundSms,
+  handleTwilioMessageStatusWebhook,
+  handleTwilioVoiceWebhook,
+  processDueTwilioFollowups
+} from './src/twilio-automation.mjs';
 import { GROWTH_CLIENT } from './src/growth-client-config.mjs';
 import {
   handleAdminAnalytics,
@@ -49,9 +57,12 @@ import {
   buildCustomerReplyAlert,
   buildDeliveryProblemAlert,
   buildEmailFailureAlert,
+  buildInboundSmsAlert,
+  buildLeadCallTranscriptAlert,
   buildNewLeadAlert,
   buildNoLeadsAlert,
   buildSearchConsoleFailureAlert,
+  buildTwilioFollowupFailureAlert,
   buildWeeklyDigestAlert,
   claimNotificationSlot,
   COOLDOWNS,
@@ -72,10 +83,12 @@ const BASE_SECRET_NAMES = [
   'GOOGLE_MAPS_API_KEY',
   'GOOGLE_MAPS_BROWSER_API_KEY'
 ];
-const SECRET_NAMES = [...BASE_SECRET_NAMES, 'HIGHLEVEL_PRIVATE_TOKEN', 'HIGHLEVEL_WEBHOOK_SECRET'];
+const TWILIO_SECRET_NAMES = ['TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN'];
+const SECRET_NAMES = [...BASE_SECRET_NAMES, ...TWILIO_SECRET_NAMES, 'HIGHLEVEL_PRIVATE_TOKEN', 'HIGHLEVEL_WEBHOOK_SECRET'];
 const SECRETS = Object.fromEntries(SECRET_NAMES.map(name => [name, defineSecret(name)]));
 const BASE_SECRET_PARAMETERS = BASE_SECRET_NAMES.map(name => SECRETS[name]);
-const SITE_API_SECRET_NAMES = [...BASE_SECRET_NAMES];
+const TWILIO_SECRET_PARAMETERS = TWILIO_SECRET_NAMES.map(name => SECRETS[name]);
+const SITE_API_SECRET_NAMES = [...BASE_SECRET_NAMES, ...TWILIO_SECRET_NAMES];
 const SITE_API_SECRET_PARAMETERS = SITE_API_SECRET_NAMES.map(name => SECRETS[name]);
 const HIGHLEVEL_WEBHOOK_SECRET_NAMES = ['HIGHLEVEL_WEBHOOK_SECRET'];
 const HIGHLEVEL_WEBHOOK_SECRET_PARAMETERS = HIGHLEVEL_WEBHOOK_SECRET_NAMES.map(name => SECRETS[name]);
@@ -131,6 +144,16 @@ function runtimeEnv(secretNames = BASE_SECRET_NAMES) {
     GOOGLE_REVIEWS_LIMIT: process.env.GOOGLE_REVIEWS_LIMIT || '5',
     GOOGLE_REVIEWS_CACHE_SECONDS: process.env.GOOGLE_REVIEWS_CACHE_SECONDS || '900',
     SEARCH_CONSOLE_SITE_URL: process.env.SEARCH_CONSOLE_SITE_URL || 'sc-domain:stonebellisimollc.com',
+    AI_CALLING_ENABLED: process.env.AI_CALLING_ENABLED || 'false',
+    SMS_FOLLOWUP_ENABLED: process.env.SMS_FOLLOWUP_ENABLED || 'false',
+    AI_CALL_CONSENT_APPROVED_VERSION: process.env.AI_CALL_CONSENT_APPROVED_VERSION || '',
+    SMS_CONSENT_APPROVED_VERSION: process.env.SMS_CONSENT_APPROVED_VERSION || '',
+    TWILIO_CALLER_ID: process.env.TWILIO_CALLER_ID || '',
+    TWILIO_CALLER_ID_VERIFIED: process.env.TWILIO_CALLER_ID_VERIFIED || 'false',
+    AI_CALL_TRANSFER_NUMBER: process.env.AI_CALL_TRANSFER_NUMBER || '',
+    OPENAI_VOICE_AGENT_WEBSOCKET_URL: process.env.OPENAI_VOICE_AGENT_WEBSOCKET_URL || '',
+    OPENAI_REALTIME_MODEL: process.env.OPENAI_REALTIME_MODEL || 'gpt-realtime-2.1',
+    OPENAI_REALTIME_VOICE: process.env.OPENAI_REALTIME_VOICE || 'marin',
     ...Object.fromEntries(secretNames.map(name => [name, secretValue(name)]))
   };
 }
@@ -237,8 +260,9 @@ function firebaseClientConfig(env) {
 }
 
 async function routeRequest(request) {
-  const env = runtimeEnv(SITE_API_SECRET_NAMES);
   const url = new URL(request.url);
+  const twilioWebhook = url.pathname.startsWith('/api/twilio/');
+  const env = runtimeEnv(twilioWebhook ? SITE_API_SECRET_NAMES : BASE_SECRET_NAMES);
 
   if (url.pathname === '/api/firebase-config') return json({ success: true, ...firebaseClientConfig(env) });
 
@@ -282,6 +306,35 @@ async function routeRequest(request) {
       sanitizeAttribution,
       recordAnalytics: event => recordServerConversion(db, event),
       createLeadWithAnalytics: (lead, event) => createLeadWithServerConversion(db, lead, event)
+    });
+  }
+
+  if (url.pathname === '/api/twilio/voice') {
+    const result = await handleTwilioVoiceWebhook(request, env, { store });
+    return new Response(result.body, {
+      status: result.status,
+      headers: { 'content-type': result.contentType || 'text/plain; charset=utf-8', 'cache-control': 'no-store' }
+    });
+  }
+  if (url.pathname === '/api/twilio/status') {
+    const result = await handleTwilioCallStatusWebhook(request, env, { store });
+    return new Response(result.body, {
+      status: result.status,
+      headers: { 'content-type': result.contentType || 'text/plain; charset=utf-8', 'cache-control': 'no-store' }
+    });
+  }
+  if (url.pathname === '/api/twilio/message-status') {
+    const result = await handleTwilioMessageStatusWebhook(request, env, { store });
+    return new Response(result.body, {
+      status: result.status,
+      headers: { 'content-type': result.contentType || 'text/plain; charset=utf-8', 'cache-control': 'no-store' }
+    });
+  }
+  if (url.pathname === '/api/twilio/sms') {
+    const result = await handleTwilioInboundSms(request, env, { db });
+    return new Response(result.body, {
+      status: result.status,
+      headers: { 'content-type': result.contentType || 'text/plain; charset=utf-8', 'cache-control': 'no-store' }
     });
   }
 
@@ -360,24 +413,95 @@ const HOUR_MS = 60 * 60 * 1000;
 
 export const notifyNewLead = onDocumentCreated({
   document: 'leads/{leadId}',
+  retry: true,
   secrets: BASE_SECRET_PARAMETERS
 }, async event => {
   const data = event.data?.data();
   if (!data) return;
   // QA submissions are already hidden from reporting; they should not ring phones either.
   if (data.attribution?.trafficClass === 'test') return;
-  if (!await claimNotificationSlot(db, `lead:${event.params.leadId}`, COOLDOWNS.perDocument, Date.now())) return;
-
-  const env = runtimeEnv();
   const lead = { ...data, id: event.params.leadId };
+  const env = runtimeEnv();
+  if (await claimNotificationSlot(db, `lead:${event.params.leadId}`, COOLDOWNS.perDocument, Date.now())) {
+    await sendAdminNotification({
+      env,
+      store,
+      type: NOTIFICATION_TYPES.newLead,
+      alert: buildNewLeadAlert(lead, env),
+      lead,
+      additionalRecipients: [env.BUSINESS_NOTIFICATION_EMAIL],
+      // Replying to the alert reaches the customer, not the alert system.
+      replyTo: lead.email || ''
+    });
+  }
+
+  // Queued after the staff email so a follow-up problem never delays it. Queueing is
+  // idempotent, so a retried event (the email slot is already claimed) only retries this.
+  const followup = await enqueueLeadFollowup(db, lead, env);
+  if (followup.queued) {
+    console.info(JSON.stringify({ message: 'Consented lead follow-up queued', leadId: lead.id, kinds: followup.kinds }));
+  }
+});
+
+export const notifyLeadCallTranscript = onDocumentUpdated({
+  document: 'leads/{leadId}',
+  secrets: BASE_SECRET_PARAMETERS
+}, async event => {
+  const before = event.data?.before.data();
+  const after = event.data?.after.data();
+  if (!before || !after || !after.aiCallTranscriptAt || after.aiCallTranscriptAt === before.aiCallTranscriptAt) return;
+  if (!await claimNotificationSlot(db, `ai_call_transcript:${event.params.leadId}:${after.aiCallSid || after.aiCallTranscriptAt}`, COOLDOWNS.perDocument, Date.now())) return;
+  const env = runtimeEnv();
+  const lead = { ...after, id: event.params.leadId };
   await sendAdminNotification({
     env,
     store,
-    type: NOTIFICATION_TYPES.newLead,
-    alert: buildNewLeadAlert(lead, env),
+    type: NOTIFICATION_TYPES.aiCallTranscript,
+    alert: buildLeadCallTranscriptAlert(lead, env),
     lead,
-    // Replying to the alert reaches the customer, not the alert system.
-    replyTo: lead.email || ''
+    additionalRecipients: [env.BUSINESS_NOTIFICATION_EMAIL]
+  });
+});
+
+export const notifyTwilioFollowupFailure = onDocumentUpdated({
+  document: 'leads/{leadId}',
+  secrets: BASE_SECRET_PARAMETERS
+}, async event => {
+  const before = event.data?.before.data();
+  const after = event.data?.after.data();
+  if (!before || !after) return;
+  const failedStatuses = ['failed', 'uncertain', 'no-answer', 'busy', 'canceled', 'undelivered'];
+  const callFailed = failedStatuses.includes(after.aiCallStatus) && after.aiCallStatus !== before.aiCallStatus;
+  const smsFailed = failedStatuses.includes(after.smsStatus) && after.smsStatus !== before.smsStatus;
+  if (!callFailed && !smsFailed) return;
+  const statusKey = callFailed ? after.aiCallStatus : after.smsStatus;
+  if (!await claimNotificationSlot(db, `twilio_followup_failure:${event.params.leadId}:${statusKey}`, COOLDOWNS.perDocument, Date.now())) return;
+  const env = runtimeEnv();
+  const lead = { ...after, id: event.params.leadId };
+  await sendAdminNotification({
+    env,
+    store,
+    type: NOTIFICATION_TYPES.twilioFollowupFailure,
+    alert: buildTwilioFollowupFailureAlert(lead, env),
+    lead,
+    additionalRecipients: [env.BUSINESS_NOTIFICATION_EMAIL]
+  });
+});
+
+export const notifyInboundTwilioSms = onDocumentCreated({
+  document: 'twilio_sms_events/{messageSid}',
+  secrets: BASE_SECRET_PARAMETERS
+}, async event => {
+  const data = event.data?.data();
+  if (!data || data.status === 'opt_out') return;
+  if (!await claimNotificationSlot(db, `twilio_sms:${event.params.messageSid}`, COOLDOWNS.perDocument, Date.now())) return;
+  const env = runtimeEnv();
+  await sendAdminNotification({
+    env,
+    store,
+    type: NOTIFICATION_TYPES.inboundSms,
+    alert: buildInboundSmsAlert(data, env),
+    additionalRecipients: [env.BUSINESS_NOTIFICATION_EMAIL]
   });
 });
 
@@ -535,6 +659,16 @@ export const socialPublishingSchedule = onSchedule({
 }, async event => {
   const result = await processPublishingQueue(runtimeEnv(PUBLISHING_SECRET_NAMES), { growthStore, bucket: growthBucket });
   console.info(JSON.stringify({ message: 'Social publishing reconciliation processed', scheduleTime: event.scheduleTime, ...result }));
+});
+
+export const processTwilioLeadFollowupsSchedule = onSchedule({
+  schedule: 'every 1 minutes',
+  timeZone: GROWTH_CLIENT.timezone,
+  maxInstances: 1,
+  secrets: TWILIO_SECRET_PARAMETERS
+}, async event => {
+  const result = await processDueTwilioFollowups({ db, env: runtimeEnv(TWILIO_SECRET_NAMES) });
+  console.info(JSON.stringify({ message: 'Twilio lead follow-ups processed', scheduleTime: event.scheduleTime, ...result }));
 });
 
 export const importSearchConsoleSchedule = onSchedule({

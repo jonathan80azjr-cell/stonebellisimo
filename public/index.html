@@ -302,6 +302,10 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);ove
 .wz-fields{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
 .wz-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .wz-fg label{display:block;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px}
+.wz-fg label.wz-consent{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.6;color:rgba(255,255,255,.55)}
+.wz-fg .wz-consent input{width:auto;flex:0 0 auto;margin-top:3px;padding:0;border:0;background:none;accent-color:var(--gold);-webkit-appearance:checkbox;appearance:auto}
+.wz-contact-extra{display:none}
+.wz-contact-extra.show{display:block}
 .wz-fg input,.wz-fg select,.wz-fg textarea{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:13px 18px;font-family:'Inter',sans-serif;font-size:14px;color:#fff;outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none;appearance:none}
 .wz-fg input::placeholder,.wz-fg textarea::placeholder{color:rgba(255,255,255,.22)}
 .wz-fg input:focus,.wz-fg select:focus,.wz-fg textarea:focus{border-color:var(--gold);background:rgba(255,255,255,.09)}
@@ -903,7 +907,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
     <div class="wz-step" id="wz5">
       <div class="wz-step-tag">Step 5 of 5: Contact Information *</div>
       <div class="wz-q">Almost there —<br><em>let's confirm your details.</em></div>
-      <div class="wz-hint">Enter your details below. Cesar or Cristian will call or text to schedule your free visit.</div>
+      <div class="wz-hint">Enter your details and choose how you would like the Stone Bellisimo team to follow up.</div>
       <!-- Summary -->
       <div class="wz-summary">
         <h4>Your project summary</h4>
@@ -950,6 +954,29 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
           <label for="wzNote">Anything else we should know? (optional)</label>
           <textarea id="wzNote" placeholder="e.g. Preferred days for a visit, existing countertop material, custom dimensions..."></textarea>
         </div>
+        <div class="wz-fg">
+          <label for="wzContactMethod">How should we follow up? *</label>
+          <select id="wzContactMethod" required>
+            <option value="">Choose a contact method</option>
+            <option value="call">Call me as soon as possible</option>
+            <option value="text">Text me</option>
+            <option value="scheduled_call">I'd like to request a call at a specific time</option>
+            <option value="email">Email only</option>
+          </select>
+          <div class="wz-error-msg" id="wzContactMethod-error">Choose a contact method.</div>
+        </div>
+        <div class="wz-fg wz-contact-extra" id="wzCallbackWrap">
+          <label for="wzCallbackAt">Requested callback time (your local time) *</label>
+          <input id="wzCallbackAt" type="datetime-local">
+          <div class="wz-error-msg" id="wzCallbackAt-error">Choose a future callback time between 9 a.m. and 8 p.m. in your local time.</div>
+        </div>
+        <div class="wz-fg wz-contact-extra" id="wzContactConsentWrap">
+          <label class="wz-consent" for="wzPhoneContactConsent">
+            <input id="wzPhoneContactConsent" type="checkbox">
+            <span id="wzPhoneContactConsentText">I agree to receive an automated call from Stone Bellisimo’s AI voice assistant about this inquiry. The call will be transcribed and shared with our team. Consent is not a condition of purchase.</span>
+          </label>
+          <div class="wz-error-msg" id="wzPhoneContactConsent-error">Please confirm phone contact or choose email follow-up.</div>
+        </div>
       </div>
       <div class="wz-nav"><button class="wz-back-btn" onclick="nextStep(4)">← Back</button><button class="wz-next-btn" onclick="submitWizard()" id="wz5submit">Send Request</button></div>
     </div>
@@ -958,7 +985,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
     <div id="wz-success">
       <div class="wz-success-icon" style="margin-bottom:20px"><svg viewBox="0 0 24 24" width="48" height="48" stroke="var(--gold)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
       <h3>Request sent!</h3>
-      <p>Thank you! Cesar or Cristian will call or text you within one business day to schedule your free in-home estimate.</p>
+      <p>Thank you. Your inquiry and follow-up preference have been sent to the Stone Bellisimo team. A requested callback time is not confirmed until a team member confirms it.</p>
       <div class="wz-what-next">
         <p>📞 <strong>Need to reach us right now?</strong></p>
         <p>Call the Office: <strong><a href="tel:+12015531919" style="color:var(--gold-lt)">201.553.1919</a></strong> or text Cesar: <strong><a href="sms:+12012816423" style="color:var(--gold-lt)">201.281.6423</a></strong></p>
@@ -1456,6 +1483,27 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 const wzData = {project:'',material:'',size:'',timeline:'',sourceCta:'Direct'};
 const CONTACT_API_ENDPOINT = '/api/contact';
 const GOOGLE_REVIEWS_API_ENDPOINT = '/api/google-reviews';
+const contactMethodInput = document.getElementById('wzContactMethod');
+const callbackInput = document.getElementById('wzCallbackAt');
+const phoneContactConsentInput = document.getElementById('wzPhoneContactConsent');
+function updateContactPreference(){
+  const method = contactMethodInput.value;
+  const needsPhoneConsent = ['call','text','scheduled_call'].includes(method);
+  document.getElementById('wzCallbackWrap').classList.toggle('show',method==='scheduled_call');
+  document.getElementById('wzContactConsentWrap').classList.toggle('show',needsPhoneConsent);
+  callbackInput.required = method === 'scheduled_call';
+  phoneContactConsentInput.required = needsPhoneConsent;
+  document.getElementById('wzPhoneContactConsentText').textContent =
+    method === 'text'
+      ? 'I agree Stone Bellisimo may text me about this inquiry. Consent is not a condition of purchase. Message and data rates may apply; reply STOP to stop texts.'
+      : 'I agree to receive an automated call from Stone Bellisimo’s AI voice assistant about this inquiry. The call will be transcribed and shared with our team. Consent is not a condition of purchase.';
+}
+contactMethodInput.addEventListener('change',()=>{
+  phoneContactConsentInput.checked = false;
+  contactMethodInput.classList.remove('err');
+  updateContactPreference();
+});
+updateContactPreference();
 function getContactEndpoint(){
   return CONTACT_API_ENDPOINT;
 }
@@ -1722,6 +1770,20 @@ async function submitWizard(){
   if(!l.value.trim()){l.classList.add('err');lErr.classList.add('show');valid=false}
   if(!p.value.trim()){p.classList.add('err');pErr.classList.add('show');valid=false}
   if(!e.value.trim()||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.value)){e.classList.add('err');eErr.classList.add('show');valid=false}
+  const contactMethod = contactMethodInput.value;
+  const contactMethodError = document.getElementById('wzContactMethod-error');
+  const callbackError = document.getElementById('wzCallbackAt-error');
+  const consentError = document.getElementById('wzPhoneContactConsent-error');
+  contactMethodInput.classList.remove('err');
+  callbackInput.classList.remove('err');
+  [contactMethodError,callbackError,consentError].forEach(el=>el.classList.remove('show'));
+  if(!contactMethod){contactMethodInput.classList.add('err');contactMethodError.classList.add('show');valid=false}
+  if(contactMethod==='scheduled_call' && (!callbackInput.value || new Date(callbackInput.value).getTime() <= Date.now() || Number(callbackInput.value.slice(11,13))<9 || Number(callbackInput.value.slice(11,13))>=20)){
+    callbackInput.classList.add('err');callbackError.classList.add('show');valid=false;
+  }
+  if(['call','text','scheduled_call'].includes(contactMethod) && !phoneContactConsentInput.checked){
+    consentError.classList.add('show');valid=false;
+  }
   if(!valid){window.StoneBellisimoAnalytics?.track('form_error',{result:'validation',formStep:5,placement:wzData.sourceCta});go('wizard-section');return}
 
   const submitBtn = document.getElementById('wz5submit');
@@ -1736,6 +1798,12 @@ async function submitWizard(){
     lastName: l.value.trim(),
     email: e.value.trim(),
     phone: p.value.trim(),
+    preferredContactMethod: contactMethod,
+    aiCallConsent: ['call','scheduled_call'].includes(contactMethod) && phoneContactConsentInput.checked,
+    smsConsent: contactMethod==='text' && phoneContactConsentInput.checked,
+    contactTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    preferredCallbackAt: contactMethod==='scheduled_call' ? new Date(callbackInput.value).toISOString() : null,
+    preferredCallbackTimezone: contactMethod==='scheduled_call' ? Intl.DateTimeFormat().resolvedOptions().timeZone : null,
     postalCode: document.getElementById('wzZip').value.trim(),
     discoverySource: document.getElementById('wzDiscovery').value,
     projectType: getProjectValue() || 'Not specified',
@@ -1767,7 +1835,7 @@ async function submitWizard(){
     document.querySelectorAll('.wz-step').forEach(s=>s.classList.remove('active'));
     document.getElementById('wzProgress').style.display='none';
     
-    const savedDataText = `Customer Name: ${f.value.trim()} ${l.value.trim()}\nPhone: ${p.value.trim()}\nEmail: ${e.value.trim()}\n\n${projectSummaryStr}`;
+    const savedDataText = `Customer Name: ${f.value.trim()} ${l.value.trim()}\nPhone: ${p.value.trim()}\nEmail: ${e.value.trim()}\nPreferred contact: ${contactMethod || 'Not selected'}\nRequested callback: ${callbackInput.value || 'Not requested'}\n\n${projectSummaryStr}`;
     document.getElementById('wzSavedText').value = savedDataText;
     
     document.getElementById('wz-failure').classList.add('show');
@@ -1789,6 +1857,10 @@ function resetWizard(){
   document.querySelectorAll('.wz-next-btn').forEach(b=>b.disabled=true);
   document.getElementById('wz5submit').disabled=false;
   document.getElementById('projectOther').value='';
+  contactMethodInput.value='';
+  callbackInput.value='';
+  phoneContactConsentInput.checked=false;
+  updateContactPreference();
   updateProjectOther();
   document.getElementById('wz-success').classList.remove('show');
   document.getElementById('wz-failure').classList.remove('show');
