@@ -9,6 +9,38 @@
       ]
     },
     {
+      "collectionGroup": "leads",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "aiCallStatus", "order": "ASCENDING" },
+        { "fieldPath": "aiCallDueAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "leads",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "smsStatus", "order": "ASCENDING" },
+        { "fieldPath": "smsDueAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "leads",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "aiCallStatus", "order": "ASCENDING" },
+        { "fieldPath": "aiCallStatusClaimedAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "leads",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "smsStatus", "order": "ASCENDING" },
+        { "fieldPath": "smsStatusClaimedAt", "order": "ASCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "analytics_cta_daily",
       "queryScope": "COLLECTION",
       "fields": [

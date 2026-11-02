@@ -25,6 +25,8 @@ const FIELD_LIMITS = {
   lastName: 80,
   email: 254,
   phone: 30,
+  contactTimezone: 80,
+  preferredCallbackTimezone: 80,
   projectType: 120,
   material: 80,
   source: 80,
@@ -33,6 +35,14 @@ const FIELD_LIMITS = {
 };
 
 const CONTACT_BODY_LIMIT = 20 * 1024;
+export const AI_CALL_CONSENT_VERSION = 'ai_call_transcript_v1';
+export const SMS_CONSENT_VERSION = 'sms_inquiry_v1';
+// The exact checkbox text for each consent version, saved with every lead as evidence of
+// what the customer agreed to. Changing the form copy requires a new version here.
+export const CONSENT_COPY = Object.freeze({
+  [AI_CALL_CONSENT_VERSION]: 'I agree to receive a call from Stone Bellisimo LLC’s AI voice assistant, which uses an artificial voice, about this inquiry at the phone number I provided. The call will be transcribed and shared with our team. Consent is not a condition of purchase.',
+  [SMS_CONSENT_VERSION]: 'I agree to receive text messages from Stone Bellisimo LLC about this inquiry at the phone number I provided. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase.'
+});
 const POSTMARK_BODY_LIMIT = 256 * 1024;
 const DEFAULT_FEEDBACK_DELAY_DAYS = 3;
 const DEFAULT_TOKEN_TTL_DAYS = 90;
@@ -106,11 +116,33 @@ export function stripSubmissionMetadata(value) {
 }
 
 export function validateContact(body) {
+  const preferredContactMethod = ['call', 'text', 'scheduled_call', 'email'].includes(body?.preferredContactMethod)
+    ? body.preferredContactMethod
+    : '';
+  const aiCallConsent = body?.aiCallConsent === true;
+  const smsConsent = body?.smsConsent === true;
+  const callbackValue = typeof body?.preferredCallbackAt === 'string' ? body.preferredCallbackAt.trim() : '';
+  const callbackDate = callbackValue ? new Date(callbackValue) : null;
   const payload = {
     firstName: normalizeText(body?.firstName, FIELD_LIMITS.firstName),
     lastName: normalizeText(body?.lastName, FIELD_LIMITS.lastName),
     email: normalizeText(body?.email, FIELD_LIMITS.email).toLowerCase(),
     phone: normalizeText(body?.phone, FIELD_LIMITS.phone),
+    preferredContactMethod,
+    aiCallConsent: aiCallConsent && ['call', 'scheduled_call'].includes(preferredContactMethod),
+    aiCallConsentTextVersion: aiCallConsent && ['call', 'scheduled_call'].includes(preferredContactMethod)
+      ? AI_CALL_CONSENT_VERSION
+      : null,
+    smsConsent: smsConsent && preferredContactMethod === 'text',
+    smsConsentTextVersion: smsConsent && preferredContactMethod === 'text' ? SMS_CONSENT_VERSION : null,
+    phoneContactConsent: (
+      aiCallConsent && ['call', 'scheduled_call'].includes(preferredContactMethod)
+    ) || (
+      smsConsent && preferredContactMethod === 'text'
+    ),
+    contactTimezone: normalizeText(body?.contactTimezone, FIELD_LIMITS.contactTimezone),
+    preferredCallbackAt: null,
+    preferredCallbackTimezone: normalizeText(body?.preferredCallbackTimezone, FIELD_LIMITS.preferredCallbackTimezone),
     projectType: normalizeText(body?.projectType, FIELD_LIMITS.projectType),
     material: normalizeText(body?.material, FIELD_LIMITS.material),
     source: normalizeText(body?.source, FIELD_LIMITS.source),
@@ -118,6 +150,7 @@ export function validateContact(body) {
     discoverySource: ['google', 'facebook', 'instagram', 'referral', 'lead_provider', 'showroom', 'other'].includes(body?.discoverySource) ? body.discoverySource : '',
     message: normalizeText(stripSubmissionMetadata(body?.message), FIELD_LIMITS.message, { preserveLines: true })
   };
+  payload.phoneE164 = normalizePhoneE164(payload.phone);
 
   if (!payload.firstName || !payload.lastName || !payload.email || !payload.phone) {
     return { error: 'Please fill out all required fields.' };
@@ -127,11 +160,84 @@ export function validateContact(body) {
     return { error: 'Please enter a valid email address.' };
   }
 
+  if (!payload.preferredContactMethod) {
+    return { error: 'Please choose how you would like us to follow up.' };
+  }
+
+  if (payload.preferredContactMethod !== 'email' && !payload.phoneE164) {
+    return { error: 'Please enter a valid phone number, including the country code if outside the U.S.' };
+  }
+
+  if (['call', 'scheduled_call'].includes(payload.preferredContactMethod) && !payload.aiCallConsent) {
+    return { error: 'Please confirm consent for an AI call or choose another follow-up method.' };
+  }
+
+  if (payload.preferredContactMethod === 'text' && !payload.smsConsent) {
+    return { error: 'Please confirm text-message consent or choose another follow-up method.' };
+  }
+
+  function isValidTimeZone(value) {
+    if (!value) return false;
+    try {
+      new Intl.DateTimeFormat('en-US', { timeZone: value });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  if (payload.preferredContactMethod === 'scheduled_call') {
+    const now = Date.now();
+    const maxCallbackTime = now + 90 * 24 * 60 * 60 * 1000;
+    const timeZone = payload.preferredCallbackTimezone;
+    if (
+      !callbackValue ||
+      Number.isNaN(callbackDate.valueOf()) ||
+      !/(?:Z|[+-]\d{2}:\d{2})$/i.test(callbackValue) ||
+      callbackDate.valueOf() <= now ||
+      callbackDate.valueOf() > maxCallbackTime ||
+      !isValidTimeZone(timeZone)
+    ) {
+      return { error: 'Please choose a future callback time within the next 90 days.' };
+    }
+
+    try {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        hour: '2-digit',
+        minute: '2-digit',
+        hourCycle: 'h23'
+      }).formatToParts(callbackDate);
+      const localTime = Object.fromEntries(parts.map(part => [part.type, part.value]));
+      const minuteOfDay = Number(localTime.hour) * 60 + Number(localTime.minute);
+      if (minuteOfDay < 9 * 60 || minuteOfDay >= 20 * 60) {
+        return { error: 'Please choose a callback time between 9 a.m. and 8 p.m. in your local time.' };
+      }
+    } catch {
+      return { error: 'Please choose a valid time zone for your callback.' };
+    }
+    payload.preferredCallbackAt = callbackDate.toISOString();
+  }
+
+  if (payload.preferredContactMethod === 'call' && !isValidTimeZone(payload.contactTimezone)) {
+    return { error: 'Please enable a valid local time zone or choose another follow-up method.' };
+  }
+
   if (hasSpamTrap(body)) {
     return { error: 'We could not submit your request. Please call us directly.' };
   }
 
   return { payload };
+}
+
+function normalizePhoneE164(value) {
+  const phone = String(value || '').trim();
+  if (!/^\+?[\d\s().-]+$/.test(phone)) return '';
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length === 10) return `+1${digits}`;
+  if (digits.length === 11 && digits.startsWith('1')) return `+${digits}`;
+  if (phone.startsWith('+') && digits.length >= 8 && digits.length <= 15) return `+${digits}`;
+  return '';
 }
 
 function hasSpamTrap(body = {}) {
@@ -797,6 +903,27 @@ function createLeadPayload(contact, request, env) {
     customerName,
     email: contact.email,
     phone: contact.phone,
+    phoneE164: contact.phoneE164 || null,
+    preferredContactMethod: contact.preferredContactMethod,
+    aiCallConsent: contact.aiCallConsent,
+    aiCallConsentTextVersion: contact.aiCallConsentTextVersion,
+    aiCallConsentText: contact.aiCallConsent ? CONSENT_COPY[contact.aiCallConsentTextVersion] : null,
+    aiCallConsentRecordedAt: contact.aiCallConsent ? submittedAt.toISOString() : null,
+    aiCallStatus: contact.aiCallConsent ? 'pending_approval' : 'not_requested',
+    aiCallDueAt: null,
+    aiCallAttemptCount: 0,
+    smsConsent: contact.smsConsent,
+    smsConsentTextVersion: contact.smsConsentTextVersion,
+    smsConsentText: contact.smsConsent ? CONSENT_COPY[contact.smsConsentTextVersion] : null,
+    smsConsentRecordedAt: contact.smsConsent ? submittedAt.toISOString() : null,
+    smsStatus: contact.smsConsent ? 'pending_approval' : 'not_requested',
+    smsDueAt: null,
+    contactTimezone: contact.contactTimezone || contact.preferredCallbackTimezone || null,
+    phoneContactConsent: contact.phoneContactConsent,
+    phoneContactConsentTextVersion: contact.aiCallConsentTextVersion || contact.smsConsentTextVersion,
+    phoneContactConsentRecordedAt: contact.phoneContactConsent ? submittedAt.toISOString() : null,
+    preferredCallbackAt: contact.preferredCallbackAt,
+    preferredCallbackTimezone: contact.preferredCallbackAt ? contact.preferredCallbackTimezone : null,
     projectType: contact.projectType || 'Not specified',
     material: contact.material || 'Not specified',
     source: contact.source || 'Website Contact Form',

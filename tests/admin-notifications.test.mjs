@@ -6,6 +6,7 @@ import {
   buildDeliveryProblemAlert,
   buildNewLeadAlert,
   buildNoLeadsAlert,
+  buildTwilioFollowupFailureAlert,
   buildWeeklyDigestAlert,
   claimNotificationSlot,
   COOLDOWNS,
@@ -54,6 +55,8 @@ test('the new lead alert carries what someone needs to return the call', () => {
     customerName: 'Dana Rivera',
     phone: '201-555-0142',
     email: 'dana@example.com',
+    preferredContactMethod: 'call',
+    phoneContactConsent: true,
     projectType: 'Kitchen countertops',
     material: 'Quartz',
     message: 'Looking for an estimate.',
@@ -65,6 +68,8 @@ test('the new lead alert carries what someone needs to return the call', () => {
   assert.match(alert.subject, /Dana Rivera/);
   assert.match(alert.text, /201-555-0142/);
   assert.match(alert.text, /Kitchen countertops/);
+  assert.match(alert.text, /Call as soon as possible/);
+  assert.match(alert.text, /Granted for this inquiry/);
   assert.match(alert.text, /\/kitchens/);
   // The fastest action on a countertop lead is a phone call, so that is the CTA.
   assert.match(alert.html, /tel:2015550142/);
@@ -231,6 +236,16 @@ test('sending an alert never throws and records one event for the group', async 
   assert.equal(saved[0].eventType, NOTIFICATION_TYPES.newLead);
   assert.equal(saved[0].recipient, ADMIN_EMAILS.join(', '));
 
+  const leadAlert = await sendAdminNotification({
+    env,
+    store,
+    type: NOTIFICATION_TYPES.newLead,
+    alert: buildNewLeadAlert({ id: 'lead_2', customerName: 'Dana Rivera' }, env),
+    additionalRecipients: ['cesaryunda@hotmail.com', 'JENSYJIMENEZ723@gmail.com']
+  });
+  assert.equal(leadAlert.sent, true);
+  assert.equal(saved[1].recipient, [...ADMIN_EMAILS, 'cesaryunda@hotmail.com'].join(', '));
+
   // Once Postmark accepts the alert, an audit-store outage must not turn it
   // into a retryable send and duplicate the owner notification.
   const failing = { saveEmailEvent: async () => { throw new Error('firestore down'); } };
@@ -250,5 +265,17 @@ test('sending an alert never throws and records one event for the group', async 
     alert: buildNewLeadAlert({ id: 'lead_1' }, env)
   });
   assert.equal(muted.reason, 'no_recipients');
-  assert.equal(saved.length, 1);
+  assert.equal(saved.length, 2);
+});
+
+test('Twilio follow-up failure alerts include the recorded provider error', () => {
+  const alert = buildTwilioFollowupFailureAlert({
+    id: 'lead_123',
+    customerName: 'Dana Rivera',
+    preferredContactMethod: 'call',
+    aiCallStatus: 'failed',
+    aiCallStatusLastError: 'Twilio request failed (400): invalid To number'
+  }, ENV);
+
+  assert.match(alert.text, /invalid To number/);
 });

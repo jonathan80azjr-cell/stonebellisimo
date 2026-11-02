@@ -102,6 +102,10 @@ export function createFirestoreStore(db) {
       return snapshot.exists ? { ...snapshot.data(), id: snapshot.id } : null;
     },
 
+    async updateLeadFields(id, update) {
+      await leads.doc(id).set({ ...update }, { merge: true });
+    },
+
     async updateLeadBusiness(id, update) {
       const reference = leads.doc(id);
       return db.runTransaction(async transaction => {
