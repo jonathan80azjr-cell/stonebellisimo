@@ -155,9 +155,12 @@ async function postTwilioResource(path, fields, env, fetchImpl) {
   return body;
 }
 
+// Spoken by Twilio before the AI connects, so the disclosure never depends on the model.
+export const AI_CALL_DISCLOSURE = 'Hello, this is an automated call from Stone Bellisimo’s AI assistant about the estimate request you submitted. This call is transcribed and shared with our team.';
+
 export function buildTwilioVoiceXml({ leadId, streamUrl }) {
   if (!leadId || !String(streamUrl || '').startsWith('wss://')) throw new TypeError('A lead ID and secure voice-stream URL are required.');
-  return `<?xml version="1.0" encoding="UTF-8"?><Response><Connect><Stream url="${xmlEscape(streamUrl)}"><Parameter name="leadId" value="${xmlEscape(leadId)}"/></Stream></Connect></Response>`;
+  return `<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="Polly.Joanna">${xmlEscape(AI_CALL_DISCLOSURE)}</Say><Connect><Stream url="${xmlEscape(streamUrl)}"><Parameter name="leadId" value="${xmlEscape(leadId)}"/></Stream></Connect></Response>`;
 }
 
 export function buildTwilioTransferXml(phoneNumber) {
@@ -208,7 +211,7 @@ export async function sendLeadSms(lead, env, fetchImpl = fetch) {
 
   const name = String(lead.firstName || 'there').replace(/[<>&]/g, '').slice(0, 60);
   const project = String(lead.projectType || 'project inquiry').replace(/[<>&]/g, '').slice(0, 100);
-  const message = `Hi ${name}, Stone Bellisimo received your ${project}. Reply to this text if you have details to add or would like a team member to follow up. Reply STOP to opt out.`;
+  const message = `Stone Bellisimo LLC: Hi ${name}, we received your ${project}. Reply here with details or to have a team member follow up. Msg frequency varies. Msg & data rates may apply. Reply HELP for help. Reply STOP to opt out.`;
   return postTwilioResource('Messages', {
     To: lead.phoneE164 || lead.phone,
     From: env.TWILIO_CALLER_ID,
@@ -489,17 +492,21 @@ export async function handleTwilioInboundSms(request, env, { db }) {
   if (!/^SM[a-f\d]{32}$/i.test(messageSid) || !normalizePhone(from)) return { status: 400, body: 'Invalid inbound message.' };
   const leads = await db.collection('leads').orderBy('submittedAt', 'desc').limit(200).get();
   const normalizedFrom = normalizePhone(from);
-  const matchingLead = leads.docs.find(document => normalizePhone(document.data().phoneE164 || document.data().phone) === normalizedFrom);
+  const matchingLeads = leads.docs.filter(document => normalizePhone(document.data().phoneE164 || document.data().phone) === normalizedFrom);
+  const matchingLead = matchingLeads[0];
   const receivedAt = new Date().toISOString();
-  const isOptOut = /^(stop|stopall|unsubscribe|cancel|end|quit)$/i.test(body.trim());
-  if (matchingLead && isOptOut) {
-    await matchingLead.ref.update({
-      smsConsent: false,
-      phoneContactConsent: matchingLead.data().aiCallConsent === true,
-      smsOptedOutAt: receivedAt,
-      smsStatus: 'opted_out',
-      updatedAt: receivedAt
-    });
+  // Carrier keywords plus plain-language revocations; an opt-out covers every inquiry from that phone.
+  const isOptOut = /^(stop|stop all|stopall|unsubscribe|cancel|end|quit|revoke|opt out|optout|opt-out)[.!]?$/i.test(body.trim());
+  if (isOptOut) {
+    for (const document of matchingLeads) {
+      await document.ref.update({
+        smsConsent: false,
+        phoneContactConsent: document.data().aiCallConsent === true,
+        smsOptedOutAt: receivedAt,
+        smsStatus: 'opted_out',
+        updatedAt: receivedAt
+      });
+    }
   }
   await db.collection('twilio_sms_events').doc(messageSid).create({
     messageSid,

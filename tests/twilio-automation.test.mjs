@@ -49,6 +49,7 @@ test('Twilio webhook signatures include the full URL and sorted POST parameters'
 test('TwiML connects a lead to a secure stream and escapes transfer destinations', () => {
   assert.match(buildTwilioVoiceXml({ leadId: 'lead_123', streamUrl: callEnv.OPENAI_VOICE_AGENT_WEBSOCKET_URL }), /wss:\/\/voice\.example\.com\/twilio-media/);
   assert.match(buildTwilioVoiceXml({ leadId: 'lead_123', streamUrl: callEnv.OPENAI_VOICE_AGENT_WEBSOCKET_URL }), /name="leadId" value="lead_123"/);
+  assert.match(buildTwilioVoiceXml({ leadId: 'lead_123', streamUrl: callEnv.OPENAI_VOICE_AGENT_WEBSOCKET_URL }), /^.*<Response><Say [^>]*>Hello, this is an automated call from Stone Bellisimo’s AI assistant[^<]*transcribed[^<]*<\/Say><Connect>/);
   assert.throws(() => buildTwilioVoiceXml({ leadId: 'lead_123', streamUrl: 'http://voice.example.com' }), /secure voice-stream URL/);
   assert.match(buildTwilioTransferXml('+12012816423'), /<Dial>\+12012816423<\/Dial>/);
   assert.throws(() => buildTwilioTransferXml('12012816423'), /E.164/);
@@ -136,6 +137,7 @@ test('consented SMS is scheduled and uses a STOP-enabled callback message', asyn
   assert.equal(sms.sid, 'SM0123456789abcdef0123456789abcdef');
   assert.equal(submitted.body.get('To'), '+12015550101');
   assert.match(submitted.body.get('Body'), /Reply STOP to opt out/);
+  assert.match(submitted.body.get('Body'), /^Stone Bellisimo LLC: .*Msg & data rates may apply\. Reply HELP for help\./);
   await assert.rejects(() => sendLeadSms({ ...lead, smsConsent: false }, {
     ...callEnv,
     SMS_FOLLOWUP_ENABLED: 'true',
@@ -244,4 +246,32 @@ test('scheduled AI callbacks use the validated callback time zone, not an unvali
   assert.deepEqual(queued, { queued: true, kinds: ['call'] });
   // 7:30 a.m. Pacific is before the calling window, so it moves to 9 a.m. Pacific.
   assert.equal(saved.aiCallDueAt, '2026-11-03T17:00:00.000Z');
+});
+
+test('a plain-language opt-out revokes SMS consent on every inquiry from that phone', async () => {
+  const messageSid = 'SMfedcba9876543210fedcba9876543210';
+  const url = 'https://stonebellisimollc.com/api/twilio/sms';
+  const params = { MessageSid: messageSid, From: '+12015550101', To: '+15512142103', Body: 'Opt out' };
+  const signature = twilioSignature(url, params, callEnv.TWILIO_AUTH_TOKEN);
+  const updated = [];
+  const lead = (id, phone) => ({
+    id,
+    data: () => ({ phone, smsConsent: true, aiCallConsent: false }),
+    ref: { update: async update => { updated.push({ id, ...update }); } }
+  });
+  const docs = [lead('lead_new', '201-555-0101'), lead('lead_other', '201-555-0199'), lead('lead_old', '(201) 555-0101')];
+  const db = {
+    collection(name) {
+      if (name === 'leads') return { orderBy: () => ({ limit: () => ({ get: async () => ({ docs }) }) }) };
+      return { doc: () => ({ create: async () => {} }) };
+    }
+  };
+  const response = await handleTwilioInboundSms(new Request(url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded', 'x-twilio-signature': signature },
+    body: new URLSearchParams(params)
+  }), callEnv, { db });
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(updated.map(update => [update.id, update.smsStatus]), [['lead_new', 'opted_out'], ['lead_old', 'opted_out']]);
 });

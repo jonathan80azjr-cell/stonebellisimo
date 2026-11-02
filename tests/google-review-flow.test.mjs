@@ -371,3 +371,22 @@ test('an accepted review email is quarantined when its sent ledger write fails',
   assert.equal(result.uncertain, 1);
   assert.equal(uncertain, 1);
 });
+
+test('a consented lead stores the exact consent text the customer agreed to', async () => {
+  const { CONSENT_COPY, SMS_CONSENT_VERSION } = await import('../src/lead-automation.mjs');
+  let created;
+  const store = {
+    countRecentByIpHash: async () => 0,
+    createLead: async lead => { created = lead; },
+    saveEmailEvent: async () => {},
+    markImmediateEmailSent: async () => {}
+  };
+  const response = await handleContactRequest(new Request('https://stonebellisimollc.com/api/contact', {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ firstName: 'Cy', lastName: 'Stone', email: 'cy@example.com', phone: '2015550103', preferredContactMethod: 'text', smsConsent: true })
+  }), env, { store, sanitizeAttribution: value => value });
+  assert.equal(response.status, 200);
+  assert.equal(created.smsConsentTextVersion, SMS_CONSENT_VERSION);
+  assert.equal(created.smsConsentText, CONSENT_COPY[SMS_CONSENT_VERSION]);
+  assert.equal(created.aiCallConsentText, null);
+});

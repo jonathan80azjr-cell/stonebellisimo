@@ -140,8 +140,9 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
 .wz-fields{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
 .wz-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .wz-fg label{display:block;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px}
-.wz-fg label.wz-consent{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.6;color:rgba(255,255,255,.55)}
+.wz-fg label.wz-consent{display:flex;align-items:flex-start;gap:10px;font-size:13px;line-height:1.6;letter-spacing:normal;text-transform:none;color:rgba(255,255,255,.72)}
 .wz-fg .wz-consent input{width:auto;flex:0 0 auto;margin-top:3px;padding:0;border:0;background:none;accent-color:var(--gold);-webkit-appearance:checkbox;appearance:auto}
+.wz-consent a{color:var(--gold-lt);text-underline-offset:2px}
 .wz-contact-extra{display:none}
 .wz-contact-extra.show{display:block}
 .wz-fg input,.wz-fg select,.wz-fg textarea{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:13px 18px;font-family:'Inter',sans-serif;font-size:14px;color:#fff;outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none;appearance:none}
@@ -413,7 +414,7 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
         <div class="wz-fg wz-contact-extra" id="wzContactConsentWrap">
           <label class="wz-consent" for="wzPhoneContactConsent">
             <input id="wzPhoneContactConsent" type="checkbox">
-            <span id="wzPhoneContactConsentText">I agree to receive an automated call from Stone Bellisimo’s AI voice assistant about this inquiry. The call will be transcribed and shared with our team. Consent is not a condition of purchase.</span>
+            <span><span id="wzPhoneContactConsentText">I agree to receive a call from Stone Bellisimo LLC’s AI voice assistant, which uses an artificial voice, about this inquiry at the phone number I provided. The call will be transcribed and shared with our team. Consent is not a condition of purchase.</span> <span class="wz-consent-links">See our <a href="/terms/" target="_blank" rel="noopener">Terms</a> and <a href="/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</span></span>
           </label>
           <div class="wz-error-msg" id="wzPhoneContactConsent-error">Please confirm phone contact or choose email follow-up.</div>
         </div>
@@ -476,7 +477,7 @@ a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
     </div>
     <hr class="foot-divider">
     <div class="foot-bottom">
-      <span class="foot-copy">(c) 2026 Stone Bellisimo LLC - 618 23rd Street, Union City, NJ 07087 - <a href="tel:+12015531919">201.553.1919</a></span>
+      <span class="foot-copy">(c) 2026 Stone Bellisimo LLC - 618 23rd Street, Union City, NJ 07087 - <a href="tel:+12015531919">201.553.1919</a> - <a href="/privacy/">Privacy</a> - <a href="/terms/">Terms</a></span>
     </div>
     <div class="bitesites-credit">
       <a class="bitesites-banner" href="https://bitesites.org" target="_blank" rel="noopener" aria-label="Made by Bite Sites">
@@ -514,8 +515,8 @@ function updateContactPreference(){
   phoneContactConsentInput.required = needsPhoneConsent;
   document.getElementById('wzPhoneContactConsentText').textContent =
     method === 'text'
-      ? 'I agree Stone Bellisimo may text me about this inquiry. Consent is not a condition of purchase. Message and data rates may apply; reply STOP to stop texts.'
-      : 'I agree to receive an automated call from Stone Bellisimo’s AI voice assistant about this inquiry. The call will be transcribed and shared with our team. Consent is not a condition of purchase.';
+      ? 'I agree to receive text messages from Stone Bellisimo LLC about this inquiry at the phone number I provided. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase.'
+      : 'I agree to receive a call from Stone Bellisimo LLC’s AI voice assistant, which uses an artificial voice, about this inquiry at the phone number I provided. The call will be transcribed and shared with our team. Consent is not a condition of purchase.';
 }
 contactMethodInput.addEventListener('change',()=>{
   phoneContactConsentInput.checked = false;

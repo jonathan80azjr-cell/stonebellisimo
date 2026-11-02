@@ -74,3 +74,15 @@ test('contact submissions are rate limited before persistence or outbound delive
   }, { store });
   assert.equal(response.status, 429);
 });
+
+test('form consent checkboxes show the exact archived copy for each consent version', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const { CONSENT_COPY, AI_CALL_CONSENT_VERSION, SMS_CONSENT_VERSION } = await import('../src/lead-automation.mjs');
+  for (const page of ['public/index.html', 'public/contact-us/index.html']) {
+    const html = await readFile(new URL(`../${page}`, import.meta.url), 'utf8');
+    assert.ok(html.includes(CONSENT_COPY[AI_CALL_CONSENT_VERSION]), `${page} AI-call consent copy differs from ${AI_CALL_CONSENT_VERSION}`);
+    assert.ok(html.includes(CONSENT_COPY[SMS_CONSENT_VERSION]), `${page} SMS consent copy differs from ${SMS_CONSENT_VERSION}`);
+    assert.match(html, /href="\/privacy\/"/);
+    assert.match(html, /href="\/terms\/"/);
+  }
+});

@@ -37,6 +37,12 @@ const FIELD_LIMITS = {
 const CONTACT_BODY_LIMIT = 20 * 1024;
 export const AI_CALL_CONSENT_VERSION = 'ai_call_transcript_v1';
 export const SMS_CONSENT_VERSION = 'sms_inquiry_v1';
+// The exact checkbox text for each consent version, saved with every lead as evidence of
+// what the customer agreed to. Changing the form copy requires a new version here.
+export const CONSENT_COPY = Object.freeze({
+  [AI_CALL_CONSENT_VERSION]: 'I agree to receive a call from Stone Bellisimo LLC’s AI voice assistant, which uses an artificial voice, about this inquiry at the phone number I provided. The call will be transcribed and shared with our team. Consent is not a condition of purchase.',
+  [SMS_CONSENT_VERSION]: 'I agree to receive text messages from Stone Bellisimo LLC about this inquiry at the phone number I provided. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase.'
+});
 const POSTMARK_BODY_LIMIT = 256 * 1024;
 const DEFAULT_FEEDBACK_DELAY_DAYS = 3;
 const DEFAULT_TOKEN_TTL_DAYS = 90;
@@ -901,12 +907,14 @@ function createLeadPayload(contact, request, env) {
     preferredContactMethod: contact.preferredContactMethod,
     aiCallConsent: contact.aiCallConsent,
     aiCallConsentTextVersion: contact.aiCallConsentTextVersion,
+    aiCallConsentText: contact.aiCallConsent ? CONSENT_COPY[contact.aiCallConsentTextVersion] : null,
     aiCallConsentRecordedAt: contact.aiCallConsent ? submittedAt.toISOString() : null,
     aiCallStatus: contact.aiCallConsent ? 'pending_approval' : 'not_requested',
     aiCallDueAt: null,
     aiCallAttemptCount: 0,
     smsConsent: contact.smsConsent,
     smsConsentTextVersion: contact.smsConsentTextVersion,
+    smsConsentText: contact.smsConsent ? CONSENT_COPY[contact.smsConsentTextVersion] : null,
     smsConsentRecordedAt: contact.smsConsent ? submittedAt.toISOString() : null,
     smsStatus: contact.smsConsent ? 'pending_approval' : 'not_requested',
     smsDueAt: null,
